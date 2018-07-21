@@ -17,3 +17,4 @@ npm run build
 =======
 # WeCheck
 H5点名系统
+test
