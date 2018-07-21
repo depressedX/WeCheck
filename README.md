@@ -14,3 +14,6 @@ npm run serve
 ```
 npm run build
 ```
+=======
+# WeCheck
+H5点名系统
