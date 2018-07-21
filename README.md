@@ -1,4 +1,5 @@
 # we-check
+H5签到APP
 
 ## Project setup
 ```
@@ -16,5 +17,5 @@ npm run build
 ```
 =======
 # WeCheck
-H5点名系统
-test
+
+[接口文档](./接口文档.md)
