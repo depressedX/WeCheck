@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import {toFirstLowerCase, toFirstUpperCase} from "./utils";
+import {toFirstLowerCase, toFirstUpperCase} from "../../utils/index";
 const views = require.context('./views')
 
 /*
@@ -20,7 +20,8 @@ const _ = name => views(`./${toFirstLowerCase(name)}/${toFirstUpperCase(name)}.v
 
 Vue.use(Router)
 
-export default new Router({
+
+export let router = new Router({
     routes: [
         {
             path: '/',
@@ -29,3 +30,6 @@ export default new Router({
         },
     ]
 })
+router.beforeEach(((to, from, next) => {
+    next()
+}))

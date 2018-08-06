@@ -1,5 +1,0 @@
-export * from './details/authorization'
-export * from './details/user'
-export * from './details/group'
-export * from './details/check'
-export * from './details/schedule'

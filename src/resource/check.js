@@ -1,4 +1,4 @@
-import {handleResponse, server} from "../common";
+import {handleResponse, server} from "../utils/http";
 import qs from 'qs'
 
 /***
