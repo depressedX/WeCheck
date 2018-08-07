@@ -33,14 +33,11 @@ export let router = new Router({
             name: 'login',
             component: _('login')
         },
-        // {
-        //     path:'/login',
-        //     component:()=>import(/* webpackChunkName: "login" */ './views/Login')
-        // },
-        // {
-        //     path:'/adminLogin',
-        //     component:AdminLogin
-        // },
+        {
+            path: '/register',
+            name: 'register',
+            component: _('register')
+        },
     ]
 })
 router.beforeEach(((to, from, next) => {

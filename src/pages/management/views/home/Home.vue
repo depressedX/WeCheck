@@ -1,6 +1,13 @@
 <template>
     <div class="home">
-        <router-link to="/login">登陆</router-link>
+        <ul>
+            <li>
+                <router-link to="/login">登陆</router-link>
+            </li>
+            <li>
+                <router-link to="/register">注册</router-link>
+            </li>
+        </ul>
     </div>
 </template>
 
