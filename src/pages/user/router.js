@@ -28,6 +28,11 @@ export let router = new Router({
             name: 'home',
             component: _('home')
         },
+        {
+            path: '/login',
+            name: 'login',
+            component: _('login')
+        },
     ]
 })
 router.beforeEach(((to, from, next) => {

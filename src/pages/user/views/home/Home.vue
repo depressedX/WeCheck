@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <a :href="`${BASE_URL}management.html`">切换至管理端应用</a>
+        <router-link to="/login">登陆</router-link>
     </div>
 </template>
 
