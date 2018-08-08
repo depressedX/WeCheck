@@ -34,7 +34,7 @@
                     drag
                     action="https://jsonplaceholder.typicode.com/posts/"
                     multiple
-                    on-change="beforeUpload()"
+                    onchange="beforeUpload()"
                     id="aaa"
                     >
                 <i class="el-icon-upload"></i>
