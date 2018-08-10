@@ -1,13 +1,16 @@
 <template>
 
 
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" >
+    <el-form status-icon :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" >
 
-        <el-form-item label="用户名" prop="username">
+        <el-form-item  label="用户名" prop="username">
             <el-input v-model="ruleForm.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-            <el-input v-model="ruleForm.password"></el-input>
+            <el-input type="password" v-model="ruleForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="checkpassword">
+            <el-input type="password" v-model="ruleForm.checkpassword"></el-input>
         </el-form-item>
 
         <el-form-item label="用户类型" prop="userType">
@@ -22,26 +25,32 @@
         </el-form-item>
 
 
-        <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
-        </el-form-item>
-
-
         <el-form-item label="本人正脸照片" prop="profile">
             <el-upload
                     class="upload-demo"
                     drag
-                    action="https://jsonplaceholder.typicode.com/posts/"
+                    action=""
+                    :on-change="getFile"
+
+                    :on-preview="handlePreview"
+                    :on-remove="handleRemove"
+                    :before-remove="beforeRemove"
                     multiple
-                    onchange="beforeUpload()"
-                    id="aaa"
+                    :on-exceed="handleExceed"
+                    :limit=1
+                    :file-list="fileList"
                     >
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+                <!--<div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>-->
             </el-upload>
         </el-form-item>
+
+        <el-form-item>
+            <el-button type="primary" @click="submitForm('ruleForm') ">注册</el-button>
+            <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+
 
 
     </el-form>
@@ -60,61 +69,189 @@
     import {register} from "../resource/authorization";
 
 
+
     export default {
+
+
         data() {
+
+
+            var checkusername = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('账号不能为空'));
+                }
+                setTimeout(() => {
+
+                    //以下if 条件 将来改成验证是否重复
+                    // if (!Number.isInteger(value)) {
+                    //     callback(new Error('请输入数字值'));
+                    // } else {
+                    //     callback();
+                    // }
+
+                    callback();
+                }, 100);
+            };
+            var validatePass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入密码'));
+                } else {
+                    if (this.ruleForm.checkpassword !== '') {
+                        this.$refs.ruleForm.validateField('checkpassword');
+                    }
+                    callback();
+                }
+            };
+            var validatecheckpass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请再次输入密码'));
+                } else if (value !== this.ruleForm.password) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+
+            var checkname = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('姓名不能为空'));
+                }
+                setTimeout(() => {
+
+                    //以下if 条件 将来改成验证是否重复
+                    // if (!Number.isInteger(value)) {
+                    //     callback(new Error('请输入数字值'));
+                    // } else {
+                    //     callback();
+                    // }
+
+                    callback();
+                }, 100);
+            };
+
+
+            var checkfile = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请上传正脸照片'));
+                }
+                setTimeout(() => {
+
+                    //以下if 条件 将来改成验证是否重复
+                    // if (!Number.isInteger(value)) {
+                    //     callback(new Error('请输入数字值'));
+                    // } else {
+                    //     callback();
+                    // }
+
+                    callback();
+                }, 100);
+            };
+
+
+
             return {
                 ruleForm: {
                     username: '',
                     password: '',
+                    checkpassword:'',
                     name: '',
                     userType: null,
                     profile: false,
 
                 },
+
+                fileList:[],
+
+
+
+
                 rules: {
                     username: [
-                        { required: true, message: '请输入活动名称', trigger: 'blur' },
-                        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                        { required:true,validator: checkusername,  trigger: 'blur' },
                     ],
                     password: [
-                        { required: true, message: '请输入密码', trigger: 'change' }
+                        { required:true, validator:validatePass ,  trigger: 'blur' },
+                    ],
+                    checkpassword:[
+                        { required:true,validator:validatecheckpass ,  trigger: 'blur' },
                     ],
                     name: [
-                        { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+                        { required:true,message:'请输入姓名',  trigger: 'blur' },
                     ],
                     userType: [
-                        { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+                        { required:true,message:'请选择用户类型' ,  trigger: 'blur' },
                     ],
                     profile: [
-                        { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+                        { required:true,validator: checkfile,  trigger: 'blur' },
                     ],
 
                 }
             };
         },
         methods: {
+
+            getFile(file, filelist) {
+                var file = file;
+                console.log(file);
+                console.log(file['name']);
+                var temp = file['name'];
+                this.ruleForm.profile = file;
+                // this.fileList[0] = {name:temp,url:''};
+                this.fileList.push({name:temp,url:''});
+                // console.log(this.fileList)
+
+            },
+
+
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        register(this.ruleForm)
+                            .then(()=> {
+                                    this.$message({
+                                        message: '注册成功  正在跳转',
+                                        type: 'success'
+                                    });
+                                    // 2s后跳转到首页
+                                    setTimeout(() => {
+                                        this.$router.push('/')
+                                    }, 2000)
+                            },
+                            e => {
+                                this.$message.error(`出错：${e.message}`);
+                            })
+
+
                     } else {
                         console.log('error submit!!');
                         return false;
                     }
-                });
+                })
             },
+
             resetForm(formName) {
                 this.$refs[formName].resetFields();
+                this.fileList = [];
+
             },
 
-            getFile(){
-                var file = document.getElementById("aaa").files[0];
+
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+                this.fileList = [];
+            },
+            handlePreview(file) {
                 console.log(file);
-                console.log(file['name']);
-
+            },
+            handleExceed(files, fileList) {
+                this.$message.warning('当前限制选择 1 个文件');
+            },
+            beforeRemove(file, fileList) {
+                return this.$confirm(`确定移除 ${ file.name }？`);
             }
-
         }
+
+
     }
 
 
