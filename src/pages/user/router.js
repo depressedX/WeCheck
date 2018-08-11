@@ -29,6 +29,12 @@ export let router = new Router({
             component: _('home')
         },
         {
+            path:'/group/:id',
+            name:'group',
+            props:true,
+            component:_('group')
+        },
+        {
             path: '/login',
             name: 'login',
             component: _('login')

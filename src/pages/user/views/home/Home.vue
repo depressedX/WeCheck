@@ -1,13 +1,12 @@
 <template>
     <div class="home">
-        <ul>
-            <li>
-                <router-link to="/login">登陆</router-link>
-            </li>
-            <li>
-                <router-link to="/register">注册</router-link>
-            </li>
-        </ul>
+        <el-form>
+            <el-form-item>
+                <el-input type="text" v-model="searchId" placeholder="输入群组口令">
+                    <el-button slot="append" icon="el-icon-search"></el-button>
+                </el-input>
+            </el-form-item>
+        </el-form>
     </div>
 </template>
 
@@ -19,7 +18,9 @@
         },
         data(){
             return{
-                BASE_URL:process.env.BASE_URL
+                BASE_URL:process.env.BASE_URL,
+                
+                searchId:undefined
             }
         }
     }

@@ -24,7 +24,7 @@ export function parseDate(str, fmt)
 }
 
 // time ms之后resolve的Promise
-export function timeout(time,data){
+export function timeout(data,time){
     return new Promise(resolve => {
         setTimeout(()=>{
             resolve(data)
