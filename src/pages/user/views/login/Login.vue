@@ -3,6 +3,7 @@
         <el-card style="width: 380px;margin: auto">
             <login-form/>
             <p style="text-align: right"><a :href="`${BASE_URL}management.html`">切换至管理端页面</a></p>
+            <!--<router-link to="../register/Register">点我不会怀孕</router-link>-->
         </el-card>
     </div>
 </template>
