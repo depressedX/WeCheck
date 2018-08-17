@@ -72,7 +72,7 @@
 
     export default {
 
-
+        name:'RegisterForm',
         data() {
 
 

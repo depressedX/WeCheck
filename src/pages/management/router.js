@@ -38,6 +38,12 @@ export let router = new Router({
             name: 'register',
             component: _('register')
         },
+        {
+            path:'/group/:id',
+            name:'group',
+            // props:true,
+            component: _('group')
+        }
     ]
 })
 router.beforeEach(((to, from, next) => {
