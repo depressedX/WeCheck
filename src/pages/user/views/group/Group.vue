@@ -18,7 +18,7 @@
 </template>
 
 <script>
-    import {getGroupInfo} from "../../../../resource/group";
+    import {getGroupInfo, quitGroup} from "../../../../resource/group";
     import AppBar from "../../../../components/AppBar";
     import HaveNotJoined from "./components/HaveNotJoined";
     import {getUserInfo} from "../../../../resource/user";
@@ -94,6 +94,12 @@
             },
             hasJoinedHandler() {
                 this.update()
+            },
+            quitGroup(){
+                quitGroup(this.id).then(()=>{
+                    this.$message('退出成功');
+                    this.$router.go(-1)
+                })
             }
         }
     }

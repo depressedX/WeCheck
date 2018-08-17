@@ -1,7 +1,7 @@
 // http相关模块
 import axios from 'axios'
 
-export const BASE_URL  = '/'
+export const BASE_URL  = '/api/v1'
 
 export let server = axios.create({
     baseURL:BASE_URL

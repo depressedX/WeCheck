@@ -5,7 +5,6 @@ import {timeout} from "../utils";
 const hasLoggedInKey = 'hasLoggedIn'
 
 export function login(username, password) {
-    return timeout( null,1000)
     return server.post('login', qs.stringify({username, password}))
         .then(handleResponse)
         .then(res => sessionStorage.setItem(hasLoggedInKey, 'true'))

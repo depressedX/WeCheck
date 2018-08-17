@@ -7,7 +7,7 @@ export function getGroupInfo(id) {
         "id": "sdfwenk",
         "owner": "liupenghao",
         "name": "2016操作系统7班",//群体名称
-        role: 0,
+        role: 1,
         //以下为附加信息
         // "members": [
         //     {
@@ -41,6 +41,7 @@ export function joinGroup(id) {
 }
 
 export function quitGroup(id) {
+    return Promise.resolve(true)
     return server.post('group/quit', qs.stringify({id})).then(handleResponse)
 }
 

@@ -15,5 +15,12 @@ module.exports = {
             filename: 'management.html',
             title: 'Management',
         },
+    },
+    devServer:{
+        proxy: {
+            '/api/v1': {
+                target:'http://39.106.131.88'
+            }
+        }
     }
 }

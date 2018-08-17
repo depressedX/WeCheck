@@ -7,14 +7,20 @@
                 </el-input>
             </el-form-item>
         </el-form>
+        <today-schedule-table/>
     </div>
 </template>
 
 <script>
 
+    import TodayScheduleTable from "./components/TodayScheduleTable";
     export default {
         name: 'home',
         components: {
+            TodayScheduleTable
+        },
+        created(){
+            console.log('ok')
         },
         data(){
             return{
