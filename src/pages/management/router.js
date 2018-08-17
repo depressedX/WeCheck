@@ -41,6 +41,7 @@ export let router = new Router({
         {
             path:'/group/:id',
             name:'group',
+            // props:true,
             component: _('group')
         }
     ]
