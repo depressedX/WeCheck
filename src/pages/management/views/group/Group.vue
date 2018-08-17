@@ -11,9 +11,9 @@
         </el-header>
         <el-main>
             <el-button-group>
-                <el-button @click = 'imme_sign' :type="!state?'primary':'danger'" >{{!state?'开始签到':'结束签到'}}</el-button>
+                <el-button @click= 'imme_sign' :type="!state?'primary':'danger'" >{{!state?'开始签到':'结束签到'}}</el-button>
                 <el-button @click="plan_sign" type="primary">计划签到</el-button>
-                <el-button type="danger">删除群体</el-button>
+                <el-button @click="del_group" type="danger">删除群体</el-button>
             </el-button-group>
 
             <ul v-for="number in members">
@@ -21,6 +21,55 @@
                     {{number.name}}
                 </li>
             </ul>
+
+
+            <!--//以下为弹出框 设置签到计划-->
+            <el-dialog title="设置签到计划" :visible.sync="dialogFormVisible">
+                <el-form :model="schedule_form">
+                    <el-form-item label="开启时间" :label-width="formLabelWidth">
+                        <el-time-picker type="fixed-time" format="HH:mm" value-format="HH:mm" placeholder="选择时间" v-model="schedule_form.startUpTime" style="width: 100%;"></el-time-picker>
+                    </el-form-item>
+                    <el-form-item label="持续时间" :label-width="formLabelWidth">
+                        <el-col :span="8" >
+                            <el-input v-model="schedule_form.dura_hour" ></el-input>
+                        </el-col>
+                        <el-col :span="2" >
+                            时
+                        </el-col>
+                        <el-col :span="8" >
+                            <el-input v-model="schedule_form.dura_min" ></el-input>
+                        </el-col>
+                        <el-col :span="2" >
+                            分
+                        </el-col>
+                    </el-form-item>
+
+                    <el-form-item label="重复" :label-width="formLabelWidth">
+                        <el-select v-model="rep" multiple placeholder="请选择"   >
+                            <el-option
+                                    v-for="item in options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                            >
+                            </el-option>
+                            {{rep}}
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="是否启用" :label-width="formLabelWidth">
+                        <el-switch
+                                v-model="schedule_form.enable"
+                                active-color="#13ce66"
+                                inactive-color="#ff4949">
+                        </el-switch>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="submit_schedule">确 定</el-button>
+                </div>
+            </el-dialog>
+
         </el-main>
     </el-container>
 </template>
@@ -31,7 +80,7 @@
     import {getGroupInfo} from "../../../../resource/group";
     import {deleteGroup} from "../../../../resource/group";
     import {enableCheck,disableCheck} from "../../../../resource/check";
-
+    import {addSchedule,updateSchedule,getAllSchedules,deleteSchedule} from "../../../../resource/schedule";
 
 
     export default {
@@ -52,6 +101,51 @@
 
                 //本群体的id
                 id:null,
+
+                dialogFormVisible:false,
+                formLabelWidth: '100px',
+
+                options: [{
+                    value: '1',
+                    label: '周一'
+                }, {
+                    value: '2',
+                    label: '周二'
+                }, {
+                    value: '3',
+                    label: '周三'
+                }, {
+                    value: '4',
+                    label: '周四'
+                }, {
+                    value: '5',
+                    label: '周五'
+                }, {
+                    value: '6',
+                    label: '周六'
+                }, {
+                    value: '7',
+                    label: '周七'
+                }
+                ],
+                rep:[],
+                schedule_form:{
+                    //关联弹出签到计划表格
+                    startUpTime: '',
+                    dura_hour:null,
+                    dura_min:null,
+                    // duration:(this.schedule_form.dura_hour*60+this.schedule_form.dura_min),
+                    repeat: '',
+                    enable: false,
+                },
+
+                schedule_final:{
+                    //上传的最终计划
+                    startUpTime: '',
+                    duration: null,
+                    repeat: '',
+                    enable: false,
+                }
             }
         },
         created(){
@@ -82,7 +176,8 @@
 
                     this.name = res.name;
                     this.owner = res.owner;
-                    this.state = res.state
+                    this.state = res.state;
+                    this.members = res.members;
                     })
                 },
 
@@ -90,6 +185,9 @@
             //计划签到方法
             plan_sign(){
                 // console.log(123);
+
+                this.dialogFormVisible = true
+
             },
 
             //即刻签到方法
@@ -97,14 +195,54 @@
                 // console.log(123);
                 if (this.state===true){
                     //本群体正在签到状态 应该停止签到
-                    disableCheck(this.id);
+                    disableCheck(this.id).then(()=>{
+                        this.$message("已关闭签到");
+                    });
                 }else {
                     //本群体没有签到  应该开启签到模式
-                    enableCheck(this.id);
+                    enableCheck(this.id).then(()=>{
+                        this.$message("开启签到成功");
+                    });
                 }
                 this.update();
-            }
+            },
 
+            del_group(){
+                deleteGroup(this.id).then(()=>
+                    {
+                        this.$message("删除成功");
+                        this.$router.go(-1)
+                        //后退一步
+                    }
+                );
+            },
+
+            //提交签到计划
+            submit_schedule(){
+
+
+                this.schedule_final.duration = parseInt(this.schedule_form.dura_hour)*60+parseInt(this.schedule_form.dura_min);
+                console.log("持续时间为"+this.schedule_final.duration);
+                this.schedule_final.enable = this.schedule_form.enable;
+                this.schedule_final.repeat = '';
+
+                this.schedule_final.repeat = this.rep[0];
+                for(var a = 1;a<this.rep.length;a++){
+                    this.schedule_final.repeat = this.schedule_final.repeat+','+this.rep[a];
+                }
+                console.log(this.schedule_final.repeat);
+                this.schedule_final.startUpTime = this.schedule_form.startUpTime;
+
+                addSchedule(this.id,this.schedule_final).then(()=>{
+                    this.$message("创建计划成功")
+                });
+
+                this.dialogFormVisible = false
+
+
+
+
+            }
 
         }
 
