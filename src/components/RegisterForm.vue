@@ -1,9 +1,9 @@
 <template>
 
 
-    <el-form status-icon :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" >
+    <el-form status-icon :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
 
-        <el-form-item  label="用户名" prop="username">
+        <el-form-item label="用户名" prop="username">
             <el-input v-model="ruleForm.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
@@ -15,8 +15,8 @@
 
         <el-form-item label="用户类型" prop="userType">
             <el-select v-model="ruleForm.userType" placeholder="请选择用户类型">
-                <el-option label="签到端用户" value="0"></el-option>
-                <el-option label="管理端用户" value="1"></el-option>
+                <el-option label="签到端用户" :value="0"></el-option>
+                <el-option label="管理端用户" :value="1"></el-option>
             </el-select>
         </el-form-item>
 
@@ -31,15 +31,12 @@
                     drag
                     action=""
                     :on-change="getFile"
-
                     :on-preview="handlePreview"
                     :on-remove="handleRemove"
                     :before-remove="beforeRemove"
-                    multiple
                     :on-exceed="handleExceed"
-                    :limit=1
-                    :file-list="fileList"
-                    >
+                    :auto-upload="false"
+            >
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                 <!--<div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>-->
@@ -52,14 +49,7 @@
         </el-form-item>
 
 
-
     </el-form>
-
-
-
-
-
-
 
 
 </template>
@@ -69,10 +59,9 @@
     import {register} from "../resource/authorization";
 
 
-
     export default {
 
-        name:'RegisterForm',
+        name: 'RegisterForm',
         data() {
 
 
@@ -148,57 +137,55 @@
             };
 
 
-
             return {
                 ruleForm: {
                     username: '',
                     password: '',
-                    checkpassword:'',
+                    checkpassword: '',
                     name: '',
                     userType: null,
                     profile: false,
 
                 },
 
-                fileList:[],
-
-
-
 
                 rules: {
                     username: [
-                        { required:true,validator: checkusername,  trigger: 'blur' },
+                        {required: true, validator: checkusername, trigger: 'blur'},
                     ],
                     password: [
-                        { required:true, validator:validatePass ,  trigger: 'blur' },
+                        {required: true, validator: validatePass, trigger: 'blur'},
                     ],
-                    checkpassword:[
-                        { required:true,validator:validatecheckpass ,  trigger: 'blur' },
+                    checkpassword: [
+                        {required: true, validator: validatecheckpass, trigger: 'blur'},
                     ],
                     name: [
-                        { required:true,message:'请输入姓名',  trigger: 'blur' },
+                        {required: true, message: '请输入姓名', trigger: 'blur'},
                     ],
                     userType: [
-                        { required:true,message:'请选择用户类型' ,  trigger: 'blur' },
+                        {required: true, message: '请选择用户类型', trigger: 'blur'},
                     ],
                     profile: [
-                        { required:true,validator: checkfile,  trigger: 'blur' },
+                        {required: true, validator: checkfile, trigger: 'blur'},
                     ],
 
                 }
             };
         },
+        computed: {
+            ruleFormData() {
+                let formData = new FormData()
+                Object.keys(this.ruleForm).forEach(key => {
+                    if (key === 'checkpassword') return
+                    formData.append(key, this.ruleForm[key])
+                })
+                return formData
+            }
+        },
         methods: {
 
             getFile(file, filelist) {
-                var file = file;
-                console.log(file);
-                console.log(file['name']);
-                var temp = file['name'];
-                this.ruleForm.profile = file;
-                // this.fileList[0] = {name:temp,url:''};
-                this.fileList.push({name:temp,url:''});
-                // console.log(this.fileList)
+                this.ruleForm.profile = file.raw;
 
             },
 
@@ -206,8 +193,8 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        register(this.ruleForm)
-                            .then(()=> {
+                        register(this.ruleFormData)
+                            .then(() => {
                                     this.$message({
                                         message: '注册成功  正在跳转',
                                         type: 'success'
@@ -216,10 +203,10 @@
                                     setTimeout(() => {
                                         this.$router.push('/')
                                     }, 2000)
-                            },
-                            e => {
-                                this.$message.error(`出错：${e.message}`);
-                            })
+                                },
+                                e => {
+                                    this.$message.error(`出错：${e.message}`);
+                                })
 
 
                     } else {
@@ -231,7 +218,6 @@
 
             resetForm(formName) {
                 this.$refs[formName].resetFields();
-                this.fileList = [];
 
             },
 
