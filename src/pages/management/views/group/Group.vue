@@ -4,7 +4,6 @@
             <AppBar>
                 <template>{{this.name}}
                     <!--<div>saf{{$route.params.id}}</div>-->
-
                 </template>
 
             </AppBar>
@@ -136,7 +135,7 @@
                     dura_min:null,
                     // duration:(this.schedule_form.dura_hour*60+this.schedule_form.dura_min),
                     repeat: '',
-                    enable: false,
+                    enable: true,
                 },
 
                 schedule_final:{
