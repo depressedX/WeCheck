@@ -11,19 +11,73 @@
         <el-main>
             <el-button-group>
                 <el-button @click= 'imme_sign' :type="!state?'primary':'danger'" >{{!state?'开始签到':'结束签到'}}</el-button>
-                <el-button @click="plan_sign" type="primary">计划签到</el-button>
+                <!--<el-button @click="plan_sign" type="primary">计划签到</el-button>-->
                 <el-button @click="del_group" type="danger">删除群体</el-button>
             </el-button-group>
 
-            <ul v-for="number in members">
-                <li>
-                    {{number.name}}
-                </li>
-            </ul>
+            <el-tabs v-model="activeName" @tab-click="handleListClick">
+                <el-tab-pane label="群体成员" name="first">
+                    <ul v-for="number in members">
+                        <li>
+                            {{number.name}}
+                        </li>
+                    </ul>
+                </el-tab-pane>
+
+                <el-tab-pane label="计划列表" name="second">
+                    <el-button @click = "plan_sign">添加计划</el-button>
+                    <el-table
+                            :data="mySchList"
+                            stripe
+                            height="600"
+                            style="width: 100%">
+                        <el-table-column
+                                prop="startUpTime"
+                                label="起始时间"
+
+                        >
+                        </el-table-column>
+                        <el-table-column
+                                prop="duration"
+                                label="持续时间"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                                prop="repeat"
+                                label="重复"
+                        >
+                        </el-table-column>
+                        <!--<el-table-column-->
+                                <!--prop="enable"-->
+                                <!--label="开启"-->
+                        <!--&gt;-->
+                            <!--<el-switch active-value="1" ></el-switch>-->
+                        <!--</el-table-column>-->
+                        <el-table-column
+                                fixed="right"
+                                label="操作"
+                                width="100">
+                            <template slot-scope="scope">
+                                <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                                <el-button type="text" size="small">编辑</el-button>
+                            </template>
+                        </el-table-column>
 
 
-            <!--//以下为弹出框 设置签到计划-->
-            <el-dialog title="设置签到计划" :visible.sync="dialogFormVisible">
+
+
+                    </el-table>
+
+                </el-tab-pane>
+            </el-tabs>
+
+
+
+
+
+            <!--//以下为弹出框 新建签到计划-->
+            <el-dialog title="设置签到计划" :visible.sync="dialogFormVisible" width="80%">
+                <el-button>afd</el-button>
                 <el-form :model="schedule_form">
                     <el-form-item label="开启时间" :label-width="formLabelWidth">
                         <el-time-picker type="fixed-time" format="HH:mm" value-format="HH:mm" placeholder="选择时间" v-model="schedule_form.startUpTime" style="width: 100%;"></el-time-picker>
@@ -144,12 +198,41 @@
                     duration: null,
                     repeat: '',
                     enable: false,
-                }
+                },
+
+                //标签栏的绑定元素
+                activeName: 'second',
+
+                mySchList:[
+                    {
+                        scheduleId:'0dsfwefsd',
+                        startUpTime:'03:15',
+                        duration:30,
+                        enable:true,
+                        repeat:'1,3,5',
+                    },
+                    {
+                        scheduleId:'adfafd',
+                        startUpTime:'04:15',
+                        duration:20,
+                        enable:true,
+                        repeat:'1,3,5',
+                    },
+                    {
+                        scheduleId:'asd',
+                        startUpTime:'06:15',
+                        duration:203,
+                        enable:true,
+                        repeat:'1,3,5',
+                    }
+                ]
             }
         },
         created(){
             this.id = this.$route.params.id;
             this.update();
+
+            // this.mySchList = getAllSchedules(this.id).data;
         },
         watch:{
             '$route' (to, from) {
@@ -238,9 +321,16 @@
 
                 this.dialogFormVisible = false
 
+            },
 
 
 
+            handleListClick(tab, event) {
+                console.log(tab, event);
+            },
+
+            handleClick(row) {
+                console.log(row);
             }
 
         }

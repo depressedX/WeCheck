@@ -5,10 +5,12 @@
             <el-table
                     :data="tableData"
                     stripe
+
                     style="width: 100%">
                 <el-table-column
                         prop="id"
                         label="群口令"
+
                         >
                 </el-table-column>
                 <el-table-column
@@ -17,10 +19,28 @@
                         >
                 </el-table-column>
 
+                <el-table-column
+                        fixed="right"
+                        label="操作"
+                >
+                    <template slot-scope="scope">
+                        <el-button @click.native.prevent="JumpToGroup(scope.$index) "
+
+                                   type="text"
+                            >
+                            进入群体
+                        </el-button>
+                    </template>
+                </el-table-column>
+
+
             </el-table>
         </el-collapse-item>
 
     </el-collapse>
+
+
+
 </template>
 
 <script>
@@ -45,23 +65,36 @@
                 myGroupList:[
                     {
                         id:'adf',
-                        aname:'操作系统',
+                        name:'操作系统',
                         // role:1,
 
                     },
                     {
                         id:'asdf',
-                        aname:'数据结构',
+                        name:'数据结构',
                         // role:2
                     }
                 ],
+
+                dialogFormVisible:false,
+                formLabelWidth: '100px',
 
             }
         },
         methods:{
             handleChange(val){
                 console.log(val);
+            },
+            JumpToGroup(index){
+                //传入的是数组的下标
+                console.log(this.myGroupList[index].id);
+                var id   = this.myGroupList[index].id
+                this.$router.push('group/:'+id)
+
             }
+
+
+
         }
     }
 </script>
