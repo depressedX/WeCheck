@@ -59,15 +59,10 @@
                                 width="100">
                             <template slot-scope="scope">
                                 <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                                <el-button type="text" size="small">编辑</el-button>
+                                <el-button type="text" size="small" @click.native.prevent = "change_Schedule(scope.$index)">编辑</el-button>
                             </template>
                         </el-table-column>
-
-
-
-
                     </el-table>
-
                 </el-tab-pane>
             </el-tabs>
 
@@ -77,21 +72,16 @@
 
             <!--//以下为弹出框 新建签到计划-->
             <el-dialog title="设置签到计划" :visible.sync="dialogFormVisible" width="80%">
-                <el-button>afd</el-button>
+
                 <el-form :model="schedule_form">
                     <el-form-item label="开启时间" :label-width="formLabelWidth">
                         <el-time-picker type="fixed-time" format="HH:mm" value-format="HH:mm" placeholder="选择时间" v-model="schedule_form.startUpTime" style="width: 100%;"></el-time-picker>
                     </el-form-item>
                     <el-form-item label="持续时间" :label-width="formLabelWidth">
                         <el-col :span="8" >
-                            <el-input v-model="schedule_form.dura_hour" ></el-input>
+                            <el-input v-model="schedule_form.duration" ></el-input>
                         </el-col>
-                        <el-col :span="2" >
-                            时
-                        </el-col>
-                        <el-col :span="8" >
-                            <el-input v-model="schedule_form.dura_min" ></el-input>
-                        </el-col>
+
                         <el-col :span="2" >
                             分
                         </el-col>
@@ -120,6 +110,51 @@
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="dialogFormVisible = false">取 消</el-button>
                     <el-button type="primary" @click="submit_schedule">确 定</el-button>
+                </div>
+            </el-dialog>
+
+
+
+            <!--弹出框  修改签到计划-->
+            <el-dialog title="修改签到计划" :visible.sync="dialogChangeFormVisible" width="80%">
+
+                <el-form :model="schedule_change_form">
+                    <el-form-item label="开启时间" :label-width="formLabelWidth">
+                        <el-time-picker type="fixed-time" format="HH:mm" value-format="HH:mm" placeholder="选择时间" v-model="schedule_change_form.startUpTime" style="width: 100%;"></el-time-picker>
+                    </el-form-item>
+                    <el-form-item label="持续时间" :label-width="formLabelWidth">
+                        <el-col :span="8" >
+                            <el-input v-model="schedule_change_form.duration" ></el-input>
+                        </el-col>
+
+                        <el-col :span="2" >
+                            分
+                        </el-col>
+                    </el-form-item>
+
+                    <el-form-item label="重复" :label-width="formLabelWidth">
+                        <el-select v-model="rep" multiple placeholder="请选择"   >
+                            <el-option
+                                    v-for="item in options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                            >
+                            </el-option>
+                            {{rep}}
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="是否启用" :label-width="formLabelWidth">
+                        <el-switch
+                                v-model="schedule_change_form.enable"
+                                active-color="#13ce66"
+                                inactive-color="#ff4949">
+                        </el-switch>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogChangeFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="submit_Changeschedule">确 定</el-button>
                 </div>
             </el-dialog>
 
@@ -158,6 +193,8 @@
                 dialogFormVisible:false,
                 formLabelWidth: '100px',
 
+
+                dialogChangeFormVisible:false,
                 options: [{
                     value: '1',
                     label: '周一'
@@ -183,7 +220,7 @@
                 ],
                 rep:[],
                 schedule_form:{
-                    //关联弹出签到计划表格
+                    //关联弹出创建签到计划表格
                     startUpTime: '',
                     dura_hour:null,
                     dura_min:null,
@@ -191,7 +228,16 @@
                     repeat: '',
                     enable: true,
                 },
+                schedule_change_form:{
+                    //关联弹出修改签到计划表格
+                    startUpTime: '',
+                    dura_hour:null,
+                    dura_min:null,
+                    // duration:(this.schedule_form.dura_hour*60+this.schedule_form.dura_min),
+                    repeat: '',
+                    enable: true,
 
+                },
                 schedule_final:{
                     //上传的最终计划
                     startUpTime: '',
@@ -225,14 +271,20 @@
                         enable:true,
                         repeat:'1,3,5',
                     }
-                ]
+                ],
+
+
+                //临时存放对应修改计划的数据
+                change_schedule_temp:{
+
+                },
             }
         },
         created(){
             this.id = this.$route.params.id;
             this.update();
 
-            // this.mySchList = getAllSchedules(this.id).data;
+            //
         },
         watch:{
             '$route' (to, from) {
@@ -260,6 +312,7 @@
                     this.owner = res.owner;
                     this.state = res.state;
                     this.members = res.members;
+                    // this.mySchList = getAllSchedules(this.id).data;      //获取当前群体计划列表
                     })
                 },
 
@@ -303,7 +356,7 @@
             submit_schedule(){
 
 
-                this.schedule_final.duration = parseInt(this.schedule_form.dura_hour)*60+parseInt(this.schedule_form.dura_min);
+                this.schedule_final.duration = this.schedule_form.duration;
                 console.log("持续时间为"+this.schedule_final.duration);
                 this.schedule_final.enable = this.schedule_form.enable;
                 this.schedule_final.repeat = '';
@@ -322,7 +375,9 @@
                 this.dialogFormVisible = false
 
             },
+            submit_Changeschedule(){
 
+            },
 
 
             handleListClick(tab, event) {
@@ -331,6 +386,17 @@
 
             handleClick(row) {
                 console.log(row);
+            },
+
+            change_Schedule(index){
+
+                // index是用户要编辑的计划数组下标
+                this.dialogChangeFormVisible = true;
+                this.schedule_change_form = this.mySchList[index];
+                var temp = this.schedule_change_form;
+                // change_schedule_temp.scheduleId = temp
+
+
             }
 
         }

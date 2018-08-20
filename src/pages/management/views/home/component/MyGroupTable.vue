@@ -3,7 +3,7 @@
         <el-collapse-item title="我创建的群体" name="1">
 
             <el-table
-                    :data="tableData"
+                    :data="myGroupList"
                     stripe
 
                     style="width: 100%">
