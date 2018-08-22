@@ -51,29 +51,16 @@
         name: "MyGroupTable",
 
         created(){
-            getGroupInfoList().then(res =>{
-                this.tableData = res
-                console.log(res)
-            })
-
+            this.update();
         },
         data(){
+
             return{
 
                 tableData: [],
                 activeNames: ['1'],
                 myGroupList:[
-                    {
-                        id:'adf',
-                        name:'操作系统',
-                        // role:1,
 
-                    },
-                    {
-                        id:'asdf',
-                        name:'数据结构',
-                        // role:2
-                    }
                 ],
 
                 dialogFormVisible:false,
@@ -82,6 +69,12 @@
             }
         },
         methods:{
+            update(){
+                getGroupInfoList().then(res =>{
+                    this.myGroupList = res
+                    console.log(res)
+                })
+            },
             handleChange(val){
                 console.log(val);
             },
@@ -89,7 +82,7 @@
                 //传入的是数组的下标
                 console.log(this.myGroupList[index].id);
                 var id   = this.myGroupList[index].id
-                this.$router.push('group/:'+id)
+                this.$router.push('group/'+id)
 
             }
 

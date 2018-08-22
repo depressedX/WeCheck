@@ -9,7 +9,7 @@
         <el-form-item label="密码" prop="password">
             <el-input type="password" v-model="ruleForm.password"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="checkpassword">
+        <el-form-item label="确认密码" prop="checkpassword">
             <el-input type="password" v-model="ruleForm.checkpassword"></el-input>
         </el-form-item>
 
@@ -199,9 +199,9 @@
                                         message: '注册成功  正在跳转',
                                         type: 'success'
                                     });
-                                    // 2s后跳转到首页
+                                    // 2s后跳转到登录页面
                                     setTimeout(() => {
-                                        this.$router.push('/')
+                                        this.$router.push('/login')
                                     }, 2000)
                                 },
                                 e => {

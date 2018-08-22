@@ -58,7 +58,7 @@
                                 label="操作"
                                 width="100">
                             <template slot-scope="scope">
-                                <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                                <el-button @click="deleteScheduleClick(scope.$index)" type="text" size="small">删除</el-button>
                                 <el-button type="text" size="small" @click.native.prevent = "change_Schedule(scope.$index)">编辑</el-button>
                             </template>
                         </el-table-column>
@@ -133,7 +133,7 @@
                     </el-form-item>
 
                     <el-form-item label="重复" :label-width="formLabelWidth">
-                        <el-select v-model="rep" multiple placeholder="请选择"   >
+                        <el-select v-model="change_arr_repeat" multiple placeholder="请选择"   >
                             <el-option
                                     v-for="item in options"
                                     :key="item.value"
@@ -141,7 +141,7 @@
                                     :value="item.value"
                             >
                             </el-option>
-                            {{rep}}
+                            {{change_arr_repeat}}
                         </el-select>
                     </el-form-item>
                     <el-form-item label="是否启用" :label-width="formLabelWidth">
@@ -231,9 +231,8 @@
                 schedule_change_form:{
                     //关联弹出修改签到计划表格
                     startUpTime: '',
-                    dura_hour:null,
-                    dura_min:null,
-                    // duration:(this.schedule_form.dura_hour*60+this.schedule_form.dura_min),
+
+                    duration:null,
                     repeat: '',
                     enable: true,
 
@@ -245,7 +244,13 @@
                     repeat: '',
                     enable: false,
                 },
-
+                changeSchedule_final:{
+                    //上传的  修改计划的数据
+                    startUpTime: '',
+                    duration: null,
+                    repeat: '',
+                    enable: false,
+                },
                 //标签栏的绑定元素
                 activeName: 'second',
 
@@ -275,13 +280,12 @@
 
 
                 //临时存放对应修改计划的数据
-                change_schedule_temp:{
-
-                },
+                change_arr_repeat:[],
             }
         },
         created(){
             this.id = this.$route.params.id;
+            console.log(this.id)
             this.update();
 
             //
@@ -291,12 +295,14 @@
                 // 对路由变化作出响应...
                 // console.log("路由变化"+this.id)
                 this.id  = this.$route.params.id;
+                 // console.log("路由变化"+this.id)
                 this.update();
             }
         },
         methods:{
             //对群体初始化
             update() {
+
                 getGroupInfo(this.id).then(res => {
                     if (!res) {
                         // group不存在
@@ -332,14 +338,17 @@
                     //本群体正在签到状态 应该停止签到
                     disableCheck(this.id).then(()=>{
                         this.$message("已关闭签到");
+                        this.update();
                     });
                 }else {
                     //本群体没有签到  应该开启签到模式
                     enableCheck(this.id).then(()=>{
                         this.$message("开启签到成功");
+                        this.update();
+
                     });
                 }
-                this.update();
+
             },
 
             del_group(){
@@ -361,11 +370,15 @@
                 this.schedule_final.enable = this.schedule_form.enable;
                 this.schedule_final.repeat = '';
 
-                this.schedule_final.repeat = this.rep[0];
-                for(var a = 1;a<this.rep.length;a++){
-                    this.schedule_final.repeat = this.schedule_final.repeat+','+this.rep[a];
+                if (this.rep.length != 0){
+                    this.schedule_final.repeat = this.rep[0];
+
+                    for(var a = 1;a<this.rep.length;a++){
+                        this.schedule_final.repeat = this.schedule_final.repeat+','+this.rep[a];
+                    }
                 }
-                console.log(this.schedule_final.repeat);
+
+                // console.log(this.schedule_final.repeat);
                 this.schedule_final.startUpTime = this.schedule_form.startUpTime;
 
                 addSchedule(this.id,this.schedule_final).then(()=>{
@@ -377,6 +390,33 @@
             },
             submit_Changeschedule(){
 
+                var sched_Id = this.schedule_change_form.scheduleId;
+                this.changeSchedule_final.startUpTime = this.schedule_change_form.startUpTime;
+                this.changeSchedule_final.duration = this.schedule_change_form.duration;
+                this.changeSchedule_final.enable = this.schedule_change_form.enable;
+                // startUpTime: '',
+                //     duration: null,
+                //     repeat: '',
+                //     enable: false,
+                this.changeSchedule_final.repeat = '';
+                if (this.change_arr_repeat.length!=0){
+                    this.changeSchedule_final.repeat = this.change_arr_repeat[0];
+                    for(var a = 1;a<this.change_arr_repeat.length;a++){
+                        this.changeSchedule_final.repeat = this.changeSchedule_final.repeat+','+this.change_arr_repeat[a];
+                    }
+                }
+
+                updateSchedule(sched_Id,this.changeSchedule_final).then(()=>{
+                    this.$message({
+                        message:"修改成功",
+                        type   :"success"
+                    })
+                    this.update();
+                    this.dialogChangeFormVisible =false;
+                })
+
+
+
             },
 
 
@@ -384,8 +424,16 @@
                 console.log(tab, event);
             },
 
-            handleClick(row) {
-                console.log(row);
+
+            //删除签到计划
+            deleteScheduleClick(index) {
+                // console.log(row);
+                deleteSchedule(this.mySchList[index].scheduleId).then(()=>{
+                    this.$message({
+                        type:"success",
+                        message:"成功删除计划"
+                    })
+                })
             },
 
             change_Schedule(index){
@@ -393,11 +441,13 @@
                 // index是用户要编辑的计划数组下标
                 this.dialogChangeFormVisible = true;
                 this.schedule_change_form = this.mySchList[index];
-                var temp = this.schedule_change_form;
+
+                var tempstr = this.schedule_change_form.repeat;
                 // change_schedule_temp.scheduleId = temp
+                this.change_arr_repeat = tempstr.split(',');
 
+            },
 
-            }
 
         }
 

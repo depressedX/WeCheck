@@ -25,7 +25,6 @@
         data(){
             return{
                 BASE_URL:process.env.BASE_URL,
-                
                 searchId:undefined
             }
         }
