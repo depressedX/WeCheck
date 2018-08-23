@@ -76,9 +76,9 @@ export function quitGroup(id) {
 }
 
 export function updateGroupInfo(id, bundle) {
-    return server.post('group/quit', qs.stringify(Object.assign({id}, bundle))).then(handleResponse)
+    return server.post('group/update', qs.stringify(Object.assign({id}, bundle))).then(handleResponse)
 }
 
 export function deleteGroup(id) {
-    return server.post('group/quit', qs.stringify({id})).then(handleResponse)
+    return server.post('group/delete', qs.stringify({id})).then(handleResponse)
 }

@@ -80,7 +80,7 @@
             },
             JumpToGroup(index){
                 //传入的是数组的下标
-                console.log(this.myGroupList[index].id);
+                // console.log(this.myGroupList[index].id);
                 var id   = this.myGroupList[index].id
                 this.$router.push('group/'+id)
 

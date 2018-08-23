@@ -12,7 +12,7 @@
             <el-button-group>
                 <el-button @click= 'imme_sign' :type="!state?'primary':'danger'" >{{!state?'开始签到':'结束签到'}}</el-button>
                 <!--<el-button @click="plan_sign" type="primary">计划签到</el-button>-->
-                <el-button @click="del_group" type="danger">删除群体</el-button>
+                <el-button @click="deleGroup_open" type="danger">删除群体</el-button>
             </el-button-group>
 
             <el-tabs v-model="activeName" @tab-click="handleListClick">
@@ -318,7 +318,11 @@
                     this.owner = res.owner;
                     this.state = res.state;
                     this.members = res.members;
-                    // this.mySchList = getAllSchedules(this.id).data;      //获取当前群体计划列表
+                    // console.log(this.id+'asdf')
+                     getAllSchedules(this.id).then(res =>{
+                         console.log("成功获取");
+                         this.mySchList = res;
+                    });      //获取当前群体计划列表
                     })
                 },
 
@@ -351,15 +355,37 @@
 
             },
 
-            del_group(){
-                deleteGroup(this.id).then(()=>
-                    {
-                        this.$message("删除成功");
-                        this.$router.go(-1)
-                        //后退一步
-                    }
-                );
+
+            //删除群体
+            deleGroup_open() {
+                this.$confirm('此操作将永久删除'+this.name+', 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    console.log("删除")
+                    deleteGroup(this.id).then(()=>
+                        {
+                            this.$message({
+                                message:"删除成功，正在跳转到主页面",
+                                type:"success"
+                            });
+                            setTimeout(()=>{
+                                this.$router.go(-1);
+                            },2000)
+                            //后退一步
+                        }
+                        ,()=>{
+                            console.log(this.id)
+                        });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
+
 
             //提交签到计划
             submit_schedule(){
@@ -447,6 +473,7 @@
                 this.change_arr_repeat = tempstr.split(',');
 
             },
+
 
 
         }
