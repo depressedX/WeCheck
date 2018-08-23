@@ -8,8 +8,8 @@
             </el-form-item>
         </el-form>
         <today-schedule-table/>
-        <el-button @click = "testF"></el-button>
-        {{list}}
+
+
     </div>
 </template>
 
@@ -31,16 +31,16 @@
                 BASE_URL:process.env.BASE_URL,
                 searchId:undefined,
                 id:'bWPNsU',
-                list:[],
+
             }
         },
         methods:{
-            testF(){
-                joinGroup(this.id).then(()=>{
-                    this.$message("进入成功")
-                });
-                this.list = getAllSchedules(this.id);
-            }
+            // testF(){
+            //     joinGroup(this.id).then(()=>{
+            //         this.$message("进入成功")
+            //     });
+            //     this.list = getAllSchedules(this.id);
+            // }
         }
     }
 </script>
