@@ -16,9 +16,20 @@
 
 <script>
     import {login} from "../resource/authorization";
+    import {userType} from "../metaInfo";
+
+    // 管理端、用户端通用登陆组件
+
 
     export default {
         name: "LoginForm",
+        props: {
+            type: {
+                type: String,
+                required: true,
+                validator: val => Object.keys(userType).find(key => userType[key] === val)
+            }
+        },
         data() {
             return {
                 form: {

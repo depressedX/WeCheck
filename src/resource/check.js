@@ -5,28 +5,7 @@ import qs from 'qs'
  * 获取当日签到情况
  * @return {PromiseLike<T> | Promise<T>}
  */
-export function getCheckInfoToday() {
-    // return Promise.resolve({
-    //     missed:[
-    //     ],
-    //     done:[
-    //         {
-    //             id:'123',
-    //             startTime:'2018-12-24T03:23:32Z'
-    //         }
-    //     ],
-    //     future:[],
-    //     open:[
-    //         {
-    //             id:'123',
-    //             startTime:'2018-12-24T03:23:32Z'
-    //         },
-    //         {
-    //             id:'1233',
-    //             startTime:'2018-12-24T03:23:32Z'
-    //         },]
-    // })
-    
+export function getCheckInfoToday(){
     return server.get('check/status').then(handleResponse)
 }
 

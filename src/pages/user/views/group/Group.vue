@@ -74,21 +74,19 @@
                 this.loading = true
 
                 getGroupInfo(this.id).then(res => {
-                    if (!res) {
-                        // group不存在
-                        this.$alert('该群组不存在！', '服务器消息', {
-                            confirmButtonText: '确定'
-                        }).then(() => {
-                            this.$router.go(-1)
-                        })
-                        return
-                    }
 
                     this.name = res.name
                     this.ownerId = res.owner
                     this.hasJoined = res.role === 1
                     this.state = res.state
                     this.checked = res.checked
+                },
+                e=>{
+                        this.$alert('该群组不存在！', '服务器消息', {
+                            confirmButtonText: '确定'
+                        }).then(() => {
+                            this.$router.go(-1)
+                        })
                 })
                     .then(onSucceedFunc, onSucceedFunc)
             },

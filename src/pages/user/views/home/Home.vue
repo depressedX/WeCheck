@@ -3,13 +3,11 @@
         <el-form>
             <el-form-item>
                 <el-input type="text" v-model="searchId" placeholder="输入群组口令">
-                    <el-button slot="append" icon="el-icon-search"></el-button>
+                    <el-button slot="append" icon="el-icon-search" @click="searchButtonHandler"></el-button>
                 </el-input>
             </el-form-item>
         </el-form>
         <today-schedule-table/>
-
-
     </div>
 </template>
 
@@ -18,6 +16,7 @@
 
     import {joinGroup} from"../../../../resource/group"
     import TodayScheduleTable from "./components/TodayScheduleTable";
+    import {getGroupInfo} from "../../../../resource/group";
     export default {
         name: 'home',
         components: {
@@ -29,18 +28,17 @@
         data(){
             return{
                 BASE_URL:process.env.BASE_URL,
-                searchId:undefined,
-                id:'bWPNsU',
-
+                searchId:''
             }
         },
         methods:{
-            // testF(){
-            //     joinGroup(this.id).then(()=>{
-            //         this.$message("进入成功")
-            //     });
-            //     this.list = getAllSchedules(this.id);
-            // }
+            searchButtonHandler(){
+                if (!this.searchId || this.searchId&&this.searchId.length===0){
+                    this.$alert('群组ID不可为空')
+                    return
+                } 
+                this.$router.push(`/group/${this.searchId}`)
+            }
         }
     }
 </script>

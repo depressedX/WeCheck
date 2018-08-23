@@ -1,6 +1,5 @@
 import {handleResponse, server} from "../utils/http";
 import qs from 'qs'
-import {timeout} from "../utils";
 
 export function getGroupInfo(id) {
     // return timeout({
@@ -40,19 +39,6 @@ export function getGroupInfo(id) {
 
 export function getGroupInfoList() {
     return server.get('group/list').then(handleResponse)
-    // return timeout([
-    //     {
-    //         id:'adf',
-    //         name:'操作系统',
-    //         role:1,
-    //
-    //     },
-    //     {
-    //         id:'asdf',
-    //         name:'数据结构',
-    //         role:2
-    //     }
-    // ],1000)
 }
 
 export function createGroup(name) {
