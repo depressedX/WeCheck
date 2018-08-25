@@ -8,6 +8,7 @@
             </el-form-item>
         </el-form>
         <today-schedule-table/>
+        <group-joined-list/>
     </div>
 </template>
 
@@ -15,15 +16,16 @@
     import {addSchedule,updateSchedule,getAllSchedules,deleteSchedule} from "../../../../resource/schedule";
 
     import {joinGroup} from"../../../../resource/group"
-    import TodayScheduleTable from "./components/TodayScheduleTable";
+    import TodayScheduleTable from "./components/TodayScheduleList";
     import {getGroupInfo} from "../../../../resource/group";
+    import GroupJoinedList from "./components/GroupJoinedList";
     export default {
         name: 'home',
         components: {
+            GroupJoinedList,
             TodayScheduleTable
         },
         created(){
-            console.log('ok')
         },
         data(){
             return{

@@ -33,7 +33,7 @@
     import Schedule from "./Schedule";
 
     export default {
-        name: "TodayScheduleTable",
+        name: "TodayScheduleList",
         components: {Schedule},
         created() {
             getCheckInfoToday().then(res => {
