@@ -314,10 +314,12 @@
                         return
                     }
 
+
                     this.name = res.name;
                     this.owner = res.owner;
                     this.state = res.state;
                     this.members = res.members;
+                    console.log("正在更新群组信息"+this.state)
                     // console.log(this.id+'asdf')
                      getAllSchedules(this.id).then(res =>{
                          console.log("成功获取");
@@ -413,6 +415,8 @@
 
                 this.dialogFormVisible = false
 
+                this.update();
+
             },
             submit_Changeschedule(){
 
@@ -458,7 +462,10 @@
                     this.$message({
                         type:"success",
                         message:"成功删除计划"
+
                     })
+                    this.update();
+
                 })
             },
 
