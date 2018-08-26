@@ -6,7 +6,7 @@
         <section class="content">
             <p v-if="ownerName">创建者：{{ownerName}}</p>
             <div class="group-operation" v-if="!loading">
-                <el-button :type="checked?'success':'primary'" :disabled="!state||checked">
+                <el-button :type="checked?'success':'primary'" :disabled="!state||checked" @click="check">
                     {{state?(checked?'已完成签到':'签到'):'未开启签到'}}
                 </el-button><br/>
                 <el-button type="danger" @click="quitGroup">退出群组</el-button>
@@ -14,6 +14,7 @@
             </div>
             <i class="el-icon-loading" v-else/>
         </section>
+        <check-validator group-/>
     </div>
 </template>
 
@@ -24,10 +25,11 @@
     import {getUserInfo} from "../../../../resource/user";
     import Icon from "../../../../components/Icon";
     import ButtonMore from "../../../../components/ButtonMore";
+    import CheckValidator from "./components/CheckValidator";
 
     export default {
         name: "Group",
-        components: {ButtonMore, Icon, HaveNotJoined, AppBar},
+        components: {CheckValidator, ButtonMore, Icon, HaveNotJoined, AppBar},
         props: {
             id: {
                 required: true,
@@ -65,6 +67,9 @@
             }
         },
         methods: {
+            check(){
+                
+            },
             update() {
 
                 let onSucceedFunc = () => {
