@@ -14,7 +14,7 @@
             </div>
             <i class="el-icon-loading" v-else/>
         </section>
-        <check-validator group-/>
+        <check-validator ref="checkValidator" group-id="sdfds" :need-location="true"/>
     </div>
 </template>
 
@@ -38,6 +38,12 @@
         },
         created() {
             this.update()
+
+
+            
+        },
+        mounted(){
+            this.$refs.checkValidator.check()
         },
         data() {
             return {
@@ -68,7 +74,7 @@
         },
         methods: {
             check(){
-                
+                this.$refs.checkValidator.check()
             },
             update() {
 
@@ -87,6 +93,7 @@
                     this.checked = res.checked
                 },
                 e=>{
+                    return null
                         this.$alert('该群组不存在！', '服务器消息', {
                             confirmButtonText: '确定'
                         }).then(() => {

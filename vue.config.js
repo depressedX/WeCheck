@@ -21,6 +21,7 @@ module.exports = {
             '/api/v1': {
                 target:'http://39.106.131.88'
             }
-        }
+        },
+        // https: true
     }
 }
