@@ -40,7 +40,8 @@
                     return
                 } 
                 this.$router.push(`/group/${this.searchId}`)
-            }
+            },
+
         }
     }
 </script>

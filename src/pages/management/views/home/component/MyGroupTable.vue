@@ -72,11 +72,11 @@
             update(){
                 getGroupInfoList().then(res =>{
                     this.myGroupList = res
-                    console.log(res)
+                    // console.log(res)
                 })
             },
             handleChange(val){
-                console.log(val);
+                // console.log(val);
             },
             JumpToGroup(index){
                 //传入的是数组的下标

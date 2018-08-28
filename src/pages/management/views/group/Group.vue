@@ -14,12 +14,13 @@
                 <!--<el-button @click="plan_sign" type="primary">计划签到</el-button>-->
                 <el-button @click="deleGroup_open" type="danger">删除群体</el-button>
             </el-button-group>
+            <el-button @click="editGroup" >编辑群体</el-button>
 
             <el-tabs v-model="activeName" @tab-click="handleListClick">
                 <el-tab-pane label="群体成员" name="first">
-                    <ul v-for="number in members">
+                    <ul v-for="member in members">
                         <li>
-                            {{number.name}}
+                            {{member.name}}
                         </li>
                     </ul>
                 </el-tab-pane>
@@ -27,14 +28,14 @@
                 <el-tab-pane label="计划列表" name="second">
                     <el-button @click = "plan_sign">添加计划</el-button>
                     <el-table
+                            :row-class-name="tableRowClassName"
                             :data="mySchList"
-                            stripe
-                            height="600"
+
+                            height="400"
                             style="width: 100%">
                         <el-table-column
                                 prop="startUpTime"
                                 label="起始时间"
-
                         >
                         </el-table-column>
                         <el-table-column
@@ -47,12 +48,8 @@
                                 label="重复"
                         >
                         </el-table-column>
-                        <!--<el-table-column-->
-                                <!--prop="enable"-->
-                                <!--label="开启"-->
-                        <!--&gt;-->
-                            <!--<el-switch active-value="1" ></el-switch>-->
-                        <!--</el-table-column>-->
+
+
                         <el-table-column
                                 fixed="right"
                                 label="操作"
@@ -114,7 +111,6 @@
             </el-dialog>
 
 
-
             <!--弹出框  修改签到计划-->
             <el-dialog title="修改签到计划" :visible.sync="dialogChangeFormVisible" width="80%">
 
@@ -158,9 +154,61 @@
                 </div>
             </el-dialog>
 
+
+            <!--弹出框 编辑群体-->
+            <el-dialog title="编辑群体"  :visible.sync="dialogEditGroup" width="80%">
+
+                <el-form :model="group_Editform">
+                    <el-form-item label="群体名称" :label-width="formLabelWidth">
+                        <el-input v-model="group_Editform.name"></el-input>
+                    </el-form-item>
+
+
+                    <el-form-item label="人脸识别" :label-width="formLabelWidth">
+                        <el-switch
+                                v-model="group_Editform.needFace"
+                                active-color="#13ce66"
+                                inactive-color="#ff4949"
+                                active-text="开启"
+                                inactive-text="关闭"
+                        >
+                        </el-switch>
+
+
+                    </el-form-item>
+                    <el-form-item label="地理位置" :label-width="formLabelWidth">
+                        <el-switch
+                                v-model="group_Editform.needLocation"
+                                active-color="#13ce66"
+                                inactive-color="#ff4949"
+                                active-text="开启"
+                                inactive-text="关闭"
+                        >
+                        </el-switch>
+
+                        <el-form  v-bind:class="[this.group_Editform.needLocation?'Show':'NotShow']" :inline="true" :model="JingWei" class="demo-form-inline">
+                            <el-form-item label="经度">
+                                <el-input v-model="JingWei.lat" placeholder="纬度"></el-input>
+                            </el-form-item>
+                            <el-form-item label="纬度">
+                                <el-input v-model="JingWei.lng" placeholder="经度"></el-input>
+                            </el-form-item>
+                        </el-form>
+                    </el-form-item>
+
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogEditGroup = false">取 消</el-button>
+                    <el-button type="primary" @click="submit_EditGroup">确 定</el-button>
+                </div>
+            </el-dialog>
+
+
         </el-main>
     </el-container>
 </template>
+
+
 
 <script>
 
@@ -175,8 +223,16 @@
         name: "Group",
         components: {AppBar},
 
+
         data(){
             return{
+
+                //经纬度
+                JingWei: {
+                    lng:null,
+                    lat:null,
+                },
+
                 //当前群组名称
                 name:'',
                 owner:'',
@@ -186,16 +242,16 @@
                 members:[
 
                 ],
-
                 //本群体的id
                 id:null,
 
                 dialogFormVisible:false,
                 formLabelWidth: '100px',
-
-
                 dialogChangeFormVisible:false,
-                options: [{
+                dialogEditGroup:false,
+
+                options: [
+                    {
                     value: '1',
                     label: '周一'
                 }, {
@@ -222,9 +278,8 @@
                 schedule_form:{
                     //关联弹出创建签到计划表格
                     startUpTime: '',
-                    dura_hour:null,
-                    dura_min:null,
-                    // duration:(this.schedule_form.dura_hour*60+this.schedule_form.dura_min),
+
+                    duration:null   ,
                     repeat: '',
                     enable: true,
                 },
@@ -269,20 +324,23 @@
                         enable:true,
                         repeat:'1,3,5',
                     },
-                    {
-                        scheduleId:'asd',
-                        startUpTime:'06:15',
-                        duration:203,
-                        enable:true,
-                        repeat:'1,3,5',
-                    }
+
                 ],
+
+                group_Editform:{
+                    name:'操作系统',
+                    // state:false,
+                    needLocation:false,
+                    needFace:false,
+                },
+                //经度纬度
 
 
                 //临时存放对应修改计划的数据
                 change_arr_repeat:[],
             }
         },
+
         created(){
             this.id = this.$route.params.id;
             console.log(this.id)
@@ -297,7 +355,11 @@
                 this.id  = this.$route.params.id;
                  // console.log("路由变化"+this.id)
                 this.update();
-            }
+            },
+
+
+
+
         },
         methods:{
             //对群体初始化
@@ -418,6 +480,22 @@
                 this.update();
 
             },
+
+            //编辑签到计划
+            change_Schedule(index){
+
+                // index是用户要编辑的计划数组下标
+                this.dialogChangeFormVisible = true;
+                this.schedule_change_form = this.mySchList[index];
+
+                var tempstr = this.schedule_change_form.repeat;
+                // change_schedule_temp.scheduleId = temp
+                this.change_arr_repeat = tempstr.split(',');
+
+            },
+
+
+            //提交修改后的签到计划
             submit_Changeschedule(){
 
                 var sched_Id = this.schedule_change_form.scheduleId;
@@ -458,36 +536,68 @@
             //删除签到计划
             deleteScheduleClick(index) {
                 // console.log(row);
-                deleteSchedule(this.mySchList[index].scheduleId).then(()=>{
-                    this.$message({
-                        type:"success",
-                        message:"成功删除计划"
+                this.$confirm('此操作将永久删除该计划, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    deleteSchedule(this.mySchList[index].scheduleId).then(()=>{
+                        this.$message({
+                            type:"success",
+                            message:"成功删除计划"
+
+                        })
+                        this.update();
 
                     })
-                    this.update();
-
-                })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
 
-            change_Schedule(index){
-
-                // index是用户要编辑的计划数组下标
-                this.dialogChangeFormVisible = true;
-                this.schedule_change_form = this.mySchList[index];
-
-                var tempstr = this.schedule_change_form.repeat;
-                // change_schedule_temp.scheduleId = temp
-                this.change_arr_repeat = tempstr.split(',');
-
+            editGroup(){
+                this.dialogEditGroup = true;
+            },
+            submit_EditGroup(){
+                this.dialogEditGroup = false;
             },
 
 
+            //根据state显示颜色
+            tableRowClassName({row, rowIndex}) {
+                if (this.mySchList[rowIndex].enable === false) {
+
+                    return 'warning_row';
+                } else if (this.mySchList[rowIndex].enable === true) {
+
+                    return 'success_row';
+                }
+                else return 'success_row';
+
+            }
 
         }
 
     }
 </script>
 
-<style scoped>
+<style >
 
+    .el-table .warning_row {
+        background: oldlace;
+    }
+
+    .el-table .success_row {
+        background: #dceed6;
+    }
+
+    .Show{
+        display: block;
+    }
+    .NotShow{
+        display: none;
+    }
 </style>
