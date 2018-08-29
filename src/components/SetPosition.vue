@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div id='container' style="height: 100px"></div>
+        <div id='container' style="height: 250px"></div>
         <div id="tip" style="height: 100px"></div>
     </div>
 </template>
@@ -20,11 +20,8 @@
 
              update(){
                 var that =this
-                // var map = new AMap.Map('container', {
-                //     resizeEnable: true,
-                //     zoom:11,
-                //     center: [116.397428, 39.90923]
-                // });
+
+
                 var map, geolocation;
                 //加载地图，调用浏览器定位服务
                 map = new AMap.Map('container', {
@@ -39,10 +36,14 @@
                         buttonPosition:'RB',
                         GeoLocationFirst:true
                     });
+                    setInterval(()=>{
+                        geolocation.getCurrentLocation();
+                    },1000)
                     map.addControl(geolocation);
                     geolocation.getCurrentPosition();
                     AMap.event.addListener(geolocation, 'complete',that.onComplete);//返回定位信息
                     AMap.event.addListener(geolocation, 'error',that.onError);      //返回定位出错信息
+
                 });
             },
             onComplete(data) {
@@ -57,6 +58,7 @@
             },
     //解析定位错误信息
              onError(data) {
+                 console.log(JSON.stringify(data));
                 document.getElementById('tip').innerHTML = '定位失败';
             }
         }
