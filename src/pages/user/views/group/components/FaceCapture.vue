@@ -1,11 +1,15 @@
 <template>
-    <div class="container">
+    <div class="face-capture container">
         <video width="320" height="240" ref="videoDisplayer"></video>
         <canvas width="320" height="240" ref="canvasDisplayer"></canvas>
     </div>
 </template>
 
 <style scoped lang="scss">
+
+    .face-capture {
+    }
+
     .container {
 
         video, canvas {
@@ -49,15 +53,24 @@
             tracker.setStepSize(2);
             tracker.setEdgesDensity(0.1);
 
+
             let trackerTask = this.trackerTask = tracking.track(video, tracker, {camera: true});
             trackerTask.stop()
+
+        },
+        beforeDestroy(){
+            this.trackerTask.stop()
+            let video = this.$refs.videoDisplayer
+            if (video.srcObject){
+                video.srcObject.getTracks().forEach(t=>t.stop())
+                video.srcObject = null
+            } 
         },
         methods: {
 
 
             async getNormalFrame() {
 
-                this.openVideo()
                 this.startTracking()
                 return await new Promise(resolve => {
                     // 获取一张图像
@@ -65,94 +78,27 @@
                     let handler = event => {
                         if (event.data.length !== 0) {
                             let img = captureImageFromVideo(this.$refs.videoDisplayer)
-                            this.closeVideo()
                             this.stopTracking()
-                            resolve(img)
                             this.tracker.removeListener('track', handler)
+                            resolve(img)
                         }
                     }
 
                     this.tracker.on('track', handler)
                 })
             },
-
-            async getHighQualityFrame() {
-
-                this.openVideo()
-                this.startTracking()
-
-
-                return await new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        this.closeVideo()
-                        this.stopTracking()
-                        resolve(null)
-
-                    }, 5000)
-                })
-
-
-            },
-
-            async openVideo() {
-                let video = this.$refs.videoDisplayer
-                let stream = await this.getMediaStream()
-                video.srcObject = stream
-                video.onloadedmetadata = function () {
-                    video.play();
-                }
-            },
-            closeVideo() {
-                if (!this.stream) return
-                this.stream.getVideoTracks().forEach(t => t.stop())
-                this.stream.getAudioTracks().forEach(t => t.stop())
-                this.stream = null
-                this.$refs.videoDisplayer.srcObject = null
-            },
-
+            
             startTracking() {
                 this.tracker && this.tracker.on('track', this.paintingFunc);
                 this.trackerTask.run()
+                this.$refs.videoDisplayer.play()
             },
             stopTracking() {
                 this.tracker && this.tracker.removeListener('track', this.paintingFunc);
                 this.trackerTask.stop()
+                this.$refs.videoDisplayer.pause()
             },
-
-            // return a MediaStream
-            async getMediaStream() {
-                if (this.stream) return this.stream
-
-                try {
-
-                    let stream = this.stream = await navigator.mediaDevices.getUserMedia({
-                        video: true,
-                        audio: false
-                    })
-
-                    return stream
-
-                }
-                catch (err) {
-
-                    switch (err.name) {
-
-                        case 'NotAllowedError':
-
-                            this.$message.error('请检查浏览器相机权限是否开启')
-                            break
-
-                        default:
-
-                            this.$message.error('未知错误:' + err)
-                            break
-
-                    }
-
-                    throw false
-
-                }
-            },
+            
 
             paintingFunc(event) {
                 let canvas = this.$refs.canvasDisplayer,

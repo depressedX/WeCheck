@@ -14,8 +14,7 @@
             </div>
             <i class="el-icon-loading" v-else/>
         </section>
-        <check-validator ref="checkValidator" group-id="sdfds" :need-location="true"/>
-        <face-capture ref="faceCapture"/>
+        <check-validator ref="checkValidator" group-id="sdfds" :need-location="true" :need-face="true"/>
     </div>
 </template>
 
@@ -43,10 +42,6 @@
         },
         mounted(){
             this.$refs.checkValidator.check()
-            
-            this.$refs.faceCapture.getNormalFrame().then(img=>{
-                console.log(img)
-            })
         },
         data() {
             return {

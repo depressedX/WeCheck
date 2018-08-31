@@ -16,9 +16,9 @@ export function getCheckInfoToday() {
  * @param bundle 附加信息  比如位置信息
  * @return {Promise<T>}
  */
-export function check(id, bundle = {}) {
-    return timeout({},2000)
-    return server.post('check/check', qs.stringify(Object.assign({id}, bundle))).then(handleResponse)
+export function check(id, form) {
+    return timeout({}, 2000)
+    return server.post('check/check', form).then(handleResponse)
 }
 
 // 开启、关闭签到

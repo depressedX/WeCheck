@@ -29,6 +29,14 @@ export function timeout(data, time) {
     })
 }
 
+export function wait(ms) {
+    return new Promise(resolve => {
+        setTimeout(()=>{
+            resolve()
+        },ms)
+    })
+}
+
 export function getCurrentPosition() {
     return new Promise((resolve, reject) => {
 
@@ -36,27 +44,37 @@ export function getCurrentPosition() {
             var geolocation = new AMap.Geolocation({
                 // 是否使用高精度定位，默认：true
                 enableHighAccuracy: true,
-                // 设置定位超时时间，默认：无穷大
-                timeout: 10000,
-                // 定位按钮的停靠位置的偏移量，默认：Pixel(10, 20)
-                buttonOffset: new AMap.Pixel(10, 20),
-                //  定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
-                zoomToAccuracy: true,
-                //  定位按钮的排放位置,  RB表示右下
-                buttonPosition: 'RB'
+                GeoLocationFirst: true
             })
+
             geolocation.getCurrentPosition()
+            let firstInvokingTime = new Date(),//首次调用时间
+                maxWaitingSeconds = 5//最长等待时间
+
+            // 低精度的也会保存  但会重复多次以获得更好的结果
+            let result = null
+
             AMap.event.addListener(geolocation, 'complete', onComplete)
             AMap.event.addListener(geolocation, 'error', onError)
 
             function onComplete(data) {
-                // data是具体的定位信息
-                resolve({lng: data.position.lng, lat: data.position.lat})
+
+                if (!result || data.accuracy < result.accuracy) result = data
+
+                if (Date.now() - firstInvokingTime < 7000) {
+                    geolocation.getCurrentPosition()
+                } else {
+                    resolve({lng: result.position.lng, lat: result.position.lat})
+                }
             }
 
             function onError(data) {
+                
                 // 定位出错
+                console.log(`定位失败  ${Date.now()} ${data}`)
+                
                 reject(data)
+                
             }
         })
     })
