@@ -173,8 +173,6 @@
                                 inactive-text="关闭"
                         >
                         </el-switch>
-
-
                     </el-form-item>
                     <el-form-item label="地理位置" :label-width="formLabelWidth">
                         <el-switch
@@ -185,16 +183,22 @@
                                 inactive-text="关闭"
                         >
                         </el-switch>
-
-                        <el-form  v-bind:class="[this.group_Editform.needLocation?'Show':'NotShow']" :inline="true" :model="JingWei" class="demo-form-inline">
-                            <el-form-item label="经度">
-                                <el-input v-model="JingWei.lat" placeholder="纬度"></el-input>
-                            </el-form-item>
-                            <el-form-item label="纬度">
-                                <el-input v-model="JingWei.lng" placeholder="经度"></el-input>
-                            </el-form-item>
-                        </el-form>
                     </el-form-item>
+                    <SetPosition v-bind:class="[this.group_Editform.needLocation?'Show':'NotShow']"
+                                 v-on:listenToChildLocationEvent="changeLoca"
+                    ></SetPosition>
+                    <el-form-item
+                            v-bind:class="[this.group_Editform.needLocation?'Show':'NotShow']"
+                            label="有效距离" :label-width="formLabelWidth">
+                        <el-col :span="12">
+                            <el-input
+                                    v-model="group_Editform.effectiveDistance" >
+                            </el-input>
+                        </el-col>
+                        米
+
+                    </el-form-item>
+
 
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -214,14 +218,14 @@
 
     import AppBar from "../../../../components/AppBar";
     import {getGroupInfo} from "../../../../resource/group";
-    import {deleteGroup} from "../../../../resource/group";
+    import {deleteGroup,updateGroupInfo} from "../../../../resource/group";
     import {enableCheck,disableCheck} from "../../../../resource/check";
     import {addSchedule,updateSchedule,getAllSchedules,deleteSchedule} from "../../../../resource/schedule";
-
+    import SetPosition from "../../../../components/SetPosition"
 
     export default {
         name: "Group",
-        components: {AppBar},
+        components: {AppBar,SetPosition},
 
 
         data(){
@@ -278,7 +282,6 @@
                 schedule_form:{
                     //关联弹出创建签到计划表格
                     startUpTime: '',
-
                     duration:null   ,
                     repeat: '',
                     enable: true,
@@ -286,11 +289,9 @@
                 schedule_change_form:{
                     //关联弹出修改签到计划表格
                     startUpTime: '',
-
                     duration:null,
                     repeat: '',
                     enable: true,
-
                 },
                 schedule_final:{
                     //上传的最终计划
@@ -332,6 +333,9 @@
                     // state:false,
                     needLocation:false,
                     needFace:false,
+                    lng:null,
+                    lat:null,
+                    effectiveDistance:200
                 },
                 //经度纬度
 
@@ -562,7 +566,14 @@
                 this.dialogEditGroup = true;
             },
             submit_EditGroup(){
-                this.dialogEditGroup = false;
+                updateGroupInfo(this.id,this.group_Editform).then(()=>{
+                    this.$message({
+                        message:"成功修改",
+                        type:"success"
+                    })
+                    this.dialogEditGroup = false;
+                })
+
             },
 
 
@@ -576,7 +587,13 @@
                     return 'success_row';
                 }
                 else return 'success_row';
+            },
 
+            //响应地图组件的事件 修改 经纬度
+            changeLoca(lng,lat){
+                this.group_Editform.lng = lng;
+                this.group_Editform.lat = lat;
+                console.log("来自父组件打印"+this.group_Editform.lng+','+this.group_Editform.lat)
             }
 
         }

@@ -2,7 +2,7 @@
     <div class="home">
         <el-button @click="ChuangJianGroup">创建群体</el-button>
         <el-button type="text" @click="logoutFunction">注销账户</el-button>
-        <SetPosition></SetPosition>
+
         <MyGroupTable ref="table"></MyGroupTable>
         <!--<div id="allmap"></div>-->
 
@@ -14,10 +14,10 @@
     import MyGroupTable from "./component/MyGroupTable"
     import {createGroup} from "../../../../resource/group"
     import{logout}from "../../../../resource/authorization"
-    import SetPosition from "../../../../components/SetPosition"
+
     export default {
         name: 'home',
-        components: {MyGroupTable,SetPosition},
+        components: {MyGroupTable,},
         created(){
           // this.getposition()
         },
