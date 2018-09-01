@@ -43,6 +43,18 @@
             </el-upload>
         </el-form-item>
 
+        <el-form-item v-if="pcOrPhone"  label="人脸识别" prop="photo_PC">
+            <el-button-group>
+                <el-button id="start" type="primary" round>打开相机</el-button>
+                <el-button id="stop" style="display:block" >停止</el-button>
+                <el-button id="picture" style="display:block" >拍照</el-button>
+                <el-button id="down">下载</el-button>
+            </el-button-group>
+
+            <video id="video" width="320" height="320" autoplay></video>
+            <canvas style="display:block" id="canvas" width="320" height="320"></canvas>
+        </el-form-item>
+
         <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm') ">注册</el-button>
             <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -62,6 +74,74 @@
     export default {
 
         name: 'RegisterForm',
+
+        created(){
+
+            if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+                this.pcOrPhone = false
+            } else {
+                this.pcOrPhone = true
+            }
+        },
+
+        mounted(){
+            if (this.pcOrPhone==true){
+                // true代表pc  false代表移动端
+
+
+                //以下为调出相机的一些监听器
+                var mediaStreamTrack;
+                var that = this;
+                console.log(document.getElementById("down"))
+                document.getElementById("down").addEventListener("click",function (ev) {
+                    var can = document.getElementById("canvas");
+                    var name = "abc"
+                    that.downLoadImage(can, name)
+                })
+                document.getElementById("start").addEventListener("click", function () {
+                    navigator.getUserMedia = navigator.getUserMedia ||
+                        navigator.webkitGetUserMedia ||
+                        navigator.mozGetUserMedia;
+                    if (navigator.getUserMedia) {
+                        navigator.getUserMedia({ audio:true, video: { width: 320, height: 320 } },
+                            function(stream) {
+                                mediaStreamTrack = typeof (stream.stop === 'function' ? stream : stream.getTracks()[1]);
+                                console.log(mediaStreamTrack)
+                                video.src = (window.URL || window.webkitURL).createObjectURL(stream);
+                                video.play();
+                                /*  var video = document.getElementById("video");
+                                 video.src = window.URL.createObjectURL(stream);
+                                 video.onloadedmetadata = function(e) {
+                                     console.log('nihao44eee4aaaaddda');
+                                     video.play();
+                                 }; */
+                            },
+                            function(err) {
+                                console.log("The following error occurred: " + err.name);
+                            }
+                        );
+                    } else {
+                        console.log("getUserMedia not supported");
+                    }
+                });
+                document.getElementById("stop").addEventListener("click", function () {
+                    console.log(mediaStreamTrack)
+                    mediaStreamTrack && mediaStreamTrack.stop();
+                });
+                document.getElementById("picture").addEventListener("click", function () {
+                    console.log(video)
+                    var image = new Image();
+                    var context = document.getElementById("canvas").getContext("2d");
+                    context.drawImage(video, 0, 0, 320, 320);
+                    image.src = context
+                    console.log(image)
+
+                    // console.log(context.drawImage(video, 0, 0, 320, 320))
+                    // console.log(document.getElementById("canvas").toDataURL("image/png"))
+                });
+
+            }
+        },
         data() {
 
 
@@ -137,6 +217,8 @@
             };
 
 
+
+
             return {
                 ruleForm: {
                     username: '',
@@ -145,6 +227,8 @@
                     name: '',
                     userType: null,
                     profile: false,
+                    pcOrPhone:true,
+                    photo_PC:null,
 
                 },
 
@@ -234,6 +318,14 @@
             },
             beforeRemove(file, fileList) {
                 return this.$confirm(`确定移除 ${ file.name }？`);
+            },
+
+
+            downLoadImage(canvas,name) {
+                var a = document.createElement("a");
+                a.href = canvas.toDataURL();
+                a.download = name;
+                a.click();
             }
         }
 

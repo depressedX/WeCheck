@@ -184,9 +184,16 @@
                         >
                         </el-switch>
                     </el-form-item>
-                    <SetPosition v-bind:class="[this.group_Editform.needLocation?'Show':'NotShow']"
+                    <SetPosition
+                            :lat-prop="son_prop.lat" :lng-prop="son_prop.lng"
+
+                                v-bind:class="[this.group_Editform.needLocation?'Show':'NotShow']"
                                  v-on:listenToChildLocationEvent="changeLoca"
                     ></SetPosition>
+
+
+                    <!--:lat-prop="this.son_prop.lat" :lng-prop="this.son_prop.lng"-->
+
                     <el-form-item
                             v-bind:class="[this.group_Editform.needLocation?'Show':'NotShow']"
                             label="有效距离" :label-width="formLabelWidth">
@@ -196,10 +203,7 @@
                             </el-input>
                         </el-col>
                         米
-
                     </el-form-item>
-
-
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="dialogEditGroup = false">取 消</el-button>
@@ -231,11 +235,11 @@
         data(){
             return{
 
-                //经纬度
-                JingWei: {
-                    lng:null,
-                    lat:null,
-                },
+                // //经纬度
+                // JingWei: {
+                //     lng:null,
+                //     lat:null,
+                // },
 
                 //当前群组名称
                 name:'',
@@ -342,6 +346,13 @@
 
                 //临时存放对应修改计划的数据
                 change_arr_repeat:[],
+
+
+                //给地图组件的属性的动态绑定对象
+                son_prop:{
+                    lat:null,
+                    lng:null
+                }
             }
         },
 
@@ -385,6 +396,21 @@
                     this.owner = res.owner;
                     this.state = res.state;
                     this.members = res.members;
+                    this.group_Editform.name = res.name;
+                    this.group_Editform.needLocation = res.needLocation;
+                    this.group_Editform.needFace = res.needFace;
+
+                    if (res.needLocation ){
+                        this.group_Editform.lng = res.location.lng;
+                        this.group_Editform.lat = res.location.lat;
+                        this.son_prop.lng = res.location.lng;
+                        this.son_prop.lat = res.location.lat;
+                        this.group_Editform.effectiveDistance = res.location.effectiveDistance;
+                    }else {
+                        this.son_prop.lng = null;
+                        this.son_prop.lat = null;
+                        this.group_Editform.effectiveDistance=null;
+                    }
                     console.log("正在更新群组信息"+this.state)
                     // console.log(this.id+'asdf')
                      getAllSchedules(this.id).then(res =>{
@@ -398,9 +424,7 @@
             //计划签到方法
             plan_sign(){
                 // console.log(123);
-
                 this.dialogFormVisible = true
-
             },
 
             //即刻签到方法
@@ -457,8 +481,6 @@
 
             //提交签到计划
             submit_schedule(){
-
-
                 this.schedule_final.duration = this.schedule_form.duration;
                 console.log("持续时间为"+this.schedule_final.duration);
                 this.schedule_final.enable = this.schedule_form.enable;
@@ -476,7 +498,10 @@
                 this.schedule_final.startUpTime = this.schedule_form.startUpTime;
 
                 addSchedule(this.id,this.schedule_final).then(()=>{
-                    this.$message("创建计划成功")
+                    this.$message({
+                        message:"创建计划成功",
+                        type:"success"
+                    })
                 });
 
                 this.dialogFormVisible = false
@@ -495,7 +520,6 @@
                 var tempstr = this.schedule_change_form.repeat;
                 // change_schedule_temp.scheduleId = temp
                 this.change_arr_repeat = tempstr.split(',');
-
             },
 
 
@@ -572,6 +596,7 @@
                         type:"success"
                     })
                     this.dialogEditGroup = false;
+                    this.update();
                 })
 
             },

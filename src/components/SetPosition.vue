@@ -9,6 +9,8 @@
 <script>
     export default {
         name: "SetPosition",
+        props:["lngProp","latProp"],
+
         data(){
             return  {
                 jing:null,
@@ -17,8 +19,25 @@
                 marker:null,
                 map:null,
                 counter:0,
-                change_jw_counter:0
+                change_jw_counter:0,
+
+                lngCenter:null,
+                latCenter:null,
+                zoom:null
             }
+        },
+        created(){
+          if (this.latProp==null||this.lngProp==null){
+
+              this.lngCenter = 117.138302;
+              this.latCenter = 36.666758;
+              this.zoom=15
+          }else {
+
+              this.lngCenter = this.lngProp;
+              this.latCenter = this.latProp;
+              this.zoom=15
+          }
         },
         mounted(){
           this.update()
@@ -39,8 +58,9 @@
                 //加载地图，调用浏览器定位服务
                 that.marker,that.map = new AMap.Map('container', {
                     resizeEnable: true,
-                    center: [117.138302, 36.666758],
-                    zoom:13
+
+                    center: [that.lngCenter,that.latCenter],
+                    zoom:that.zoom
                 });
 
                 //点击事件
@@ -55,7 +75,7 @@
                      that.addMarker()
                      //触发事件 向父组件传送经纬度
                      that.sendLocationParent()
-                     console.log(that.jing+','+that.wei)
+                     // console.log(that.jing+','+that.wei)
                  });
                  //
 
@@ -69,14 +89,32 @@
                         GeoLocationFirst:true
                     });
 
+
                         that.map.addControl(geolocation);
                     // that.intervalindex = setInterval(()=>{
                     //     geolocation.getCurrentPosition()
                     //     that.counter = that.counter+1;
                     //     console.log("在县城里")
                     // },1000)
-                    geolocation.getCurrentPosition()
+                    if (that.lngProp==null&&that.latProp==null){
+                        // console.log("abc")
+                        geolocation.getCurrentPosition()
+                    }else if (that.lngProp==undefined&&that.latProp==undefined){
+                        // console.log(that.lngProp)
+                        console.log("没收到prop")
+                    }else {
+                        //传过来了经纬度
+                        // console.log(that.lngProp)
+                        // console.log(that.latProp)
+                        that.jing = that.lngProp
+                        that.wei = that.latProp
+                        that.clearmarker()
+                        that.addMarker()
+                        // console.log("画图")
+                        that.sendLocationParent()
+                    }
 
+                    console.log("已经开始加载地图了")
                     AMap.event.addListener(geolocation, 'complete',that.onComplete);//返回定位信息
                     AMap.event.addListener(geolocation, 'error',that.onError);      //返回定位出错信息
 
@@ -163,4 +201,6 @@
         /*border: 1px solid #ccc;*/
         /*line-height: 30px;*/
     }
+
+
 </style>
