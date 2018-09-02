@@ -1,67 +1,59 @@
 <template>
+    <el-container id="RfContainer" style="">
+        <el-form status-icon :model="ruleForm" :rules="rules" ref="ruleForm" style="width: 80%;margin: 0 auto"  >
+
+            <el-form-item label="用户名" prop="username">
+                <el-input type="text" v-model="ruleForm.username"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+                <el-input type="password" v-model="ruleForm.password"></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码" prop="checkpassword">
+                <el-input type="password" v-model="ruleForm.checkpassword"></el-input>
+            </el-form-item>
+
+            <el-form-item label="用户类型" prop="userType">
+                <br>
+                <el-select v-model="ruleForm.userType" placeholder="请选择用户类型">
+                    <el-option label="签到端用户" :value="0"></el-option>
+                    <el-option label="管理端用户" :value="1"></el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item label="姓名" prop="name">
+                <el-input v-model="ruleForm.name"></el-input>
+            </el-form-item>
 
 
-    <el-form status-icon :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
-
-        <el-form-item label="用户名" prop="username">
-            <el-input v-model="ruleForm.username"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" prop="password">
-            <el-input type="password" v-model="ruleForm.password"></el-input>
-        </el-form-item>
-        <el-form-item label="确认密码" prop="checkpassword">
-            <el-input type="password" v-model="ruleForm.checkpassword"></el-input>
-        </el-form-item>
-
-        <el-form-item label="用户类型" prop="userType">
-            <el-select v-model="ruleForm.userType" placeholder="请选择用户类型">
-                <el-option label="签到端用户" :value="0"></el-option>
-                <el-option label="管理端用户" :value="1"></el-option>
-            </el-select>
-        </el-form-item>
-
-        <el-form-item label="姓名" prop="name">
-            <el-input v-model="ruleForm.name"></el-input>
-        </el-form-item>
+            <el-form-item label="本人照片" prop="profile">
+                <el-upload
+                        class="upload-demo"
+                        drag
+                        action=""
+                        :on-change="getFile"
+                        :on-preview="handlePreview"
+                        :on-remove="handleRemove"
+                        :before-remove="beforeRemove"
+                        :on-exceed="handleExceed"
+                        :auto-upload="false"
+                >
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                    <!--<div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>-->
+                </el-upload>
+            </el-form-item>
 
 
-        <el-form-item label="本人正脸照片" prop="profile">
-            <el-upload
-                    class="upload-demo"
-                    drag
-                    action=""
-                    :on-change="getFile"
-                    :on-preview="handlePreview"
-                    :on-remove="handleRemove"
-                    :before-remove="beforeRemove"
-                    :on-exceed="handleExceed"
-                    :auto-upload="false"
-            >
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                <!--<div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>-->
-            </el-upload>
-        </el-form-item>
 
-        <el-form-item v-if="pcOrPhone"  label="人脸识别" prop="photo_PC">
-            <el-button-group>
-                <el-button id="start" type="primary" round>打开相机</el-button>
-                <el-button id="stop" style="display:block" >停止</el-button>
-                <el-button id="picture" style="display:block" >拍照</el-button>
-                <el-button id="down">下载</el-button>
-            </el-button-group>
+            <el-form-item>
+                <el-button type="primary" style="width: 100%" @click="submitForm('ruleForm') ">注册</el-button>
+                <!--<el-button @click="resetForm('ruleForm')">重置</el-button>-->
+            </el-form-item>
 
 
-            <video v-bind:class="videodiv?'show':'displayNone'" id="video" muted width="320" height="320" autoplay></video>
-        </el-form-item>
+        </el-form>
 
-        <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm') ">注册</el-button>
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
-        </el-form-item>
-
-
-    </el-form>
+    </el-container>
 
 
 </template>
@@ -86,76 +78,6 @@
 
         mounted(){
 
-
-            //如果pc端 则调用下面
-            if (this.pcOrPhone==true){
-                var mediaStreamTrack;
-                var that = this;
-                document.getElementById("down").addEventListener("click",function (ev) {
-                    var can = document.getElementById("canvas");
-                    var name = "abc"
-                    that.downLoadImage(can, name)
-                })
-
-
-                document.getElementById("start").addEventListener("click", function () {
-                    that.videodiv = true
-                    navigator.getUserMedia = navigator.getUserMedia ||
-                        navigator.webkitGetUserMedia ||
-                        navigator.mozGetUserMedia;
-                    if (navigator.getUserMedia) {
-                        navigator.getUserMedia({ audio: true, video: { width: 320, height: 320 } },
-                            function(stream) {
-                                mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
-                                console.log(mediaStreamTrack)
-                                video.src = (window.URL || window.webkitURL).createObjectURL(stream);
-                                video.play();
-                                /*  var video = document.getElementById("video");
-                                 video.src = window.URL.createObjectURL(stream);
-                                 video.onloadedmetadata = function(e) {
-                                     console.log('nihao44eee4aaaaddda');
-                                     video.play();
-                                 }; */
-                            },
-                            function(err) {
-                                console.log("The following error occurred: " + err.name);
-                            }
-                        );
-                    } else {
-                        console.log("getUserMedia not supported");
-                    }
-                });
-                document.getElementById("stop").addEventListener("click", function () {
-                    // console.log(mediaStreamTrack)
-                    mediaStreamTrack && mediaStreamTrack.stop();
-                    that.videodiv = false
-                });
-                document.getElementById("picture").addEventListener("click", function () {
-
-                    that.ruleForm.photo_PC = captureImageFromVideo(video);
-                    that.$message({
-                        message:"拍照成功"
-                    })
-
-                    // var image = new Image();
-                    // var context = document.getElementById("canvas").getContext("2d");
-                    // context.drawImage(video, 0, 0, 320, 320);
-                    //
-                    // var canvas=document.getElementById('canvas')
-                    // var imageData =  canvas.toDataURL('image/png');
-                    // document.getElementById('myimage').src = imageData;
-                    // alert(imageData);
-                    //
-                    // var data=imageData.substr(22);
-                    // alert(data);
-                    //
-                    // image.src = context
-                    // // console.log("这里是测试")
-                    // console.log(image)
-                    // console.log(context.drawImage(video, 0, 0, 320, 320))
-                    // console.log(document.getElementById("canvas").toDataURL("image/png"))
-                });
-            }
         },
 
 
@@ -247,7 +169,7 @@
 
 
             return {
-                videodiv:false,
+
                 ruleForm: {
                     username: '',
                     password: '',
@@ -301,9 +223,7 @@
         },
         methods: {
 
-            getCanvasPhoto(ev){
 
-            },
 
             getFile(file, filelist) {
                 console.log(file)
@@ -357,20 +277,14 @@
             },
 
 
-            downLoadImage(canvas,name) {
-                var a = document.createElement("a");
-                a.href = canvas.toDataURL();
-                // console.log(a.href)
-                console.log(a.href)
-                a.download = name;
-                a.click();
-            }
+
         }
 
     }
 
 
 </script>
+
 
 <style scoped lang="scss">
 
@@ -380,5 +294,16 @@
 
     .show{
         display: block;
+    }
+
+
+
+</style>
+<style lang="scss">
+    #RfContainer .el-upload-dragger  {
+        width: 100%;
+    }
+    #RfContainer .el-upload{
+        width: 100%;
     }
 </style>
