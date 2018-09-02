@@ -51,8 +51,8 @@
                 <el-button id="down">下载</el-button>
             </el-button-group>
 
-            <video id="video" width="320" height="320" autoplay></video>
-            <canvas style="display:block" id="canvas" width="320" height="320"></canvas>
+
+            <video v-bind:class="videodiv?'show':'displayNone'" id="video" muted width="320" height="320" autoplay></video>
         </el-form-item>
 
         <el-form-item>
@@ -69,7 +69,7 @@
 <script>
 
     import {register} from "../resource/authorization";
-
+    import {captureImageFromVideo}from "../utils/index"
 
     export default {
 
@@ -85,27 +85,28 @@
         },
 
         mounted(){
+
+
+            //如果pc端 则调用下面
             if (this.pcOrPhone==true){
-                // true代表pc  false代表移动端
-
-
-                //以下为调出相机的一些监听器
                 var mediaStreamTrack;
                 var that = this;
-                console.log(document.getElementById("down"))
                 document.getElementById("down").addEventListener("click",function (ev) {
                     var can = document.getElementById("canvas");
                     var name = "abc"
                     that.downLoadImage(can, name)
                 })
+
+
                 document.getElementById("start").addEventListener("click", function () {
+                    that.videodiv = true
                     navigator.getUserMedia = navigator.getUserMedia ||
                         navigator.webkitGetUserMedia ||
                         navigator.mozGetUserMedia;
                     if (navigator.getUserMedia) {
-                        navigator.getUserMedia({ audio:true, video: { width: 320, height: 320 } },
+                        navigator.getUserMedia({ audio: true, video: { width: 320, height: 320 } },
                             function(stream) {
-                                mediaStreamTrack = typeof (stream.stop === 'function' ? stream : stream.getTracks()[1]);
+                                mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
                                 console.log(mediaStreamTrack)
                                 video.src = (window.URL || window.webkitURL).createObjectURL(stream);
                                 video.play();
@@ -125,23 +126,40 @@
                     }
                 });
                 document.getElementById("stop").addEventListener("click", function () {
-                    console.log(mediaStreamTrack)
+                    // console.log(mediaStreamTrack)
                     mediaStreamTrack && mediaStreamTrack.stop();
+                    that.videodiv = false
                 });
                 document.getElementById("picture").addEventListener("click", function () {
-                    console.log(video)
-                    var image = new Image();
-                    var context = document.getElementById("canvas").getContext("2d");
-                    context.drawImage(video, 0, 0, 320, 320);
-                    image.src = context
-                    console.log(image)
 
+                    that.ruleForm.photo_PC = captureImageFromVideo(video);
+                    that.$message({
+                        message:"拍照成功"
+                    })
+
+                    // var image = new Image();
+                    // var context = document.getElementById("canvas").getContext("2d");
+                    // context.drawImage(video, 0, 0, 320, 320);
+                    //
+                    // var canvas=document.getElementById('canvas')
+                    // var imageData =  canvas.toDataURL('image/png');
+                    // document.getElementById('myimage').src = imageData;
+                    // alert(imageData);
+                    //
+                    // var data=imageData.substr(22);
+                    // alert(data);
+                    //
+                    // image.src = context
+                    // // console.log("这里是测试")
+                    // console.log(image)
                     // console.log(context.drawImage(video, 0, 0, 320, 320))
                     // console.log(document.getElementById("canvas").toDataURL("image/png"))
                 });
-
             }
         },
+
+
+
         data() {
 
 
@@ -216,10 +234,20 @@
                 }, 100);
             };
 
+            var checkface = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请拍照'));
+                }
+                setTimeout(() => {
+
+                    callback();
+                }, 100);
+            };
 
 
 
             return {
+                videodiv:false,
                 ruleForm: {
                     username: '',
                     password: '',
@@ -252,10 +280,15 @@
                     profile: [
                         {required: true, validator: checkfile, trigger: 'blur'},
                     ],
+                    photo_PC:[
+                        {required: true, validator: checkface, trigger: 'blur'},
+                    ]
 
                 }
             };
         },
+
+
         computed: {
             ruleFormData() {
                 let formData = new FormData()
@@ -268,9 +301,13 @@
         },
         methods: {
 
-            getFile(file, filelist) {
-                this.ruleForm.profile = file.raw;
+            getCanvasPhoto(ev){
 
+            },
+
+            getFile(file, filelist) {
+                console.log(file)
+                this.ruleForm.profile = file.raw;
             },
 
 
@@ -291,7 +328,6 @@
                                 e => {
                                     this.$message.error(`出错：${e.message}`);
                                 })
-
 
                     } else {
                         console.log('error submit!!');
@@ -324,11 +360,12 @@
             downLoadImage(canvas,name) {
                 var a = document.createElement("a");
                 a.href = canvas.toDataURL();
+                // console.log(a.href)
+                console.log(a.href)
                 a.download = name;
                 a.click();
             }
         }
-
 
     }
 
@@ -337,4 +374,11 @@
 
 <style scoped lang="scss">
 
+    .displayNone{
+        display: none;
+    }
+
+    .show{
+        display: block;
+    }
 </style>
