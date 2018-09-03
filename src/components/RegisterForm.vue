@@ -1,6 +1,8 @@
 <template>
     <el-container id="RfContainer" style="">
+
         <el-form status-icon :model="ruleForm" :rules="rules" ref="ruleForm" style="width: 80%;margin: 0 auto"  >
+            <h2 >新用户注册:</h2>
 
             <el-form-item label="用户名" prop="username">
                 <el-input type="text" v-model="ruleForm.username"></el-input>

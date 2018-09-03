@@ -15,7 +15,7 @@
 </template>
 
 <script>
-    import {login} from "../resource/authorization";
+    import {login,logout} from "../resource/authorization";
     import {userType} from "../metaInfo";
 
     // 管理端、用户端通用登陆组件
@@ -47,6 +47,7 @@
             submit() {
                 this.submitting = true
 
+                // logout();
                 login(this.form.username, this.form.password)
                     .then(() => {
                             this.$message({
