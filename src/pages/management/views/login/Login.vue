@@ -1,5 +1,5 @@
 <template>
-    <div id="test" style=" ; background-image:url(./login_back.png)">
+    <div id="test" :style="note" class="note">
         <h2 style="margin-top: 10%">hello,欢迎回来！</h2>
         <el-card style="width: 380px; margin: auto;margin-top: 20%">
             <login-form type="management"/>
@@ -16,6 +16,12 @@
         components: {LoginForm},
         data() {
             return {
+                note:{
+                    backgroundImage: "url(" + require("../../../../image/login_back.png") + ")",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "25px auto",
+                    marginTop: "5px",
+                },
                 BASE_URL: process.env.BASE_URL
             }
         }
@@ -25,9 +31,9 @@
 <style scoped lang="scss">
 
 
-    /*#test{*/
-        /*background-image: url("login_back.png");*/
-
-    /*}*/
+    #test{
+        /*background-image: url("../../../../image/login_back.png");*/
+        background-position: left;
+    }
 
 </style>
