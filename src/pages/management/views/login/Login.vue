@@ -1,10 +1,24 @@
 <template>
-    <div id="test" :style="note" class="note">
-        <h2 style="margin-top: 10%">hello,欢迎回来！</h2>
-        <el-card style="width: 380px; margin: auto;margin-top: 20%">
-            <login-form type="management"/>
-            <p style="text-align: right"><a :href="`${BASE_URL}user.html`">切换至用户端页面</a></p>
-        </el-card>
+    <div :style="note" id="test" style="height: 100%" >
+        <div style="height: 100% ;background-color: rgba(0,0,0,0.47);color: white">
+
+            <div style="width: 80% ;margin: 0 auto; padding-top: 25%">
+
+                <h2 style="margin: 0;margin-bottom: 20%;" >hello,欢迎回来！</h2>
+                <el-card style=" margin:0 auto;color: white ">
+
+                    <login-form type="management"/>
+                    <p style=" float: left">
+                        <a :href="`${BASE_URL}management.html/#/register`"
+                        >新用户注册</a>
+                    </p>
+                    <p style="float: right"><a :href="`${BASE_URL}user.html`">切换至用户端页面</a></p>
+                </el-card>
+            </div>
+
+
+        </div>
+
     </div>
 </template>
 
@@ -19,9 +33,9 @@
                 note:{
                     backgroundImage: "url(" + require("../../../../image/login_back.png") + ")",
                     backgroundRepeat: "no-repeat",
-                    backgroundSize: "25px auto",
-                    marginTop: "5px",
-                },
+                    height:'100%',
+                    backgroundSize:'100% 100%'
+        },
                 BASE_URL: process.env.BASE_URL
             }
         }
@@ -32,8 +46,28 @@
 
 
     #test{
-        /*background-image: url("../../../../image/login_back.png");*/
-        background-position: left;
+        height: 100%;
     }
 
+
+</style>
+<style>
+    html{
+        height: 100%;
+    }
+    body{
+        height:100% ;
+    }
+    #test .el-card{
+        background-color: #fff0;
+        border: none;
+    }
+    #test .el-form-item__label{
+        color: aliceblue;
+        font-size: medium;
+    }
+    #test .el-card__body{
+        padding: 0;
+        /*max-width: 300px;*/
+    }
 </style>

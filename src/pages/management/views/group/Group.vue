@@ -1,5 +1,5 @@
 <template>
-    <el-container>
+    <el-container id="GroupContainer">
         <el-header>
             <AppBar>
                 <template>{{this.name}}
@@ -69,7 +69,6 @@
 
             <!--//以下为弹出框 新建签到计划-->
             <el-dialog title="设置签到计划" :visible.sync="dialogFormVisible" width="80%">
-
                 <el-form :model="schedule_form">
                     <el-form-item label="开启时间" :label-width="formLabelWidth">
                         <el-time-picker type="fixed-time" format="HH:mm" value-format="HH:mm" placeholder="选择时间" v-model="schedule_form.startUpTime" style="width: 100%;"></el-time-picker>
@@ -433,15 +432,25 @@
                 if (this.state===true){
                     //本群体正在签到状态 应该停止签到
                     disableCheck(this.id).then(()=>{
-                        this.$message("已关闭签到");
+                        this.$message({
+
+                            message:"已关闭签到",
+                            center: true,
+                            type:"warning"
+                        });
                         this.update();
+                        center: true
                     });
                 }else {
                     //本群体没有签到  应该开启签到模式
                     enableCheck(this.id).then(()=>{
-                        this.$message("开启签到成功");
+                        this.$message({
+                            message:"开启签到成功",
+                            type:"success",
+                            center:true
+                        });
                         this.update();
-
+                        center: true
                     });
                 }
 
@@ -460,7 +469,9 @@
                         {
                             this.$message({
                                 message:"删除成功，正在跳转到主页面",
-                                type:"success"
+                                type:"success",
+                                center: true
+
                             });
                             setTimeout(()=>{
                                 this.$router.go(-1);
@@ -473,7 +484,9 @@
                 }).catch(() => {
                     this.$message({
                         type: 'info',
-                        message: '已取消删除'
+                        message: '已取消删除',
+                        center: true
+
                     });
                 });
             },
@@ -500,7 +513,9 @@
                 addSchedule(this.id,this.schedule_final).then(()=>{
                     this.$message({
                         message:"创建计划成功",
-                        type:"success"
+                        type:"success",
+                        center: true
+
                     })
                 });
 
@@ -545,7 +560,9 @@
                 updateSchedule(sched_Id,this.changeSchedule_final).then(()=>{
                     this.$message({
                         message:"修改成功",
-                        type   :"success"
+                        type   :"success",
+                        center: true
+
                     })
                     this.update();
                     this.dialogChangeFormVisible =false;
@@ -572,7 +589,9 @@
                     deleteSchedule(this.mySchList[index].scheduleId).then(()=>{
                         this.$message({
                             type:"success",
-                            message:"成功删除计划"
+                            message:"成功删除计划",
+                            center: true
+
 
                         })
                         this.update();
@@ -581,7 +600,9 @@
                 }).catch(() => {
                     this.$message({
                         type: 'info',
-                        message: '已取消删除'
+                        message: '已取消删除',
+                        center: true
+
                     });
                 });
             },
@@ -593,7 +614,9 @@
                 updateGroupInfo(this.id,this.group_Editform).then(()=>{
                     this.$message({
                         message:"成功修改",
-                        type:"success"
+                        type:"success",
+                        center: true
+
                     })
                     this.dialogEditGroup = false;
                     this.update();
@@ -626,7 +649,12 @@
     }
 </script>
 
+<style scoped>
+
+</style>
 <style >
+
+
 
     .el-table .warning_row {
         background: oldlace;
@@ -641,5 +669,12 @@
     }
     .NotShow{
         display: none;
+    }
+
+    body .el-message-box{
+        width: unset;
+    }
+    body .el-message{
+        min-width: 350px;
     }
 </style>
