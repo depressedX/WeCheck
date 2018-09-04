@@ -80,7 +80,7 @@
                             let img = captureImageFromVideo(this.$refs.videoDisplayer)
                             this.stopTracking()
                             this.tracker.removeListener('track', handler)
-                            resolve(img)
+                            // resolve(img)
                         }
                     }
 
