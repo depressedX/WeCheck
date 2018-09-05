@@ -39,7 +39,7 @@
         data() {
             return {
                 note: {
-                    backgroundImage: "url(" + require("../../../../image/userLogin.png") + ")",
+                    backgroundImage: "url(" + require("../../../../image/login_back.png") + ")",
                     backgroundRepeat: "no-repeat",
                     height: '100%',
                     backgroundSize: '100% 100%'
@@ -64,6 +64,7 @@
 
     body {
         height: 100%;
+        margin: 0;
     }
 
     #test .el-card {
