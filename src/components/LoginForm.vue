@@ -15,7 +15,7 @@
 </template>
 
 <script>
-    import {login,logout} from "../resource/authorization";
+    import {login} from "../resource/authorization";
     import {userType} from "../metaInfo";
 
     // 管理端、用户端通用登陆组件
@@ -33,8 +33,8 @@
         data() {
             return {
                 form: {
-                    username: this.type=='user'?'username':'quyans',
-                    password: this.type=='user'?123:123,
+                    username: this.type == 'user' ? 'username' : 'quyans',
+                    password: this.type == 'user' ? 123 : 123,
                 },
                 rules: {
                     username: [{required: true, message: '请输入用户名'}],
@@ -47,16 +47,15 @@
             submit() {
                 this.submitting = true
 
-                // logout();
                 login(this.form.username, this.form.password)
                     .then(() => {
                             this.$message({
                                 message: '登陆成功  正在跳转',
                                 type: 'success'
                             });
-                            // 2s后跳转到首页
+                            // 2s后跳转到相应页面
                             setTimeout(() => {
-                                this.$router.push('/')
+                                window.location.href = `/${this.type}.html`
                             }, 2000)
                         },
                         e => {

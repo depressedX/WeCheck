@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import {toFirstLowerCase, toFirstUpperCase} from "../../utils/index";
-import {hasLoggedIn} from "../../resource/authorization";
 
 const views = require.context('./views')
 
@@ -31,19 +30,18 @@ export let router = new Router({
             component: _('home')
         },
         {
-            path:'/group/:id',
-            name:'group',
-            props:true,
-            component:_('group')
+            path: '/login',
+            name: 'login',
+            component: _('login'),
+            props: route => ({ type: route.query.type })
+        },
+        {
+            path: '/register',
+            name: 'register',
+            component: _('register')
         },
     ]
 })
 router.beforeEach(((to, from, next) => {
-    
-    if (!hasLoggedIn()){
-        // 跳转到首页
-        window.location.href = '/index.html'
-    }else {
-        next()
-    }
+    next()
 }))

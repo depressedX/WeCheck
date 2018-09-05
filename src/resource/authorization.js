@@ -1,6 +1,5 @@
 import {handleResponse, server} from "../utils/http";
 import qs from 'qs'
-import {timeout} from "../utils";
 
 const hasLoggedInKey = 'hasLoggedIn'
 
@@ -19,4 +18,8 @@ export function logout() {
 
 export function register(form) {
     return server.post('register', form).then(handleResponse)
+}
+
+export function hasLoggedIn() {
+    return sessionStorage.getItem(hasLoggedInKey) === 'true'
 }

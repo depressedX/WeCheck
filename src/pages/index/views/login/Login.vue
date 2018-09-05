@@ -1,23 +1,19 @@
 <template>
-
-
-
-    <div :style="note" id="test" style="height: 100%" >
+    
+    <div :style="note" id="test" style="height: 100%">
         <div style="height: 100% ;background-color: rgba(0,0,0,0.47);color: white">
 
             <div style="width: 80% ;margin: 0 auto; padding-top: 25%">
 
-                <h2 style="margin: 0;margin-bottom: 20%;" >亲爱的用户，<br><h1 style="margin: 0">welcome!</h1></h2>
+                <h2 style="margin: 0;margin-bottom: 20%;">亲爱的用户，<br>
+                    <h1 style="margin: 0">welcome!</h1></h2>
 
                 <el-card style=" margin:0 auto;color: white ">
 
-                    <login-form type="user"/>
+                    <login-form :type="type"/>
                     <p style=" float: left">
-                        <a :href="`${BASE_URL}user.html/#/register`"
-                        >新用户注册</a>
+                        <router-link to="/register">新用户注册</router-link>
                     </p>
-                    <p style="float: right"><a :href="`${BASE_URL}management.html/#/login`">切换至管理端页面</a></p>
-
                 </el-card>
             </div>
 
@@ -29,51 +25,63 @@
 
 <script>
     import LoginForm from "../../../../components/LoginForm";
+    import {userType} from "../../../../metaInfo";
 
     export default {
         name: "Login",
         components: {LoginForm},
+        props: {
+            type: {
+                type: String,
+                validator: val => Object.keys(userType).map(k => userType[k]).indexOf(val) !== -1
+            }
+        },
         data() {
             return {
-                note:{
+                note: {
                     backgroundImage: "url(" + require("../../../../image/userLogin.png") + ")",
                     backgroundRepeat: "no-repeat",
-                    height:'100%',
-                    backgroundSize:'100% 100%'
+                    height: '100%',
+                    backgroundSize: '100% 100%'
                 },
                 BASE_URL: process.env.BASE_URL
             }
-        }
+        },
+        computed: {}
     }
 </script>
 <style scoped lang="scss">
-    #test{
+    #test {
         height: 100%;
     }
 
 </style>
-<style  lang="scss">
+<style lang="scss">
 
-    html{
+    html {
         height: 100%;
     }
-    body{
-        height:100% ;
+
+    body {
+        height: 100%;
     }
-    #test .el-card{
+
+    #test .el-card {
         background-color: #fff0;
         border: none;
     }
-    #test .el-form-item__label{
+
+    #test .el-form-item__label {
         color: aliceblue;
         font-size: medium;
     }
-    #test .el-card__body{
+
+    #test .el-card__body {
         padding: 0;
         /*max-width: 300px;*/
     }
 
-    #app{
+    #app {
         height: 100%;
     }
 </style>
