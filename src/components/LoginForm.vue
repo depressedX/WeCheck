@@ -33,8 +33,8 @@
         data() {
             return {
                 form: {
-                    username: '',
-                    password: ''
+                    username: this.type=='user'?'username':'quyans',
+                    password: this.type=='user'?123:123,
                 },
                 rules: {
                     username: [{required: true, message: '请输入用户名'}],

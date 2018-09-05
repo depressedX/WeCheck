@@ -1,10 +1,29 @@
 <template>
-    <div>
-        <el-card style="width: 380px;margin: auto">
-            <login-form type="user"/>
-            <p style="text-align: right"><a :href="`${BASE_URL}management.html`">切换至管理端页面</a></p>
-            <!--<router-link to="../register/Register">点我不会怀孕</router-link>-->
-        </el-card>
+
+
+
+    <div :style="note" id="test" style="height: 100%" >
+        <div style="height: 100% ;background-color: rgba(0,0,0,0.47);color: white">
+
+            <div style="width: 80% ;margin: 0 auto; padding-top: 25%">
+
+                <h2 style="margin: 0;margin-bottom: 20%;" >亲爱的用户，<br><h1 style="margin: 0">welcome!</h1></h2>
+
+                <el-card style=" margin:0 auto;color: white ">
+
+                    <login-form type="user"/>
+                    <p style=" float: left">
+                        <a :href="`${BASE_URL}user.html/#/register`"
+                        >新用户注册</a>
+                    </p>
+                    <p style="float: right"><a :href="`${BASE_URL}management.html/#/login`">切换至管理端页面</a></p>
+
+                </el-card>
+            </div>
+
+
+        </div>
+
     </div>
 </template>
 
@@ -16,12 +35,45 @@
         components: {LoginForm},
         data() {
             return {
+                note:{
+                    backgroundImage: "url(" + require("../../../../image/userLogin.png") + ")",
+                    backgroundRepeat: "no-repeat",
+                    height:'100%',
+                    backgroundSize:'100% 100%'
+                },
                 BASE_URL: process.env.BASE_URL
             }
         }
     }
 </script>
-
 <style scoped lang="scss">
+    #test{
+        height: 100%;
+    }
 
+</style>
+<style  lang="scss">
+
+    html{
+        height: 100%;
+    }
+    body{
+        height:100% ;
+    }
+    #test .el-card{
+        background-color: #fff0;
+        border: none;
+    }
+    #test .el-form-item__label{
+        color: aliceblue;
+        font-size: medium;
+    }
+    #test .el-card__body{
+        padding: 0;
+        /*max-width: 300px;*/
+    }
+
+    #app{
+        height: 100%;
+    }
 </style>

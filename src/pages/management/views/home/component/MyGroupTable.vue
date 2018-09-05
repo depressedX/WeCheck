@@ -1,6 +1,6 @@
 <template>
-    <el-collapse v-model="activeNames" @change="handleChange">
-        <el-collapse-item title="我创建的群体" name="1">
+    <!--<el-collapse v-model="activeNames" @change="handleChange">-->
+        <!--<el-collapse-item title="我创建的群体" name="1">-->
 
             <el-table
                     :data="myGroupList"
@@ -25,7 +25,6 @@
                 >
                     <template slot-scope="scope">
                         <el-button @click.native.prevent="JumpToGroup(scope.$index) "
-
                                    type="text"
                             >
                             进入群体
@@ -35,9 +34,9 @@
 
 
             </el-table>
-        </el-collapse-item>
+        <!--</el-collapse-item>-->
 
-    </el-collapse>
+    <!--</el-collapse>-->
 
 
 
