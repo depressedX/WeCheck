@@ -5,7 +5,52 @@ export function getGroupInfo(id) {
     return server.get('group', {params: {id}}).then(handleResponse)
 }
 
+// export function getGroupInfo(groupname,username) {
+//     // return server.get('group', {params: {groupname,username}}).then(handleResponse)
+//     return server.get('group/'+groupname+'/'+username).then(handleResponse)
+// }
+
 export function getGroupInfoList() {
+    // return{
+    //     "id":"sdfwenk",//口令
+    //     "owner":"liupenghao",//创建者username
+    //     "name":"2016操作系统7班",//群体名称
+    //     "role":1,
+    //
+    //     //以下为附加信息
+    //
+    //     //if 管理者||成员 附加state
+    //     "state":true,
+    //
+    //     //if 管理者 附加members
+    //     "members":[
+    //     {
+    //         "username":"quyansong",
+    //         "name":"曲延松",
+    //         "state":true
+    //     },
+    //         {
+    //             "username":"wenyanan",
+    //             "name":"温雅楠",
+    //             "state":true
+    //         }
+    //
+    // ],
+    //
+    //
+    //
+    // //if 管理者||成员 附加needLocation
+    //     "needLocation":false,
+    //
+    //     //if 管理者&&needLocation 附加location
+    //     "location":{
+    //         "lng":116.331398,
+    //         "lat":39.897445,
+    //         "effectiveDistance":50
+    // },
+    //
+    // //if 管理者||成员 附加needFace
+    // "needFace":true,}
     return server.get('group/list').then(handleResponse)
 }
 

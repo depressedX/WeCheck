@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import {toFirstLowerCase, toFirstUpperCase} from "../../utils/index";
+import {hasLoggedIn} from "../../resource/authorization";
 const views = require.context('./views')
 
 /*
@@ -28,16 +29,16 @@ export let router = new Router({
             name: 'home',
             component: _('home')
         },
-        {
-            path: '/login',
-            name: 'login',
-            component: _('login')
-        },
-        {
-            path: '/register',
-            name: 'register',
-            component: _('register')
-        },
+        // {
+        //     path: '/login',
+        //     name: 'login',
+        //     component: _('login')
+        // },
+        // {
+        //     path: '/register',
+        //     name: 'register',
+        //     component: _('register')
+        // },
         {
             path:'/group/:id',
             name:'group',
@@ -47,5 +48,11 @@ export let router = new Router({
     ]
 })
 router.beforeEach(((to, from, next) => {
-    next()
+
+        if (!hasLoggedIn()){
+            // 跳转到首页
+            window.location.href = '/index.html'
+        }else {
+            next()
+        }
 }))

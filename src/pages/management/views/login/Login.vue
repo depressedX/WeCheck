@@ -10,7 +10,7 @@
 
                     <login-form type="management"/>
                     <p style=" float: left">
-                        <a :href="`${BASE_URL}management.html/#/register`"
+                        <a :href="`${BASE_URL}index.html/#/login`"
                         >新用户注册</a>
                     </p>
                     <p style="float: right"><a :href="`${BASE_URL}user.html/#/login`">切换至用户端页面</a></p>
