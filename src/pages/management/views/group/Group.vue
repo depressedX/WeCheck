@@ -54,17 +54,13 @@
                         </el-table-column>
                     </el-table>
 
-                    <el-dialog id="perRecord" title="详细签到情况" :visible.sync="perRecordDiv">
+                    <el-dialog class="recordDiv" title="详细签到情况" :visible.sync="perRecordDiv">
                         <el-table :data="perRecordData" :height="400" :row-class-name="perRecordState">
                             <el-table-column property="day" label="日期" ></el-table-column>
                             <el-table-column property="time" label="开始时间" ></el-table-column>
                             <el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>
                         </el-table>
                     </el-dialog>
-
-
-
-
                 </el-tab-pane>
 
                 <el-tab-pane label="计划列表" name="second">
@@ -102,6 +98,50 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                </el-tab-pane>
+
+                <el-tab-pane label="历史计划" name="third">
+                    <el-table
+                            :data="historyScheduleList"
+                            style="width: 100%"
+                            border
+                    >
+
+
+
+                            <el-table-column
+                                    prop="day"
+                                    label="日期"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                    prop="time"
+                                    label="时间"
+                            >
+                            </el-table-column>
+                        <el-table-column
+                                fixed="right"
+                                label="操作"
+                                width="60">
+                            <template slot-scope="scope">
+                                <el-button @click="recordMess(scope.$index)" type="text" size="small">查看</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
+                    <el-dialog class="recordDiv" title="详细签到情况" :visible.sync="RecordDiv">
+                        <el-table :data="RecordData.done"  >
+                            <el-table-column property="username" label="用户名" ></el-table-column>
+                            <el-table-column property="name" label="姓名" ></el-table-column>
+                            <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
+                        </el-table>
+
+                        <el-table :data="RecordData.missed"  >
+                            <el-table-column property="username" label="用户名" ></el-table-column>
+                            <el-table-column property="name" label="姓名" ></el-table-column>
+                            <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
+                        </el-table>
+                    </el-dialog>
                 </el-tab-pane>
             </el-tabs>
 
@@ -399,7 +439,18 @@
                     lng:null
                 },
                 perRecordDiv:false,
-                perRecordData:[]
+                perRecordData:[],
+
+                historyScheduleList:[],
+
+                RecordDiv:false,
+                RecordData:{
+                    id:null,
+                    startUpDateTime:null,
+                    duration:null,
+                    done:[],
+                    missed:[],
+                },
             }
         },
 
@@ -443,6 +494,23 @@
                     this.name = res.name;
                     this.owner = res.owner;
                     this.state = res.state;
+
+
+                    //在这里获取 历史计划列表
+                    getGroupHistory(this.id).then(res =>{
+                         var temp = res
+
+                        for (var i=0;i<temp.length;i++){
+                            temp[i].day = temp[i].startUpDateTime.slice(0,10);
+                            temp[i].time = temp[i].startUpDateTime.slice(11,16);
+                            if (temp[i].checked==true){
+                                temp[i].checked = '签到'
+                            } else {
+                                temp[i].checked = '未签'
+                            }
+                        }
+                        this.historyScheduleList = temp
+                    })
 
 
                     //在这里对每个成员进行统计
@@ -751,6 +819,19 @@
                     }
                     this.perRecordData = temp
                 })
+            },
+
+
+            recordMess(index){
+                this.RecordDiv = true
+                console.log(index)
+
+                var schId = this.historyScheduleList[index].id;
+                console.log(schId)
+                getRecord(schId).then(res =>{
+                    this.RecordData.done = res.done;
+                    this.RecordData.missed = res.missed;
+                })
             }
 
         }
@@ -785,13 +866,15 @@
     }
     body .el-message{
         min-width: 350px;
+
+
     }
 
-    #perRecord .el-dialog{
+    .recordDiv .el-dialog{
         width: 100%;
 
     }
-    #perRecord .el-dialog__body{
+    .recordDiv .el-dialog__body{
         max-height: 50vh;
         padding: 0;
     }

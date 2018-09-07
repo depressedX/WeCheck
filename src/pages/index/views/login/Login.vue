@@ -12,7 +12,9 @@
 
                     <login-form :type="type"/>
                     <p style=" float: left">
-                        <router-link to="/register">新用户注册</router-link>
+                        <router-link to="/register" style="color: white;
+                                            margin: 0;text-decoration: none;">
+                            新用户注册</router-link>
                     </p>
                 </el-card>
             </div>

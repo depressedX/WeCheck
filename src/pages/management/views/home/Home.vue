@@ -1,11 +1,34 @@
 <template>
     <div class="home">
-        <el-button @click="ChuangJianGroup">创建群体</el-button>
-        <el-button type="text" @click="logoutFunction">注销账户</el-button>
+
+
+        <div id="headOut" style="width: 100%;height: 60px;background: #ddd;position: relative;">
+            <div style="height: 36px;width: 36px;background-color: aqua;
+                    display: inline-block;
+                    position: absolute;top: 50%;transform: translate(0, -50%);
+                    border-radius: 25px;
+
+                    "
+                id="headphoto"
+            >
+            </div>
+            <div id="headIn" style="right: 0; height: 60%; background: #93BC49;position: absolute;top: 50%;transform: translate(0, -50%);">
+
+                <el-button type="text" @click="logoutFunction">注销账户</el-button>
+            </div>
+        </div>
+
 
         <MyGroupTable ref="table"></MyGroupTable>
         <!--<div id="allmap"></div>-->
-
+        <div class="footer">
+            <el-button @click="ChuangJianGroup">
+                <span class="letter_footer">创</span>
+                <span class="letter_footer">建</span>
+                <span class="letter_footer">群</span>
+                <span class="letter_footer">体</span>
+            </el-button>
+        </div>
     </div>
 
 </template>
@@ -14,17 +37,20 @@
     import MyGroupTable from "./component/MyGroupTable"
     import {createGroup} from "../../../../resource/group"
     import{logout}from "../../../../resource/authorization"
-
+    import {getUserInfo} from "../../../../resource/user"
     export default {
         name: 'home',
         components: {MyGroupTable,},
         created(){
           // this.getposition()
+            getUserInfo().then(res=>{
+                document.getElementById("headphoto").style.backgroundImage = res.profile;
+            })
         },
         data() {
             return {
                 BASE_URL: process.env.BASE_URL,
-
+                headPhoto:null,
 
             }
         },
@@ -44,6 +70,7 @@
                 })
             },
             update(){
+
                 this.$refs.table.update()
             },
 
@@ -116,3 +143,28 @@
         }
     }
 </script>
+
+<style lang="scss">
+    .footer{
+        position: fixed;
+        bottom: 0;
+        /*background-color: beige;*/
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        z-index: 100;
+        height: 50px;
+    }
+    .footer .el-button {
+        width: 100%;
+        height: 100%;
+        background-color: #409EFF;
+    }
+
+    .footer .letter_footer{
+        padding: 0 10px;
+        font-size: 20px;
+        font-weight: inherit;
+        color: white;
+    }
+</style>
