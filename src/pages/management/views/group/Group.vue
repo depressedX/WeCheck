@@ -1,111 +1,108 @@
 <template>
-    <el-container id="GroupContainer">
-        <el-header>
-            <AppBar>
-                <template>{{this.name}}
-                    <!--<div>saf{{$route.params.id}}</div>-->
-                </template>
+    <div style="width: 100%;">
+        <el-container id="GroupContainer">
+            <el-header>
+                <AppBar>
+                    <template>{{this.name}}
+                        <!--<div>saf{{$route.params.id}}</div>-->
+                    </template>
 
-            </AppBar>
-        </el-header>
-        <el-main>
-            <el-button-group>
-                <el-button @click= 'imme_sign' :type="!state?'primary':'danger'" >{{!state?'开始签到':'结束签到'}}</el-button>
-                <!--<el-button @click="plan_sign" type="primary">计划签到</el-button>-->
-                <el-button @click="deleGroup_open" type="danger">删除群体</el-button>
-            </el-button-group>
-            <el-button @click="editGroup" >编辑群体</el-button>
+                </AppBar>
+            </el-header>
+            <el-main>
 
-            <el-tabs v-model="activeName" type="card" @tab-click="handleListClick">
-                <el-tab-pane label="群体成员" name="first" >
-                    <el-table
-                            :data="members"
-                            style="width: 100%"
-                            border
-                    >
-                        <el-table-column
-                                prop="name"
-                                label="姓名"
+
+
+                <el-tabs v-model="activeName" type="card" @tab-click="handleListClick">
+                    <el-tab-pane label="群体成员" name="first" >
+                        <el-table
+                                :data="members"
+                                style="width: 100%"
+                                border
+                        >
+                            <el-table-column
+                                    prop="name"
+                                    label="姓名"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                    label="签到情况"
+                            >
+                                <el-table-column
+                                        prop="allRecord"
+                                        label="本群次数"
                                 >
-                        </el-table-column>
-                        <el-table-column
-                                label="签到情况"
-                        >
-                            <el-table-column
-                                prop="allRecord"
-                                label="本群次数"
-                            >
+                                </el-table-column>
+                                <el-table-column
+                                        prop="misRecord"
+                                        label="未签次数"
+                                >
+                                </el-table-column>
                             </el-table-column>
+
+
                             <el-table-column
-                                    prop="misRecord"
-                                    label="未签次数"
-                            >
+                                    fixed="right"
+                                    label="操作"
+                                    width="60">
+                                <template slot-scope="scope">
+                                    <el-button @click="stu_message(scope.$index)" type="text" size="small">查看</el-button>
+                                </template>
                             </el-table-column>
-                        </el-table-column>
-
-
-                        <el-table-column
-                                fixed="right"
-                                label="操作"
-                                width="60">
-                            <template slot-scope="scope">
-                                <el-button @click="stu_message(scope.$index)" type="text" size="small">查看</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-
-                    <el-dialog class="recordDiv" title="详细签到情况" :visible.sync="perRecordDiv">
-                        <el-table :data="perRecordData" :height="400" :row-class-name="perRecordState">
-                            <el-table-column property="day" label="日期" ></el-table-column>
-                            <el-table-column property="time" label="开始时间" ></el-table-column>
-                            <el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>
                         </el-table>
-                    </el-dialog>
-                </el-tab-pane>
 
-                <el-tab-pane label="计划列表" name="second">
-                    <el-button @click = "plan_sign">添加计划</el-button>
-                    <el-table
-                            :row-class-name="tableRowClassName"
-                            :data="mySchList"
+                        <el-dialog class="recordDiv" title="详细签到情况" :visible.sync="perRecordDiv">
+                            <el-table :data="perRecordData" :height="400" :row-class-name="perRecordState">
+                                <el-table-column property="day" label="日期" ></el-table-column>
+                                <el-table-column property="time" label="开始时间" ></el-table-column>
+                                <el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>
+                            </el-table>
+                        </el-dialog>
+                    </el-tab-pane>
 
-                            height="400"
-                            style="width: 100%">
-                        <el-table-column
-                                prop="startUpTime"
-                                label="起始时间"
+                    <el-tab-pane label="计划列表" name="second">
+                        <el-button @click = "plan_sign">添加计划</el-button>
+                        <el-table
+                                :row-class-name="tableRowClassName"
+                                :data="mySchList"
+
+                                height="400"
+                                style="width: 100%">
+                            <el-table-column
+                                    prop="startUpTime"
+                                    label="起始时间"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                    prop="duration"
+                                    label="持续时间"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                    prop="repeat"
+                                    label="重复"
+                            >
+                            </el-table-column>
+
+
+                            <el-table-column
+                                    fixed="right"
+                                    label="操作"
+                                    width="100">
+                                <template slot-scope="scope">
+                                    <el-button @click="deleteScheduleClick(scope.$index)" type="text" size="small">删除</el-button>
+                                    <el-button type="text" size="small" @click.native.prevent = "change_Schedule(scope.$index)">编辑</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-tab-pane>
+
+                    <el-tab-pane label="历史计划" name="third">
+                        <el-table
+                                :data="historyScheduleList"
+                                style="width: 100%"
+                                border
                         >
-                        </el-table-column>
-                        <el-table-column
-                                prop="duration"
-                                label="持续时间"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                                prop="repeat"
-                                label="重复"
-                        >
-                        </el-table-column>
-
-
-                        <el-table-column
-                                fixed="right"
-                                label="操作"
-                                width="100">
-                            <template slot-scope="scope">
-                                <el-button @click="deleteScheduleClick(scope.$index)" type="text" size="small">删除</el-button>
-                                <el-button type="text" size="small" @click.native.prevent = "change_Schedule(scope.$index)">编辑</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-tab-pane>
-
-                <el-tab-pane label="历史计划" name="third">
-                    <el-table
-                            :data="historyScheduleList"
-                            style="width: 100%"
-                            border
-                    >
 
 
 
@@ -119,185 +116,195 @@
                                     label="时间"
                             >
                             </el-table-column>
-                        <el-table-column
-                                fixed="right"
-                                label="操作"
-                                width="60">
-                            <template slot-scope="scope">
-                                <el-button @click="recordMess(scope.$index)" type="text" size="small">查看</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-
-                    <el-dialog class="recordDiv" title="详细签到情况" :visible.sync="RecordDiv">
-                        <el-table :data="RecordData.done"  >
-                            <el-table-column property="username" label="用户名" ></el-table-column>
-                            <el-table-column property="name" label="姓名" ></el-table-column>
-                            <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
+                            <el-table-column
+                                    fixed="right"
+                                    label="操作"
+                                    width="60">
+                                <template slot-scope="scope">
+                                    <el-button @click="recordMess(scope.$index)" type="text" size="small">查看</el-button>
+                                </template>
+                            </el-table-column>
                         </el-table>
 
-                        <el-table :data="RecordData.missed"  >
-                            <el-table-column property="username" label="用户名" ></el-table-column>
-                            <el-table-column property="name" label="姓名" ></el-table-column>
-                            <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
-                        </el-table>
-                    </el-dialog>
-                </el-tab-pane>
-            </el-tabs>
+                        <el-dialog class="recordDiv" title="详细签到情况" :visible.sync="RecordDiv">
+                            <el-table :data="RecordData.done"  >
+                                <el-table-column property="username" label="用户名" ></el-table-column>
+                                <el-table-column property="name" label="姓名" ></el-table-column>
+                                <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
+                            </el-table>
+
+                            <el-table :data="RecordData.missed"  >
+                                <el-table-column property="username" label="用户名" ></el-table-column>
+                                <el-table-column property="name" label="姓名" ></el-table-column>
+                                <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
+                            </el-table>
+                        </el-dialog>
+                    </el-tab-pane>
+                </el-tabs>
 
 
 
 
 
-            <!--//以下为弹出框 新建签到计划-->
-            <el-dialog title="设置签到计划" :visible.sync="dialogFormVisible" width="80%">
-                <el-form :model="schedule_form">
-                    <el-form-item label="开启时间" :label-width="formLabelWidth">
-                        <el-time-picker type="fixed-time" format="HH:mm" value-format="HH:mm" placeholder="选择时间" v-model="schedule_form.startUpTime" style="width: 100%;"></el-time-picker>
-                    </el-form-item>
-                    <el-form-item label="持续时间" :label-width="formLabelWidth">
-                        <el-col :span="8" >
-                            <el-input v-model="schedule_form.duration" ></el-input>
-                        </el-col>
+                <!--//以下为弹出框 新建签到计划-->
+                <el-dialog title="设置签到计划" :visible.sync="dialogFormVisible" width="80%">
+                    <el-form :model="schedule_form">
+                        <el-form-item label="开启时间" :label-width="formLabelWidth">
+                            <el-time-picker type="fixed-time" format="HH:mm" value-format="HH:mm" placeholder="选择时间" v-model="schedule_form.startUpTime" style="width: 100%;"></el-time-picker>
+                        </el-form-item>
+                        <el-form-item label="持续时间" :label-width="formLabelWidth">
+                            <el-col :span="8" >
+                                <el-input v-model="schedule_form.duration" ></el-input>
+                            </el-col>
 
-                        <el-col :span="2" >
-                            分
-                        </el-col>
-                    </el-form-item>
+                            <el-col :span="2" >
+                                分
+                            </el-col>
+                        </el-form-item>
 
-                    <el-form-item label="重复" :label-width="formLabelWidth">
-                        <el-select v-model="rep" multiple placeholder="请选择"   >
-                            <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
+                        <el-form-item label="重复" :label-width="formLabelWidth">
+                            <el-select v-model="rep" multiple placeholder="请选择"   >
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                >
+                                </el-option>
+                                {{rep}}
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="是否启用" :label-width="formLabelWidth">
+                            <el-switch
+                                    v-model="schedule_form.enable"
+                                    active-color="#13ce66"
+                                    inactive-color="#ff4949">
+                            </el-switch>
+                        </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="submit_schedule">确 定</el-button>
+                    </div>
+                </el-dialog>
+
+
+                <!--弹出框  修改签到计划-->
+                <el-dialog title="修改签到计划" :visible.sync="dialogChangeFormVisible" width="80%">
+
+                    <el-form :model="schedule_change_form">
+                        <el-form-item label="开启时间" :label-width="formLabelWidth">
+                            <el-time-picker type="fixed-time" format="HH:mm" value-format="HH:mm" placeholder="选择时间" v-model="schedule_change_form.startUpTime" style="width: 100%;"></el-time-picker>
+                        </el-form-item>
+                        <el-form-item label="持续时间" :label-width="formLabelWidth">
+                            <el-col :span="8" >
+                                <el-input v-model="schedule_change_form.duration" ></el-input>
+                            </el-col>
+
+                            <el-col :span="2" >
+                                分
+                            </el-col>
+                        </el-form-item>
+
+                        <el-form-item label="重复" :label-width="formLabelWidth">
+                            <el-select v-model="change_arr_repeat" multiple placeholder="请选择"   >
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                >
+                                </el-option>
+                                {{change_arr_repeat}}
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="是否启用" :label-width="formLabelWidth">
+                            <el-switch
+                                    v-model="schedule_change_form.enable"
+                                    active-color="#13ce66"
+                                    inactive-color="#ff4949">
+                            </el-switch>
+                        </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogChangeFormVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="submit_Changeschedule">确 定</el-button>
+                    </div>
+                </el-dialog>
+
+
+                <!--弹出框 编辑群体-->
+                <el-dialog title="编辑群体"  :visible.sync="dialogEditGroup" width="80%">
+
+                    <el-form :model="group_Editform">
+                        <el-form-item label="群体名称" :label-width="formLabelWidth">
+                            <el-input v-model="group_Editform.name"></el-input>
+                        </el-form-item>
+
+
+                        <el-form-item label="人脸识别" :label-width="formLabelWidth">
+                            <el-switch
+                                    v-model="group_Editform.needFace"
+                                    active-color="#13ce66"
+                                    inactive-color="#ff4949"
+                                    active-text="开启"
+                                    inactive-text="关闭"
                             >
-                            </el-option>
-                            {{rep}}
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="是否启用" :label-width="formLabelWidth">
-                        <el-switch
-                                v-model="schedule_form.enable"
-                                active-color="#13ce66"
-                                inactive-color="#ff4949">
-                        </el-switch>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="submit_schedule">确 定</el-button>
-                </div>
-            </el-dialog>
-
-
-            <!--弹出框  修改签到计划-->
-            <el-dialog title="修改签到计划" :visible.sync="dialogChangeFormVisible" width="80%">
-
-                <el-form :model="schedule_change_form">
-                    <el-form-item label="开启时间" :label-width="formLabelWidth">
-                        <el-time-picker type="fixed-time" format="HH:mm" value-format="HH:mm" placeholder="选择时间" v-model="schedule_change_form.startUpTime" style="width: 100%;"></el-time-picker>
-                    </el-form-item>
-                    <el-form-item label="持续时间" :label-width="formLabelWidth">
-                        <el-col :span="8" >
-                            <el-input v-model="schedule_change_form.duration" ></el-input>
-                        </el-col>
-
-                        <el-col :span="2" >
-                            分
-                        </el-col>
-                    </el-form-item>
-
-                    <el-form-item label="重复" :label-width="formLabelWidth">
-                        <el-select v-model="change_arr_repeat" multiple placeholder="请选择"   >
-                            <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
+                            </el-switch>
+                        </el-form-item>
+                        <el-form-item label="地理位置" :label-width="formLabelWidth">
+                            <el-switch
+                                    v-model="group_Editform.needLocation"
+                                    active-color="#13ce66"
+                                    inactive-color="#ff4949"
+                                    active-text="开启"
+                                    inactive-text="关闭"
                             >
-                            </el-option>
-                            {{change_arr_repeat}}
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="是否启用" :label-width="formLabelWidth">
-                        <el-switch
-                                v-model="schedule_change_form.enable"
-                                active-color="#13ce66"
-                                inactive-color="#ff4949">
-                        </el-switch>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogChangeFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="submit_Changeschedule">确 定</el-button>
-                </div>
-            </el-dialog>
-
-
-            <!--弹出框 编辑群体-->
-            <el-dialog title="编辑群体"  :visible.sync="dialogEditGroup" width="80%">
-
-                <el-form :model="group_Editform">
-                    <el-form-item label="群体名称" :label-width="formLabelWidth">
-                        <el-input v-model="group_Editform.name"></el-input>
-                    </el-form-item>
-
-
-                    <el-form-item label="人脸识别" :label-width="formLabelWidth">
-                        <el-switch
-                                v-model="group_Editform.needFace"
-                                active-color="#13ce66"
-                                inactive-color="#ff4949"
-                                active-text="开启"
-                                inactive-text="关闭"
-                        >
-                        </el-switch>
-                    </el-form-item>
-                    <el-form-item label="地理位置" :label-width="formLabelWidth">
-                        <el-switch
-                                v-model="group_Editform.needLocation"
-                                active-color="#13ce66"
-                                inactive-color="#ff4949"
-                                active-text="开启"
-                                inactive-text="关闭"
-                        >
-                        </el-switch>
-                    </el-form-item>
-                    <SetPosition
-                            :lat-prop="son_prop.lat" :lng-prop="son_prop.lng"
+                            </el-switch>
+                        </el-form-item>
+                        <SetPosition
+                                :lat-prop="son_prop.lat" :lng-prop="son_prop.lng"
 
                                 v-bind:class="[this.group_Editform.needLocation?'Show':'NotShow']"
-                                 v-on:listenToChildLocationEvent="changeLoca"
-                    ></SetPosition>
+                                v-on:listenToChildLocationEvent="changeLoca"
+                        ></SetPosition>
 
 
-                    <!--:lat-prop="this.son_prop.lat" :lng-prop="this.son_prop.lng"-->
+                        <!--:lat-prop="this.son_prop.lat" :lng-prop="this.son_prop.lng"-->
 
-                    <el-form-item
-                            v-bind:class="[this.group_Editform.needLocation?'Show':'NotShow']"
-                            label="有效距离" :label-width="formLabelWidth">
-                        <el-col :span="12">
-                            <el-input
-                                    v-model="group_Editform.effectiveDistance" >
-                            </el-input>
-                        </el-col>
-                        米
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogEditGroup = false">取 消</el-button>
-                    <el-button type="primary" @click="submit_EditGroup">确 定</el-button>
-                </div>
-            </el-dialog>
-
-
+                        <el-form-item
+                                v-bind:class="[this.group_Editform.needLocation?'Show':'NotShow']"
+                                label="有效距离" :label-width="formLabelWidth">
+                            <el-col :span="12">
+                                <el-input
+                                        v-model="group_Editform.effectiveDistance" >
+                                </el-input>
+                            </el-col>
+                            米
+                        </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogEditGroup = false">取 消</el-button>
+                        <el-button type="primary" @click="submit_EditGroup">确 定</el-button>
+                    </div>
+                </el-dialog>
 
 
 
-        </el-main>
-    </el-container>
+
+
+
+            </el-main>
+        </el-container>
+        <div class="footer">
+            <el-button-group>
+                <el-button @click= 'imme_sign' :type="!state?'primary':'danger'" >{{!state?'开始签到':'结束签到'}}</el-button>
+                <!--<el-button @click="plan_sign" type="primary">计划签到</el-button>-->
+                <el-button @click="deleGroup_open" type="danger">删除群体</el-button>
+                <el-button @click="editGroup" >编辑群体</el-button>
+            </el-button-group>
+        </div>
+    </div>
 </template>
 
 
@@ -842,7 +849,7 @@
 <style scoped>
 
 </style>
-<style >
+<style scoped>
 
 
 
@@ -878,4 +885,15 @@
         max-height: 50vh;
         padding: 0;
     }
+
+    .footer .el-button-group{
+        display: block;
+        width: 300px;
+        margin: 0 auto;
+    }
+    .footer .el-button{
+        width: 100px;
+    }
+
+
 </style>

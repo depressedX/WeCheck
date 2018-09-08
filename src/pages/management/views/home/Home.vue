@@ -2,19 +2,19 @@
     <div class="home">
 
 
-        <div id="headOut" style="width: 100%;height: 60px;background: #ddd;position: relative;">
-            <div style="height: 36px;width: 36px;background-color: aqua;
+        <div id="headOut" :style="note">
+            <div style="height: 45px;width: 45px;background-color: aqua;
                     display: inline-block;
                     position: absolute;top: 50%;transform: translate(0, -50%);
                     border-radius: 25px;
-
+                    margin-left: 5%;
                     "
                 id="headphoto"
             >
             </div>
-            <div id="headIn" style="right: 0; height: 60%; background: #93BC49;position: absolute;top: 50%;transform: translate(0, -50%);">
-
-                <el-button type="text" @click="logoutFunction">注销账户</el-button>
+            <div id="headIn" style="right: 0; height: 60%; position: absolute;top: 50%;transform: translate(0, -50%);
+                                            margin-right: 5%;">
+                <el-button type="text" @click="logoutFunction" style="color: white">注销账户</el-button>
             </div>
         </div>
 
@@ -51,6 +51,15 @@
             return {
                 BASE_URL: process.env.BASE_URL,
                 headPhoto:null,
+
+                note: {
+                    backgroundImage: "url(" + require("../../../../image/head3.png") + ")",
+                    backgroundRepeat: "no-repeat",
+                    height: '60px',
+                    width: "100%",
+                    backgroundSize: '100% 100%',
+                    position: "relative",
+                },
 
             }
         },
@@ -144,17 +153,8 @@
     }
 </script>
 
-<style lang="scss">
-    .footer{
-        position: fixed;
-        bottom: 0;
-        /*background-color: beige;*/
-        width: 100%;
-        padding: 0;
-        margin: 0;
-        z-index: 100;
-        height: 50px;
-    }
+<style scoped lang="scss">
+
     .footer .el-button {
         width: 100%;
         height: 100%;
@@ -166,5 +166,17 @@
         font-size: 20px;
         font-weight: inherit;
         color: white;
+    }
+</style>
+<style lang="scss">
+    .footer{
+        position: fixed;
+        bottom: 0;
+        /*background-color: beige;*/
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        z-index: 100;
+        height: 50px;
     }
 </style>
