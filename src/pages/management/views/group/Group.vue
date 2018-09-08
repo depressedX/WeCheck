@@ -51,8 +51,8 @@
                             </el-table-column>
                         </el-table>
 
-                        <el-dialog class="recordDiv" title="详细签到情况" :visible.sync="perRecordDiv">
-                            <el-table :data="perRecordData" :height="400" :row-class-name="perRecordState">
+                        <el-dialog id="detailRecord" class="recordDiv" style="margin-top: 0" title="详细签到情况" :visible.sync="perRecordDiv">
+                            <el-table :data="perRecordData" :height="350" :row-class-name="perRecordState">
                                 <el-table-column property="day" label="日期" ></el-table-column>
                                 <el-table-column property="time" label="开始时间" ></el-table-column>
                                 <el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>
@@ -61,13 +61,13 @@
                     </el-tab-pane>
 
                     <el-tab-pane label="计划列表" name="second">
-                        <el-button @click = "plan_sign">添加计划</el-button>
+
                         <el-table
                                 :row-class-name="tableRowClassName"
                                 :data="mySchList"
 
-                                height="400"
-                                style="width: 100%">
+
+                                style="width: 100%  ;   margin-bottom: 40px;">
                             <el-table-column
                                     prop="startUpTime"
                                     label="起始时间"
@@ -100,7 +100,7 @@
                     <el-tab-pane label="历史计划" name="third">
                         <el-table
                                 :data="historyScheduleList"
-                                style="width: 100%"
+                                style="width: 100% ;    margin-bottom: 40px;"
                                 border
                         >
 
@@ -147,7 +147,7 @@
 
 
                 <!--//以下为弹出框 新建签到计划-->
-                <el-dialog title="设置签到计划" :visible.sync="dialogFormVisible" width="80%">
+                <el-dialog title="设置签到计划" :visible.sync="dialogFormVisible" >
                     <el-form :model="schedule_form">
                         <el-form-item label="开启时间" :label-width="formLabelWidth">
                             <el-time-picker type="fixed-time" format="HH:mm" value-format="HH:mm" placeholder="选择时间" v-model="schedule_form.startUpTime" style="width: 100%;"></el-time-picker>
@@ -190,7 +190,7 @@
 
 
                 <!--弹出框  修改签到计划-->
-                <el-dialog title="修改签到计划" :visible.sync="dialogChangeFormVisible" width="80%">
+                <el-dialog title="修改签到计划" :visible.sync="dialogChangeFormVisible" >
 
                     <el-form :model="schedule_change_form">
                         <el-form-item label="开启时间" :label-width="formLabelWidth">
@@ -234,7 +234,7 @@
 
 
                 <!--弹出框 编辑群体-->
-                <el-dialog title="编辑群体"  :visible.sync="dialogEditGroup" width="80%">
+                <el-dialog title="编辑群体"  :visible.sync="dialogEditGroup" >
 
                     <el-form :model="group_Editform">
                         <el-form-item label="群体名称" :label-width="formLabelWidth">
@@ -284,6 +284,9 @@
                         </el-form-item>
                     </el-form>
                     <div slot="footer" class="dialog-footer">
+                        <el-button @click="deleGroup_open" type="danger" style="width: 100%;margin: 20px 0" >
+                            删除群体
+                        </el-button>
                         <el-button @click="dialogEditGroup = false">取 消</el-button>
                         <el-button type="primary" @click="submit_EditGroup">确 定</el-button>
                     </div>
@@ -297,10 +300,12 @@
             </el-main>
         </el-container>
         <div class="footer">
-            <el-button-group>
-                <el-button @click= 'imme_sign' :type="!state?'primary':'danger'" >{{!state?'开始签到':'结束签到'}}</el-button>
+            <el-button-group >
+                <el-button @click= 'imme_sign' :type="!state?'primary':'danger'" >
+                    {{!state?'开始签到':'结束签到'}}
+                </el-button>
                 <!--<el-button @click="plan_sign" type="primary">计划签到</el-button>-->
-                <el-button @click="deleGroup_open" type="danger">删除群体</el-button>
+                <el-button @click = "plan_sign">添加计划</el-button>
                 <el-button @click="editGroup" >编辑群体</el-button>
             </el-button-group>
         </div>
@@ -378,7 +383,7 @@
                 schedule_form:{
                     //关联弹出创建签到计划表格
                     startUpTime: '',
-                    duration:null   ,
+                    duration:'' ,
                     repeat: '',
                     enable: true,
                 },
@@ -741,11 +746,8 @@
                             type:"success",
                             message:"成功删除计划",
                             center: true
-
-
                         })
                         this.update();
-
                     })
                 }).catch(() => {
                     this.$message({
@@ -778,7 +780,6 @@
             //根据state显示颜色
             tableRowClassName({row, rowIndex}) {
                 if (this.mySchList[rowIndex].enable === false) {
-
                     return 'warning_row';
                 } else if (this.mySchList[rowIndex].enable === true) {
 
@@ -848,35 +849,6 @@
 
 <style scoped>
 
-</style>
-<style scoped>
-
-
-
-    .el-table .warning_row {
-        background: oldlace;
-    }
-
-    .el-table .success_row {
-        background: #dceed6;
-    }
-
-    .Show{
-        display: block;
-    }
-    .NotShow{
-        display: none;
-    }
-
-    body .el-message-box{
-        width: unset;
-    }
-    body .el-message{
-        min-width: 350px;
-
-
-    }
-
     .recordDiv .el-dialog{
         width: 100%;
 
@@ -894,6 +866,31 @@
     .footer .el-button{
         width: 100px;
     }
+
+</style>
+<style  >
+
+
+
+    .el-table .warning_row {
+        background: oldlace;
+    }
+
+    .el-table .success_row {
+        background: rgba(162, 252, 152, 0.31);
+    }
+
+    .Show{
+        display: block;
+    }
+    .NotShow{
+        display: none;
+    }
+    #detailRecord .el-dialog__body{
+        padding: 0;
+    }
+
+
 
 
 </style>
