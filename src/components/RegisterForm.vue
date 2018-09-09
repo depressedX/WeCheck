@@ -36,15 +36,14 @@
                         :on-remove="handleRemove"
                         :before-remove="beforeRemove"
                         :on-exceed="handleExceed"
+                        :limit=1
                         :auto-upload="false"
                 >
-                    <i class="el-icon-upload"></i>
+                    <i class="el-icon-upload"></i   >
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                     <!--<div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>-->
                 </el-upload>
             </el-form-item>
-
-
 
             <el-form-item>
                 <el-button type="primary" style="width: 100%" @click="submitForm('ruleForm') ">注册</el-button>
@@ -215,10 +214,12 @@
         computed: {
             ruleFormData() {
                 let formData = new FormData()
+                console.log(this.ruleForm);
                 Object.keys(this.ruleForm).forEach(key => {
                     if (key === 'checkpassword') return
                     formData.append(key, this.ruleForm[key])
                 })
+                console.log(formData)
                 return formData
             }
         },
@@ -230,7 +231,6 @@
                 console.log(file)
                 this.ruleForm.profile = file.raw;
             },
-
 
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {

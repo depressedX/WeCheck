@@ -21,17 +21,51 @@
 
 
         <!--点击头像弹出框 修改个人信息-->
-        <el-dialog title="个人信息" :visible.sync="dialogFormVisible">
-            <el-form :model="UserInfo" >
-                <el-form-item label="用户名" :label-width="formLabelWidth">
-                    <el-input v-model="UserInfo.username" :disabled="true"></el-input>
-                </el-form-item>
-                <el-form-item label="姓名" :label-width="formLabelWidth">
-                    <el-input v-model="UserInfo.name" ></el-input>
-                </el-form-item>
-                <el-form-item label="人脸识别头像" :label-width="formLabelWidth">
+        <!--<el-dialog title="个人信息" :visible.sync="dialogFormVisible">-->
+            <!--<el-form :model="UserInfo" ref="UserInfo" >-->
+                <!--<el-form-item label="用户名" :label-width="formLabelWidth">-->
+                    <!--<el-input v-model="UserInfo.username" :disabled="true"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="姓名" :label-width="formLabelWidth">-->
+                    <!--<el-input v-model="UserInfo.name" ></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="人脸识别头像" :label-width="formLabelWidth">-->
 
-                </el-form-item>
+                <!--</el-form-item>-->
+                <!--<div id="perEditHead" style="width: 120px;height: 120px; ">-->
+                    <!--asf-->
+                <!--</div>-->
+                <!--<el-upload-->
+                        <!--prop="profile"-->
+                        <!--class="upload-demo"-->
+                        <!--action=""-->
+                        <!--:on-preview="handlePreview"-->
+                        <!--:on-remove="handleRemove"-->
+                        <!--:before-remove="beforeRemove"-->
+                        <!--:on-change="getFile"-->
+                        <!--multiple-->
+                        <!--:limit="1"-->
+                        <!--:on-exceed="handleExceed"-->
+                        <!--:auto-upload="false">-->
+                    <!--<el-button size="small" type="primary">更换头像</el-button>-->
+                <!--</el-upload>-->
+
+
+            <!--</el-form>-->
+            <!--<div slot="footer" class="dialog-footer">-->
+                <!--<el-button @click="dialogFormVisible = false">取 消</el-button>-->
+                <!--<el-button type="primary" @click="editPerInfo()">确 定</el-button>-->
+            <!--</div>-->
+        <!--</el-dialog>-->
+
+        <el-form :model="UserInfo" ref="UserInfo" >
+            <el-form-item label="用户名" prop="username" :label-width="formLabelWidth">
+                <el-input v-model="UserInfo.username" :disabled="true"></el-input>
+            </el-form-item>
+            <el-form-item label="姓名" prop="name" :label-width="formLabelWidth">
+                <el-input v-model="UserInfo.name" ></el-input>
+            </el-form-item>
+            <el-form-item label="人脸识别头像"  prop="profile" :label-width="formLabelWidth">
                 <div id="perEditHead" style="width: 120px;height: 120px; ">
                     asf
                 </div>
@@ -49,15 +83,16 @@
                         :auto-upload="false">
                     <el-button size="small" type="primary">更换头像</el-button>
                 </el-upload>
+            </el-form-item>
 
 
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="editPerInfo()">确 定</el-button>
-            </div>
-        </el-dialog>
 
+
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="editPerInfo()">确 定</el-button>
+        </div>
 
         <MyGroupTable ref="table"></MyGroupTable>
         <!--<div id="allmap"></div>-->
@@ -85,8 +120,41 @@
           // this.getposition()
             this.getPhoto()
         },
+        computed: {
+            // editPerInfoFormData() {
+            //     this.submitUserInfo.name = this.UserInfo.name;
+            //     console.log( this.UserInfo.name)
+            //     let formData = new FormData()
+            //     console.log(this.UserInfo)
+            //     Object.keys(this.submitUserInfo).forEach(key => {
+            //         if (key === 'profile' && this.submitUserInfo[key] === null){
+            //             alert(123)
+            //             return
+            //         }
+            //         formData.append(key, this.UserInfo[key])
+            //     })
+            //     return formData
+            // },
+            ruleFormData() {
+                this.submitUserInfo.name = this.UserInfo.name;
+                let formData = new FormData()
+                // console.log(this.UserInfo)
+                Object.keys(this.submitUserInfo).forEach(key => {
+                    formData.append(key, this.submitUserInfo[key])
+                })
+                // console.log(formData)
+                return formData
+            }
+        },
+
         data() {
             return {
+
+                submitUserInfo:{
+                    profile:null,
+                    name:"",
+                },
+
                 BASE_URL: process.env.BASE_URL,
                 headPhoto:null,
 
@@ -99,29 +167,14 @@
                     position: "relative",
                 },
 
-                UserInfo:{},
+                UserInfo:{
+                    username:'',
+                    name:'',
+                    profile:null  ,
+                },
                 dialogFormVisible:false,
                 formLabelWidth: '120px',
-                submitUserInfo:{
-                    profile:null,
-                    name:null,
-                }
-            }
-        },
-        computed: {
-            editPerInfoFormData() {
-                this.submitUserInfo.name = this.UserInfo.name;
-                let formData = new FormData()
-                // console.log("你好");
-                Object.keys(this.submitUserInfo).forEach(key => {
-                    // if (key === 'profile' && this.submitUserInfo[key] === null){
-                    //     alert(123)
-                    //     return
-                    // }
-                    console.log(key, this.submitUserInfo[key]);
-                    formData.append(key, this.submitUserInfo[key])
-                })
-                return formData
+
             }
         },
 
@@ -150,9 +203,7 @@
                     this.$message({
                         message: '账户注销成功  正在跳转',
                         type: 'success'
-
                     })
-
                     setTimeout(() => {
                         this.$router.push('/login')
                     }, 2000)
@@ -166,7 +217,7 @@
                     document.getElementById("headphoto").style.backgroundImage = 'url('+res.profile+')';
                     document.getElementById("headphoto").style.backgroundSize='45px 45px'
                     this.UserInfo = res;
-                    console.log(res.name + " 123");
+                    // console.log(res.name + " 123");
 
                 })
             },
@@ -175,56 +226,14 @@
                 this.$refs.table.update()
             },
 
-            //  getposition(){
-            //      var map = new BMap.Map("allmap");
-            //      var point = new BMap.Point(120.331398,39.897445);
-            //      map.centerAndZoom(point,12);
-            //
-            //      var geolocation = new BMap.Geolocation();
-            //      geolocation.getCurrentPosition(function(r){
-            //          if(this.getStatus() == BMAP_STATUS_SUCCESS){
-            //              var mk = new BMap.Marker(r.point);
-            //              map.addOverlay(mk);
-            //              map.panTo(r.point);
-            //              alert('您的位置：'+r.point.lng+','+r.point.lat);
-            //          }
-            //          else {
-            //              alert('failed'+this.getStatus());
-            //          }
-            //      },{enableHighAccuracy: true})
-            //
-            //      // var geolocation = new BMap.Geolocation();
-            //      // geolocation.getCurrentPosition(function(r) {
-            //      //     if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-            //      //         var myGeo = new BMap.Geocoder();
-            //      //
-            //      //         myGeo.getLocation(new BMap.Point(r.point.lng, r.point.lat), function(rs) {
-            //      //             var lbs_point = '';
-            //      //             var address = '';
-            //      //             if (rs.surroundingPois.length > 0) {
-            //      //                 lbs_point = rs.surroundingPois[0].point.lng+","+rs.surroundingPois[0].point.lat;
-            //      //                 address =  rs.surroundingPois[0].title;
-            //      //             } else {
-            //      //                 lbs_point = rs.point.lng+","+rs.point.lat;
-            //      //                 address = rs.address;
-            //      //             }
-            //      //
-            //      //             alert(JSON.stringify(rs, null, 4));
-            //      //
-            //      //         })
-            //      //     }},{
-            //      //         enableHighAccuracy : true
-            //      //     });
-            // },
 
             editPerInfo(){
                 // console.log(this.editPerInfoFormData.key)
-                console.log(this.editPerInfoFormData)
-                updateUserInfo(this.editPerInfoFormData).then(()=>{
+                updateUserInfo(this.ruleFormData).then(()=>{
                     this.dialogFormVisible = false
                     this.$message("修改成功")
                     this.getPhoto();
-                    console.log(this.UserInfo.profile)
+                    // console.log(this.submitUserInfo.profile)
                 })
             },
 
