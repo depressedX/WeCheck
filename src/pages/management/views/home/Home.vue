@@ -90,10 +90,10 @@
                 this.submitUserInfo.name = this.UserInfo.name;
                 if (this.userHeadPhoto!=null){
                     alert("有图片");
-                    this.submitUserInfo.file=this.userHeadPhoto;
+                    this.submitUserInfo.profile=this.userHeadPhoto;
                 }
                 let formData = new FormData()
-                // console.log(this.submitUserInfo)
+                console.log(this.submitUserInfo)
                 Object.keys(this.submitUserInfo).forEach(key => {
                     formData.append(key, this.submitUserInfo[key])
                 })
@@ -199,7 +199,7 @@
                 updateUserInfo(this.editPerInfoFormData).then(()=>{
                     this.dialogFormVisible = false
                     this.$message("修改成功")
-                    this.getPhoto();
+                    setTimeout(this.getPhoto(),1000)
                     this.$refs.profile.clearFiles()
                     //初始化
                     this.userHeadPhoto = null
