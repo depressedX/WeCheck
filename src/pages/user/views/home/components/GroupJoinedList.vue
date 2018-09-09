@@ -1,6 +1,6 @@
 <template>
     <div class="group-joined-list">
-        <h2>已加入的群组</h2>
+        <my-title>已加入的群组</my-title>
         <ul>
             <li v-for="item in groupInfoList"><group-item :id="item.id"/></li>
         </ul>
@@ -10,9 +10,11 @@
 <script>
     import GroupItem from "./GroupItem";
     import {getGroupInfoList} from "../../../../../resource/group";
+    import MyTitle from "./MyTitle";
+
     export default {
         name: "GroupJoinedList",
-        components: {GroupItem},
+        components: {MyTitle, GroupItem},
         created(){
             this.update()
         },

@@ -4,11 +4,24 @@
             <template>{{name}}</template>
         </app-bar>
         <section class="content">
-            <p v-if="ownerName">创建者：{{ownerName}}</p>
+            <div class="owner-tag" v-if="ownerName">
+                <div class="owner-tag__key">创建者：</div>
+                <div class="owner-tag__value">{{ownerName}}</div>
+            </div>
             <div class="group-operation" v-if="!loading">
-                <el-button :type="checked?'success':'primary'" :disabled="!state||checked" @click="check">
-                    {{state?(checked?'已完成签到':'签到'):'未开启签到'}}
-                </el-button><br/>
+
+                <!--签到-->
+                <el-alert
+                        v-if="!state"
+                        title="暂未开启签到"
+                        type="warning">
+                </el-alert>
+                <el-button v-else :type="checked?'success':'primary'" :disabled="!state||checked" @click="check">
+                    {{checked?'已完成签到':'签到'}}
+                </el-button>
+                <br/>
+
+
                 <el-button type="danger" @click="quitGroup">退出群组</el-button>
                 <have-not-joined v-if="!hasJoined" :id="id" @hasJoined="hasJoinedHandler"/>
             </div>
@@ -40,7 +53,7 @@
         created() {
             this.update()
         },
-        mounted(){
+        mounted() {
         },
         data() {
             return {
@@ -57,10 +70,10 @@
                 checked: false,
 
                 loading: false,
-                
+
                 // 人脸、地理
-                needFace:false,
-                needLocation:false
+                needFace: false,
+                needLocation: false
             }
         },
         watch: {
@@ -74,9 +87,9 @@
             }
         },
         methods: {
-            check(){
-                this.$refs.checkValidator.check(this.needLocation,this.needFace)
-                    .then(()=>{
+            check() {
+                this.$refs.checkValidator.check(this.needLocation, this.needFace)
+                    .then(() => {
                         this.update()
                     })
             },
@@ -90,30 +103,30 @@
 
                 getGroupInfo(this.id).then(res => {
 
-                    this.name = res.name
-                    this.ownerId = res.owner
-                    this.hasJoined = res.role === 1
-                    this.state = res.state
-                    this.checked = res.checked
-                    
-                    this.needLocation = res.needLocation
-                    this.needFace = res.needFace
-                },
-                e=>{
-                    return null
+                        this.name = res.name
+                        this.ownerId = res.owner
+                        this.hasJoined = res.role === 1
+                        this.state = res.state
+                        this.checked = res.checked
+
+                        this.needLocation = res.needLocation
+                        this.needFace = res.needFace
+                    },
+                    e => {
+                        return null
                         this.$alert('该群组不存在！', '服务器消息', {
                             confirmButtonText: '确定'
                         }).then(() => {
                             this.$router.go(-1)
                         })
-                })
+                    })
                     .then(onSucceedFunc, onSucceedFunc)
             },
             hasJoinedHandler() {
                 this.update()
             },
-            quitGroup(){
-                quitGroup(this.id).then(()=>{
+            quitGroup() {
+                quitGroup(this.id).then(() => {
                     this.$message('退出成功');
                     this.$router.go(-1)
                 })
@@ -135,6 +148,40 @@
         .group-operation {
             position: relative;
             padding: 1em .5em;
+        }
+        
+        .owner-tag{
+            border-bottom: 1px solid #409EFF;
+            position: relative;
+            height: 2em;
+            line-height: 2;
+            
+            .owner-tag__key{
+                
+                display: inline-block;
+                position: relative;
+                background-color: #409EFF;
+                padding-left: .5em;
+                margin-right: 2em;
+                
+                &:after{
+                    content: "";
+                    display: inline-block;
+                    width: 0px;
+                    height: 0px;
+                    position: absolute;
+                    left: 100%;
+                    bottom: 0px;
+                    border: 2em solid transparent;
+                    border-right-color: #409EFF;
+                    transform: translateX(-50%) rotateZ(90deg);
+                    z-index: -2;
+                }
+            }
+            .owner-tag__value{
+                display: inline-block;
+                position: relative;
+            }
         }
     }
 </style>

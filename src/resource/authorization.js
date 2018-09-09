@@ -13,7 +13,7 @@ export function logout() {
     return server.post('logout')
         .then(handleResponse)
         .then(res => sessionStorage.removeItem(hasLoggedInKey))
-    
+
 }
 
 export function register(form) {
@@ -23,3 +23,6 @@ export function register(form) {
 export function hasLoggedIn() {
     return sessionStorage.getItem(hasLoggedInKey) === 'true'
 }
+
+server.get('hasLoggedIn').then(handleResponse)
+    .then(flag => sessionStorage.setItem(hasLoggedInKey, flag ? 'true' : 'false'))

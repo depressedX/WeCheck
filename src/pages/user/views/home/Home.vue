@@ -7,41 +7,48 @@
                 </el-input>
             </el-form-item>
         </el-form>
-        <today-schedule-table/>
-        <group-joined-list/>
+        <section class="main">
+            <today-schedule-table/>
+            <group-joined-list/>
+        </section>
     </div>
 </template>
 
 <script>
-    import {addSchedule,updateSchedule,getAllSchedules,deleteSchedule} from "../../../../resource/schedule";
-
-    import {joinGroup} from"../../../../resource/group"
     import TodayScheduleTable from "./components/TodayScheduleList";
-    import {getGroupInfo} from "../../../../resource/group";
     import GroupJoinedList from "./components/GroupJoinedList";
+
     export default {
         name: 'home',
         components: {
             GroupJoinedList,
             TodayScheduleTable
         },
-        created(){
+        created() {
         },
-        data(){
-            return{
-                BASE_URL:process.env.BASE_URL,
-                searchId:''
+        data() {
+            return {
+                BASE_URL: process.env.BASE_URL,
+                searchId: ''
             }
         },
-        methods:{
-            searchButtonHandler(){
-                if (!this.searchId || this.searchId&&this.searchId.length===0){
+        methods: {
+            searchButtonHandler() {
+                if (!this.searchId || this.searchId && this.searchId.length === 0) {
                     this.$alert('群组ID不可为空')
                     return
-                } 
+                }
                 this.$router.push(`/group/${this.searchId}`)
             },
 
         }
     }
 </script>
+<style lang="scss" scoped>
+    .home {
+
+        section.main {
+            padding: 0 1em;
+        }
+    }
+</style>

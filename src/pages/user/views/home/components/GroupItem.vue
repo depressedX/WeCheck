@@ -1,6 +1,7 @@
 <template>
     <router-link :to="`/group/${id}`" class="group-item">
-        <i v-if="loading" class="el-icon-loading"/>{{loading?'':name}}
+        <i v-if="loading" class="el-icon-loading"/>{{loading?'':name}}x
+        <i class="group-item__arrow el-icon-arrow-right"></i>
     </router-link>
 </template>
 
@@ -42,5 +43,15 @@
 <style scoped lang="scss">
     .group-item {
         display: block;
+        padding: 1em .5em;
+        color: #303133;
+        cursor: pointer;
+        border-bottom: 1px solid #ebeef5;
+        font-weight: 500;
+        
+        .group-item__arrow{
+            float: right;
+            line-height: 20px;
+        }
     }
 </style>

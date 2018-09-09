@@ -10,7 +10,7 @@
 
                 <el-card style=" margin:0 auto;color: white ">
 
-                    <login-form :type="type"/>
+                    <login-form :type="type" :redirect="redirect"/>
                     <p style=" float: left">
                         <router-link to="/register" style="color: white;
                                             margin: 0;text-decoration: none;">
@@ -36,6 +36,9 @@
             type: {
                 type: String,
                 validator: val => Object.keys(userType).map(k => userType[k]).indexOf(val) !== -1
+            },
+            redirect:{
+                type:String
             }
         },
         data() {

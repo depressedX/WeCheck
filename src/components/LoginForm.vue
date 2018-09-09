@@ -28,6 +28,9 @@
                 type: String,
                 required: true,
                 validator: val => Object.keys(userType).find(key => userType[key] === val)
+            },
+            redirect:{
+                type:String
             }
         },
         data() {
@@ -55,7 +58,11 @@
                             });
                             // 2s后跳转到相应页面
                             setTimeout(() => {
-                                window.location.href = `/${this.type}.html`
+                                if (this.redirect) {
+                                    window.location.href = this.redirect
+                                }else {
+                                    window.location.href = `/${this.type}.html`
+                                }
                             }, 2000)
                         },
                         e => {
