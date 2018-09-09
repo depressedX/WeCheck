@@ -3,7 +3,7 @@
 
 
         <div id="headOut" :style="note" >
-            <div style="height: 45px;width: 45px;background-color: aqua;
+            <div style="height: 45px;width: 45px;background-color: #00ffff00;
                     display: inline-block;
                     position: absolute;top: 50%;transform: translate(0, -50%);
                     border-radius: 25px;
@@ -21,78 +21,43 @@
 
 
         <!--点击头像弹出框 修改个人信息-->
-        <!--<el-dialog title="个人信息" :visible.sync="dialogFormVisible">-->
-            <!--<el-form :model="UserInfo" ref="UserInfo" >-->
-                <!--<el-form-item label="用户名" :label-width="formLabelWidth">-->
-                    <!--<el-input v-model="UserInfo.username" :disabled="true"></el-input>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item label="姓名" :label-width="formLabelWidth">-->
-                    <!--<el-input v-model="UserInfo.name" ></el-input>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item label="人脸识别头像" :label-width="formLabelWidth">-->
-
-                <!--</el-form-item>-->
-                <!--<div id="perEditHead" style="width: 120px;height: 120px; ">-->
-                    <!--asf-->
-                <!--</div>-->
-                <!--<el-upload-->
-                        <!--prop="profile"-->
-                        <!--class="upload-demo"-->
-                        <!--action=""-->
-                        <!--:on-preview="handlePreview"-->
-                        <!--:on-remove="handleRemove"-->
-                        <!--:before-remove="beforeRemove"-->
-                        <!--:on-change="getFile"-->
-                        <!--multiple-->
-                        <!--:limit="1"-->
-                        <!--:on-exceed="handleExceed"-->
-                        <!--:auto-upload="false">-->
-                    <!--<el-button size="small" type="primary">更换头像</el-button>-->
-                <!--</el-upload>-->
-
-
-            <!--</el-form>-->
-            <!--<div slot="footer" class="dialog-footer">-->
-                <!--<el-button @click="dialogFormVisible = false">取 消</el-button>-->
-                <!--<el-button type="primary" @click="editPerInfo()">确 定</el-button>-->
-            <!--</div>-->
-        <!--</el-dialog>-->
-
-        <el-form :model="UserInfo" ref="UserInfo" >
-            <el-form-item label="用户名" prop="username" :label-width="formLabelWidth">
-                <el-input v-model="UserInfo.username" :disabled="true"></el-input>
-            </el-form-item>
-            <el-form-item label="姓名" prop="name" :label-width="formLabelWidth">
-                <el-input v-model="UserInfo.name" ></el-input>
-            </el-form-item>
-            <el-form-item label="人脸识别头像"  prop="profile" :label-width="formLabelWidth">
-                <div id="perEditHead" style="width: 120px;height: 120px; ">
-                    asf
-                </div>
-                <el-upload
-                        prop="profile"
-                        class="upload-demo"
-                        action=""
-                        :on-preview="handlePreview"
-                        :on-remove="handleRemove"
-                        :before-remove="beforeRemove"
-                        :on-change="getFile"
-                        multiple
-                        :limit="1"
-                        :on-exceed="handleExceed"
-                        :auto-upload="false">
-                    <el-button size="small" type="primary">更换头像</el-button>
-                </el-upload>
-            </el-form-item>
+        <el-dialog title="个人信息" :visible.sync="dialogFormVisible">
+            <el-form :model="UserInfo" ref="UserInfo" >
+                <el-form-item label="用户名" :label-width="formLabelWidth">
+                    <el-input v-model="UserInfo.username" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="姓名" :label-width="formLabelWidth">
+                    <el-input v-model="UserInfo.name" ></el-input>
+                </el-form-item>
+                <el-form-item label="人脸识别头像" :label-width="formLabelWidth">
+                    <div id="perEditHead" style="width: 120px;height: 120px; ">
+                        asf
+                    </div>
+                    <el-upload
+                            ref="profile"
+                            prop="profile"
+                            class="upload-demo"
+                            action=""
+                            :on-preview="handlePreview"
+                            :on-remove="handleRemove"
+                            :before-remove="beforeRemove"
+                            :on-change="getFile"
+                            multiple
+                            :limit="1"
+                            :on-exceed="handleExceed"
+                            :auto-upload="false">
+                        <el-button size="small" type="primary">更换头像</el-button>
+                    </el-upload>
+                </el-form-item>
 
 
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="editPerInfo()">确 定</el-button>
+            </div>
+        </el-dialog>
 
-
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="editPerInfo()">确 定</el-button>
-        </div>
 
         <MyGroupTable ref="table"></MyGroupTable>
         <!--<div id="allmap"></div>-->
@@ -121,39 +86,35 @@
             this.getPhoto()
         },
         computed: {
-            // editPerInfoFormData() {
-            //     this.submitUserInfo.name = this.UserInfo.name;
-            //     console.log( this.UserInfo.name)
-            //     let formData = new FormData()
-            //     console.log(this.UserInfo)
-            //     Object.keys(this.submitUserInfo).forEach(key => {
-            //         if (key === 'profile' && this.submitUserInfo[key] === null){
-            //             alert(123)
-            //             return
-            //         }
-            //         formData.append(key, this.UserInfo[key])
-            //     })
-            //     return formData
-            // },
-            ruleFormData() {
+            editPerInfoFormData() {
                 this.submitUserInfo.name = this.UserInfo.name;
+                if (this.userHeadPhoto!=null){
+                    alert("有图片");
+                    this.submitUserInfo.profile=this.userHeadPhoto;
+                }
                 let formData = new FormData()
-                // console.log(this.UserInfo)
+                console.log(this.submitUserInfo)
                 Object.keys(this.submitUserInfo).forEach(key => {
                     formData.append(key, this.submitUserInfo[key])
                 })
-                // console.log(formData)
                 return formData
-            }
+            },
+            // ruleFormData() {
+            //     this.submitUserInfo.name = this.UserInfo.name;
+            //     let formData = new FormData()
+            //     // console.log(this.UserInfo)
+            //     Object.keys(this.submitUserInfo).forEach(key => {
+            //         formData.append(key, this.submitUserInfo[key])
+            //     })
+            //     // console.log(formData)
+            //     return formData
+            // }
         },
 
         data() {
             return {
 
-                submitUserInfo:{
-                    profile:null,
-                    name:"",
-                },
+
 
                 BASE_URL: process.env.BASE_URL,
                 headPhoto:null,
@@ -174,7 +135,10 @@
                 },
                 dialogFormVisible:false,
                 formLabelWidth: '120px',
-
+                submitUserInfo:{
+                    name:"",
+                },
+                userHeadPhoto:null  ,
             }
         },
 
@@ -182,7 +146,7 @@
 
             getFile(file, filelist) {
                 // console.log(file)
-                this.submitUserInfo.profile = file.raw;
+                this.userHeadPhoto = file.raw;
             },
             handleRemove(file, fileList) {
                 console.log(file, fileList);
@@ -192,6 +156,7 @@
                 console.log(file);
             },
             handleExceed(files, fileList) {
+
                 this.$message.warning('当前限制选择 1 个文件');
             },
             beforeRemove(file, fileList) {
@@ -224,15 +189,20 @@
             update(){
 
                 this.$refs.table.update()
+
             },
+
 
 
             editPerInfo(){
                 // console.log(this.editPerInfoFormData.key)
-                updateUserInfo(this.ruleFormData).then(()=>{
+                updateUserInfo(this.editPerInfoFormData).then(()=>{
                     this.dialogFormVisible = false
                     this.$message("修改成功")
-                    this.getPhoto();
+                    setTimeout(this.getPhoto(),1000)
+                    this.$refs.profile.clearFiles()
+                    //初始化
+                    this.userHeadPhoto = null
                     // console.log(this.submitUserInfo.profile)
                 })
             },

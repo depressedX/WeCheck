@@ -1,19 +1,16 @@
 <template>
     <div style="width: 100%;">
         <el-container id="GroupContainer">
-            <el-header>
-                <AppBar>
+            <el-header :style="note" >
+                <AppBar >
                     <template>{{this.name}}
-                        <!--<div>saf{{$route.params.id}}</div>-->
                     </template>
 
                 </AppBar>
             </el-header>
             <el-main>
 
-
-
-                <el-tabs v-model="activeName" type="card" @tab-click="handleListClick">
+                <el-tabs v-model="activeName"  @tab-click="handleListClick">
                     <el-tab-pane label="群体成员" name="first" >
                         <el-table
                                 :data="members"
@@ -65,8 +62,7 @@
                         <el-table
                                 :row-class-name="tableRowClassName"
                                 :data="mySchList"
-
-
+                                border
                                 style="width: 100%  ;   margin-bottom: 40px;">
                             <el-table-column
                                     prop="startUpTime"
@@ -103,9 +99,6 @@
                                 style="width: 100% ;    margin-bottom: 40px;"
                                 border
                         >
-
-
-
                             <el-table-column
                                     prop="day"
                                     label="日期"
@@ -127,17 +120,27 @@
                         </el-table>
 
                         <el-dialog class="recordDiv" title="详细签到情况" :visible.sync="RecordDiv">
-                            <el-table :data="RecordData.done"  >
-                                <el-table-column property="username" label="用户名" ></el-table-column>
-                                <el-table-column property="name" label="姓名" ></el-table-column>
-                                <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
-                            </el-table>
 
-                            <el-table :data="RecordData.missed"  >
-                                <el-table-column property="username" label="用户名" ></el-table-column>
-                                <el-table-column property="name" label="姓名" ></el-table-column>
-                                <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
-                            </el-table>
+                            <el-collapse v-model="Record_activeName" >
+                                <el-collapse-item title="完成签到人员" name="1">
+                                    <el-table :data="RecordData.done"  :row-class-name="recordBack_done"  >
+                                        <el-table-column property="username" label="用户名" ></el-table-column>
+                                        <el-table-column property="name" label="姓名" ></el-table-column>
+                                        <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
+                                    </el-table>
+                                </el-collapse-item>
+
+                                <el-collapse-item title="未完成签到人员" name="2">
+                                    <el-table :data="RecordData.missed" :row-class-name="recordBack_missed"   >
+                                        <el-table-column property="username" label="用户名" ></el-table-column>
+                                        <el-table-column property="name" label="姓名" ></el-table-column>
+                                        <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
+                                    </el-table>
+                                </el-collapse-item>
+
+                            </el-collapse>
+
+
                         </el-dialog>
                     </el-tab-pane>
                 </el-tabs>
@@ -291,12 +294,6 @@
                         <el-button type="primary" @click="submit_EditGroup">确 定</el-button>
                     </div>
                 </el-dialog>
-
-
-
-
-
-
             </el-main>
         </el-container>
         <div class="footer">
@@ -410,7 +407,7 @@
                 },
                 //标签栏的绑定元素
                 activeName: 'second',
-
+                Record_activeName:1,
                 mySchList:[
                     {
                         scheduleId:'0dsfwefsd',
@@ -462,6 +459,14 @@
                     duration:null,
                     done:[],
                     missed:[],
+                },
+                note: {
+                    backgroundImage: "url(" + require("../../../../image/head3.png") + ")",
+                    backgroundRepeat: "no-repeat",
+                    height: '60px',
+                    width: "100%",
+                    backgroundSize: '100% 100%',
+                    position: "relative",
                 },
             }
         },
@@ -788,6 +793,15 @@
                 else return 'success_row';
             },
 
+            recordBack_done({row, rowIndex}) {
+
+                 return 'success_row';
+            },
+            recordBack_missed({row, rowIndex}) {
+
+                return 'warning_row';
+            },
+
             perRecordState({row, rowIndex}) {
 
                 if (this.perRecordData[rowIndex].checked === '未签') {
@@ -837,11 +851,10 @@
                 var schId = this.historyScheduleList[index].id;
                 console.log(schId)
                 getRecord(schId).then(res =>{
-                    this.RecordData.done = res.done;
-                    this.RecordData.missed = res.missed;
+                    this.RecordData.done = res.missed;
+                    this.RecordData.missed = res.done;
                 })
             }
-
         }
 
     }
@@ -867,6 +880,22 @@
         width: 100px;
     }
 
+    #GroupContainer .app-bar {
+        background-color: unset;
+        /*height: 60%;*/
+        /*position: absolute;*/
+        top: 50%;
+        transform: translate(0px, -50%);
+
+        color: white;
+
+        font-weight: inherit;
+        letter-spacing: 3px;
+    }
+    #GroupContainer .app-bar .title h1{
+
+    }
+
 </style>
 <style  >
 
@@ -889,6 +918,7 @@
     #detailRecord .el-dialog__body{
         padding: 0;
     }
+
 
 
 
