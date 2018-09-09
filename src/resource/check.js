@@ -1,6 +1,5 @@
 import {handleResponse, server} from "../utils/http";
 import qs from 'qs'
-import {timeout} from "../utils";
 
 /***
  * 获取当日签到情况
@@ -17,7 +16,7 @@ export function getCheckInfoToday() {
  * @return {Promise<T>}
  */
 export function check(id, form) {
-    return timeout({}, 2000)
+    form.append('id', id)
     return server.post('check/check', form).then(handleResponse)
 }
 

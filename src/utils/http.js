@@ -25,6 +25,12 @@ export class RequestError extends Error {
 
 export const handleResponse = resp => {
     let data = resp.data
+    
+    //TODO:等后台改好了 就去除
+    if (data.message instanceof Array){
+        data.message = data.message[0]
+    }
+    
     if (data.status === 200) {
         return data.data
     } else {

@@ -1,10 +1,9 @@
 import {handleResponse, server} from "../utils/http";
-import qs from 'qs'
 
 export function getUserInfo(){
     return server.get('user').then(handleResponse)
 }
 
-export function updateUserInfo(bundle) {
-    return server.post('user',qs.stringify(bundle)).then(handleResponse)
+export function updateUserInfo(form) {
+    return server.post('user',form).then(handleResponse)
 }

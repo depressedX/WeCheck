@@ -24,14 +24,14 @@
                 type: String,
                 required: true
             },
-            needLocation: {
-                type: Boolean,
-                default: false
-            },
-            needFace: {
-                type: Boolean,
-                default: false
-            }
+            // needLocation: {
+            //     type: Boolean,
+            //     default: false
+            // },
+            // needFace: {
+            //     type: Boolean,
+            //     default: false
+            // }
         },
         data() {
             return {
@@ -41,7 +41,7 @@
             }
         },
         methods: {
-            async check() {
+            async check(needLocation = false, needFace = false) {
                 this.visible = true
 
                 this.message = '正在签到'
@@ -50,13 +50,12 @@
                 let face = null
 
 
-                if (this.needLocation) {
+                if (needLocation) {
 
                     // 获取地理位置
                     try {
                         this.message = '正在获取地理位置'
                         point = await getCurrentPosition()
-                        alert(JSON.stringify(point))
                         this.message = '成功获取位置信息'
                         wait(1000)
                     } catch (e) {
@@ -69,14 +68,14 @@
                     }
                 }
 
-                if (this.needFace) {
+                if (needFace) {
 
                     //检测人脸
                     this.message = '正在获取人脸信息'
                     this.faceCaptureVisible = true
                     this.visible = false
                     await new Promise(resolve => {
-                        this.$nextTick(()=>{
+                        this.$nextTick(() => {
                             resolve()
                         })
                     })
@@ -90,16 +89,24 @@
 
                 try {
                     this.message = '正在连接服务器'
-                    let bundle = {}
                     let form = new FormData()
-                    point && form.append('lng',point.lng) && form.append('lat',point.lat)
-                    face && form.append('face',face)
-                    await check(this.groupId, bundle)
-                } catch (e) {
-                    this.$message.error(e)
-                }
 
-                this.visible = false
+                    if (point) {
+                        form.append('lng', point.lng)
+                        form.append('lat', point.lat)
+                    }
+                    if (face) {
+                        form.append('face', face)
+                    }
+                    await check(this.groupId, form)
+                    return true
+                } catch (e) {
+                    console.log(e)
+                    this.$message.error(e.message)
+                    throw e
+                } finally {
+                    this.visible = false
+                }
 
             },
         }

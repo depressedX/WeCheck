@@ -14,7 +14,7 @@
             </div>
             <i class="el-icon-loading" v-else/>
         </section>
-        <check-validator ref="checkValidator" group-id="sdfds" :need-location="true" :need-face="true"/>
+        <check-validator ref="checkValidator" :group-id="id"/>
     </div>
 </template>
 
@@ -41,7 +41,6 @@
             this.update()
         },
         mounted(){
-            this.$refs.checkValidator.check()
         },
         data() {
             return {
@@ -58,6 +57,10 @@
                 checked: false,
 
                 loading: false,
+                
+                // 人脸、地理
+                needFace:false,
+                needLocation:false
             }
         },
         watch: {
@@ -72,7 +75,10 @@
         },
         methods: {
             check(){
-                this.$refs.checkValidator.check()
+                this.$refs.checkValidator.check(this.needLocation,this.needFace)
+                    .then(()=>{
+                        this.update()
+                    })
             },
             update() {
 
@@ -89,6 +95,9 @@
                     this.hasJoined = res.role === 1
                     this.state = res.state
                     this.checked = res.checked
+                    
+                    this.needLocation = res.needLocation
+                    this.needFace = res.needFace
                 },
                 e=>{
                     return null

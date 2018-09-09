@@ -5,23 +5,23 @@
             <el-collapse-item title="错过的签到" name="missed">
                 <ul>
                     <li v-for="item in missedList" :key="item.groupId">
-                        <schedule type="missed" group-id="sdfdsf" group-name="test"/>
+                        <schedule type="missed" :group-id="item.groupId" :group-name="item.groupName"/>
                     </li>
                 </ul>
             </el-collapse-item>
             <el-collapse-item title="已完成" name="done">
                 <li v-for="item in doneList" :key="item.groupId">
-                    <schedule type="done" group-id="sdfdsf" group-name="test"/>
+                    <schedule type="done" :group-id="item.groupId" :group-name="item.groupName"/>
                 </li>
             </el-collapse-item>
             <el-collapse-item title="待签到" name="open">
                 <li v-for="item in openList" :key="item.groupId">
-                    <schedule type="open" group-id="sdfdsf" group-name="test"/>
+                    <schedule type="open" :group-id="item.groupId" :group-name="item.groupName"/>
                 </li>
             </el-collapse-item>
             <el-collapse-item title="即将开启" name="future">
                 <li v-for="item in futureList" :key="item.groupId">
-                    <schedule type="future" group-id="sdfdsf" group-name="test"/>
+                    <schedule type="future" :group-id="item.groupId" :group-name="item.groupName"/>
                 </li>
             </el-collapse-item>
         </el-collapse>
