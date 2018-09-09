@@ -28,7 +28,7 @@ module.exports = {
                 target: 'http://39.106.131.88'
             }
         },
-        // host: "192.168.2.102", //本机的局域网ip
+        // host: "121.250.222.97", //本机的局域网ip
         https: true
     }
 }
