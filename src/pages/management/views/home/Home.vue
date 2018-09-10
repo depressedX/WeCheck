@@ -3,7 +3,7 @@
 
         <div class="home">
             <my-header/>
-            <MyGroupTable ref="table"></MyGroupTable>
+            <MyGroupTable ref="table" style="margin-bottom: 50px"></MyGroupTable>
             <!--<div id="allmap"></div>-->
             <div class="footer">
                 <el-button @click="ChuangJianGroup">
@@ -23,6 +23,8 @@
     import MyGroupTable from "./component/MyGroupTable"
     import MyHeader from "../../../../components/MyHeader"
     import {createGroup} from "../../../../resource/group"
+    import {logout} from "../../../../resource/authorization"
+    import {getUserInfo, updateUserInfo} from "../../../../resource/user"
 
     export default {
         name: 'home',
@@ -47,9 +49,6 @@
 
         data() {
             return {
-
-
-
                 BASE_URL: process.env.BASE_URL,
                 headPhoto:null,
 
@@ -72,8 +71,6 @@
         },
 
         methods:{
-
-
 
             update(){
 

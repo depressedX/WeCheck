@@ -97,7 +97,6 @@
             editPerInfoFormData() {
                 this.submitUserInfo.name = this.UserInfo.name;
                 if (this.userHeadPhoto!=null){
-                    // alert("有图片");
                     this.submitUserInfo.profile=this.userHeadPhoto;
                 }
                 let formData = new FormData()

@@ -5,7 +5,6 @@
             <el-table
                     :data="myGroupList"
                     stripe
-
                     style="width: 100%">
                 <el-table-column
                         prop="id"
