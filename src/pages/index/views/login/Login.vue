@@ -5,8 +5,8 @@
 
             <div style="width: 80% ;margin: 0 auto; padding-top: 25%">
 
-                <h2 style="margin: 0;margin-bottom: 20%;">亲爱的用户，<br>
-                    <h1 style="margin: 0">welcome!</h1></h2>
+                <h2 style="margin: 0;margin-bottom: 20%;">Hello，<br>
+                    <h2 style="margin: 0">欢迎回来!</h2></h2>
 
                 <el-card style=" margin:0 auto;color: white ">
 

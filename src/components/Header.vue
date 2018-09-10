@@ -1,14 +1,16 @@
 <template>
-    <div id="headOut" :style="note" >
-        <div style="height: 45px;width: 45px;background-color: #00ffff00;
+    <div>
+        <div id="headOut" :style="note" >
+            <div style="height: 45px;width: 45px;background-color: #00ffff00;
                     display: inline-block;
                     position: absolute;top: 50%;transform: translate(0, -50%);
                     border-radius: 25px;
                     margin-left: 5%;
                     "
-             @click="showEditPerInfo()"
-             id="headphoto"
-        >
+                 @click="showEditPerInfo()"
+                 id="headphoto"
+            >
+            </div>
         </div>
         <div id="headIn" style="right: 0; height: 60%; position: absolute;top: 50%;transform: translate(0, -50%);
                                             margin-right: 5%;">
@@ -53,14 +55,13 @@
             </div>
         </el-dialog>
     </div>
-
 </template>
 
 <script>
     import {logout} from "../resource/authorization"
     import {getUserInfo, updateUserInfo} from "../resource/user"
     export default {
-        name: "head",
+        name: "Header",
         created(){
             // this.getposition()
             this.getPhoto()

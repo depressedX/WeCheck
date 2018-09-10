@@ -1,9 +1,7 @@
 <template>
     <div class="home">
 
-        <header></header>
-
-
+        <Header></Header>
 
         <MyGroupTable ref="table"></MyGroupTable>
         <!--<div id="allmap"></div>-->
@@ -21,7 +19,7 @@
 
 <script>
     import MyGroupTable from "./component/MyGroupTable"
-    import Header from "./component/Header"
+    import Header from "../../../../components/Header"
     import {createGroup} from "../../../../resource/group"
     import {logout} from "../../../../resource/authorization"
     import {getUserInfo, updateUserInfo} from "../../../../resource/user"
