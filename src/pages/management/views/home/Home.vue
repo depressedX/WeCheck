@@ -3,7 +3,7 @@
 
         <div class="home">
             <Header></Header>
-            <MyGroupTable ref="table"></MyGroupTable>
+            <MyGroupTable ref="table" style="margin-bottom: 50px"></MyGroupTable>
             <!--<div id="allmap"></div>-->
             <div class="footer">
                 <el-button @click="ChuangJianGroup">
@@ -49,9 +49,6 @@
 
         data() {
             return {
-
-
-
                 BASE_URL: process.env.BASE_URL,
                 headPhoto:null,
 
@@ -75,10 +72,10 @@
 
         methods:{
 
-
-
             update(){
+
                 this.$refs.table.update()
+
             },
 
             ChuangJianGroup() {

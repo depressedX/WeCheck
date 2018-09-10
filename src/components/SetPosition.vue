@@ -1,7 +1,7 @@
 <template>
     <div style="">
         <div id='container' style="height: 250px"></div>
-        <div id="tip" style="height: 100px"></div>
+        <!--<div id="tip" style="height: 100px"></div>-->
         <!--<el-button>确定</el-button>-->
     </div>
 </template>
@@ -138,12 +138,12 @@
                     str.push('精度：' + data.accuracy + ' 米');
                 }//如为IP精确定位结果则没有精度信息
                 str.push('是否经过偏移：' + (data.isConverted ? '是' : '否'));
-                document.getElementById('tip').innerHTML = str.join('<br>');
+                // document.getElementById('tip').innerHTML = str.join('<br>');
             },
     //解析定位错误信息
             onError(data) {
                  console.log(JSON.stringify(data));
-                document.getElementById('tip').innerHTML = '定位失败';
+                // document.getElementById('tip').innerHTML = '定位失败';
             },
             addMarker() {
                  this.marker = new AMap.Marker({

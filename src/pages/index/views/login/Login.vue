@@ -3,7 +3,7 @@
     <div :style="note" id="test" style="height: 100%">
         <div style="height: 100% ;background-color: rgba(0,0,0,0.47);color: white">
 
-            <div style="width: 80% ;margin: 0 auto; padding-top: 25%">
+            <div style="width: 80% ;margin: 0 auto; padding-top: 15%">
 
                 <h2 style="margin: 0;margin-bottom: 20%;">Hello，<br>
                     <h2 style="margin: 0">欢迎回来!</h2></h2>

@@ -5,7 +5,6 @@
                 <AppBar >
                     <template>{{this.name}}
                     </template>
-
                 </AppBar>
             </el-header>
             <el-main>
@@ -174,7 +173,7 @@
                                         :value="item.value"
                                 >
                                 </el-option>
-                                {{rep}}
+                                <!--{{rep}}-->
                             </el-select>
                         </el-form-item>
                         <el-form-item label="是否启用" :label-width="formLabelWidth">
@@ -218,7 +217,7 @@
                                         :value="item.value"
                                 >
                                 </el-option>
-                                {{change_arr_repeat}}
+                                <!--{{change_arr_repeat}}-->
                             </el-select>
                         </el-form-item>
                         <el-form-item label="是否启用" :label-width="formLabelWidth">
@@ -250,8 +249,7 @@
                                     v-model="group_Editform.needFace"
                                     active-color="#13ce66"
                                     inactive-color="#ff4949"
-                                    active-text="开启"
-                                    inactive-text="关闭"
+
                             >
                             </el-switch>
                         </el-form-item>
@@ -260,8 +258,7 @@
                                     v-model="group_Editform.needLocation"
                                     active-color="#13ce66"
                                     inactive-color="#ff4949"
-                                    active-text="开启"
-                                    inactive-text="关闭"
+
                             >
                             </el-switch>
                         </el-form-item>
@@ -373,7 +370,7 @@
                     label: '周六'
                 }, {
                     value: '7',
-                    label: '周七'
+                    label: '周日'
                 }
                 ],
                 rep:[],
@@ -409,20 +406,6 @@
                 activeName: 'second',
                 Record_activeName:1,
                 mySchList:[
-                    {
-                        scheduleId:'0dsfwefsd',
-                        startUpTime:'03:15',
-                        duration:30,
-                        enable:true,
-                        repeat:'1,3,5',
-                    },
-                    {
-                        scheduleId:'adfafd',
-                        startUpTime:'04:15',
-                        duration:20,
-                        enable:true,
-                        repeat:'1,3,5',
-                    },
 
                 ],
 
@@ -433,7 +416,7 @@
                     needFace:false,
                     lng:null,
                     lat:null,
-                    effectiveDistance:200
+                    effectiveDistance:500
                 },
                 //经度纬度
 
@@ -494,7 +477,6 @@
         methods:{
             //对群体初始化
             update() {
-
                 getGroupInfo(this.id).then(res => {
                     var that = this
                     if (!res) {
@@ -516,7 +498,6 @@
                     //在这里获取 历史计划列表
                     getGroupHistory(this.id).then(res =>{
                          var temp = res
-
                         for (var i=0;i<temp.length;i++){
                             temp[i].day = temp[i].startUpDateTime.slice(0,10);
                             temp[i].time = temp[i].startUpDateTime.slice(11,16);
@@ -568,7 +549,7 @@
                     }else {
                         this.son_prop.lng = null;
                         this.son_prop.lat = null;
-                        this.group_Editform.effectiveDistance=null;
+                        this.group_Editform.effectiveDistance=500;
                     }
                     console.log("正在更新群组信息"+this.state)
                     // console.log(this.id+'asdf')
