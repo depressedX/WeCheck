@@ -56,8 +56,6 @@
         created() {
             this.update()
         },
-        mounted() {
-        },
         data() {
             return {
                 ownerId: undefined,

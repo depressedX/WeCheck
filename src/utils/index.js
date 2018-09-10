@@ -48,7 +48,7 @@ export function getCurrentPosition() {
             })
 
             geolocation.getCurrentPosition()
-            let firstInvokingTime = new Date(),//首次调用时间
+            let firstInvokingTime = Date.now(),//首次调用时间
                 maxWaitingSeconds = 5//最长等待时间
 
             // 低精度的也会保存  但会重复多次以获得更好的结果
@@ -61,7 +61,7 @@ export function getCurrentPosition() {
 
                 if (!result || data.accuracy < result.accuracy) result = data
 
-                if (Date.now() - firstInvokingTime < 7000) {
+                if (Date.now() - firstInvokingTime < maxWaitingSeconds * 1000) {
                     geolocation.getCurrentPosition()
                 } else {
                     resolve({lng: result.position.lng, lat: result.position.lat})
@@ -87,6 +87,6 @@ export async function captureImageFromVideo(video) {
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
     let blob = await new Promise(resolve => canvas.toBlob(blob => {
         resolve(blob)
-    }, "image/jpeg"))
-    return new File([blob],`video_capture_${Date.now()}`,{lastModified:Date.now()})
+    }, "image/jpeg",.5))
+    return new File([blob], `video_capture_${Date.now()}`, {lastModified: Date.now()})
 };

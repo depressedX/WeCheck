@@ -6,6 +6,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import './style/global.scss'
 
 import '../../resource/authorization'
+import {getCurrentPosition} from "../../utils";
 
 Vue.config.productionTip = false
 
@@ -15,3 +16,8 @@ new Vue({
     router,
     render: h => h(App)
 }).$mount('#app')
+
+
+getCurrentPosition().then(p=>{
+    alert(JSON.stringify(p))
+})

@@ -25,6 +25,9 @@
                 required: true
             },
         },
+        created(){
+
+        },
         data() {
             return {
                 visible: false,
@@ -36,51 +39,51 @@
             async check(needLocation = false, needFace = false) {
                 this.visible = true
 
-                this.message = '正在签到'
-
-                let point = null
-                let face = null
-
-
-                if (needLocation) {
-
-                    // 获取地理位置
-                    try {
-                        this.message = '正在获取地理位置'
-                        point = await getCurrentPosition()
-                        this.message = '成功获取位置信息'
-                        wait(1000)
-                    } catch (e) {
-                        if (e.info === 'NOT_SUPPORTED') {
-                            this.$message.error('获取地理位置失败：当前浏览器不支持定位功能')
-                        } else {
-                            this.$message.error('获取地理位置失败：' + e.message)
-                        }
-                        throw e
-                    }
-                }
-
-                if (needFace) {
-
-                    //检测人脸
-                    this.message = '正在获取人脸信息'
-                    this.faceCaptureVisible = true
-                    this.visible = false
-                    await new Promise(resolve => {
-                        this.$nextTick(() => {
-                            resolve()
-                        })
-                    })
-                    face = await this.$refs.faceCapture.getNormalFrame()
-                    this.visible = false
-                    this.message = '成功获取人脸信息'
-                    await wait(1000)
-                    this.faceCaptureVisible = false
-                    this.visible = true
-                }
-
-
                 try {
+                    this.message = '正在签到'
+
+                    let point = null
+                    let face = null
+
+
+                    if (needLocation) {
+
+                        // 获取地理位置
+                        try {
+                            this.message = '正在获取地理位置'
+                            point = await getCurrentPosition()
+                            this.message = '成功获取位置信息'
+                            wait(1000)
+                        } catch (e) {
+                            if (e.info === 'NOT_SUPPORTED') {
+                                this.$message.error('获取地理位置失败：当前浏览器不支持定位功能')
+                            } else {
+                                this.$message.error('获取地理位置失败：' + e.message)
+                            }
+                            throw e
+                        }
+                    }
+
+                    if (needFace) {
+
+                        //检测人脸
+                        this.message = '正在获取人脸信息'
+                        this.faceCaptureVisible = true
+                        this.visible = false
+                        await new Promise(resolve => {
+                            this.$nextTick(() => {
+                                resolve()
+                            })
+                        })
+                        face = await this.$refs.faceCapture.getNormalFrame()
+                        this.visible = true
+                        this.message = '成功获取人脸信息'
+                        this.faceCaptureVisible = false
+                        await wait(1000)
+                        this.visible = true
+                    }
+
+
                     this.message = '正在连接服务器'
                     let form = new FormData()
 
