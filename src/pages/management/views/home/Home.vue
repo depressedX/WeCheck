@@ -78,9 +78,7 @@
 
 
             update(){
-
                 this.$refs.table.update()
-
             },
 
             ChuangJianGroup() {
