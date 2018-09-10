@@ -11,11 +11,12 @@
                  id="headphoto"
             >
             </div>
-        </div>
-        <div id="headIn" style="right: 0; height: 60%; position: absolute;top: 50%;transform: translate(0, -50%);
+            <div id="headIn" style="right: 0; height: 60%; position: absolute;top: 50%;transform: translate(0, -50%);
                                             margin-right: 5%;">
-            <el-button type="text" @click="logoutFunction" style="color: white">注销账户</el-button>
+                <el-button type="text" @click="logoutFunction" style="color: white">注销账户</el-button>
+            </div>
         </div>
+
 
         <!--点击头像弹出框 修改个人信息-->
         <el-dialog title="个人信息" :visible.sync="dialogFormVisible">
@@ -28,7 +29,7 @@
                 </el-form-item>
                 <el-form-item label="人脸识别头像" :label-width="formLabelWidth">
                     <div id="perEditHead" style="width: 120px;height: 120px; ">
-                        asf
+
                     </div>
                     <el-upload
                             ref="profile"
@@ -88,14 +89,14 @@
                 },
                 dialogFormVisible:false,
 
-                formLabelWidth: '120px',
+                formLabelWidth: '100px',
             }
         },
         computed: {
             editPerInfoFormData() {
                 this.submitUserInfo.name = this.UserInfo.name;
                 if (this.userHeadPhoto!=null){
-                    alert("有图片");
+                    // alert("有图片");
                     this.submitUserInfo.profile=this.userHeadPhoto;
                 }
                 let formData = new FormData()

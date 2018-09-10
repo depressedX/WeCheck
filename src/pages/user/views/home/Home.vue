@@ -46,7 +46,6 @@
 </script>
 <style lang="scss" scoped>
     .home {
-
         section.main {
             padding: 0 1em;
         }

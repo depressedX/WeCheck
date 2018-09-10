@@ -1,19 +1,21 @@
 <template>
-    <div class="home">
 
-        <Header></Header>
 
-        <MyGroupTable ref="table"></MyGroupTable>
-        <!--<div id="allmap"></div>-->
-        <div class="footer">
-            <el-button @click="ChuangJianGroup">
-                <span class="letter_footer">创</span>
-                <span class="letter_footer">建</span>
-                <span class="letter_footer">群</span>
-                <span class="letter_footer">体</span>
-            </el-button>
+        <div class="home">
+            <Header></Header>
+            <MyGroupTable ref="table"></MyGroupTable>
+            <!--<div id="allmap"></div>-->
+            <div class="footer">
+                <el-button @click="ChuangJianGroup">
+                    <span class="letter_footer">创</span>
+                    <span class="letter_footer">建</span>
+                    <span class="letter_footer">群</span>
+                    <span class="letter_footer">体</span>
+                </el-button>
+            </div>
         </div>
-    </div>
+
+
 
 </template>
 
