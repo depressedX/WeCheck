@@ -1,6 +1,6 @@
 <template>
     <router-link :to="`/group/${id}`" class="group-item">
-        <i v-if="loading" class="el-icon-loading"/>{{loading?'':name}}x
+        <i v-if="loading" class="el-icon-loading"/>{{loading?'':name}}
         <i class="group-item__arrow el-icon-arrow-right"></i>
     </router-link>
 </template>

@@ -4,32 +4,32 @@
         <el-collapse v-model="activeNames" style="overflow: hidden">
             <el-collapse-item title="错过的签到" name="missed">
                 <ul v-if="missedList.length!==0">
-                    <li v-for="item in missedList" :key="item.groupId">
-                        <schedule type="missed" :group-id="item.groupId" :group-name="item.groupName"/>
+                    <li v-for="item in missedList" :key="Date.now()">
+                        <schedule type="missed" v-bind="item"/>
                     </li>
                 </ul>
                 <div v-else class="no-data">暂无数据</div>
             </el-collapse-item>
             <el-collapse-item title="已完成" name="done">
                 <ul v-if="doneList.length!==0">
-                    <li v-for="item in doneList" :key="item.groupId">
-                        <schedule type="done" :group-id="item.groupId" :group-name="item.groupName"/>
+                    <li v-for="item in doneList" :key="Date.now()">
+                        <schedule type="done" v-bind="item"/>
                     </li>
                 </ul>
                 <div v-else class="no-data">暂无数据</div>
             </el-collapse-item>
             <el-collapse-item title="待签到" name="open">
                 <ul v-if="openList.length!==0">
-                    <li v-for="item in openList" :key="item.groupId">
-                        <schedule type="open" :group-id="item.groupId" :group-name="item.groupName"/>
+                    <li v-for="item in openList" :key="Date.now()">
+                        <schedule type="open" v-bind="item"/>
                     </li>
                 </ul>
                 <div v-else class="no-data">暂无数据</div>
             </el-collapse-item>
             <el-collapse-item title="即将开启" name="future">
                 <ul v-if="futureList.length!==0">
-                    <li v-for="item in futureList" :key="item.groupId">
-                        <schedule type="future" :group-id="item.groupId" :group-name="item.groupName"/>
+                    <li v-for="item in futureList" :key="Date.now()">
+                        <schedule type="future" v-bind="item"/>
                     </li>
                 </ul>
                 <div v-else class="no-data">暂无数据</div>
