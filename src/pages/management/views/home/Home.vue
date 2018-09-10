@@ -76,8 +76,9 @@
 <script>
     import MyGroupTable from "./component/MyGroupTable"
     import {createGroup} from "../../../../resource/group"
-    import{logout}from "../../../../resource/authorization"
-    import {getUserInfo,updateUserInfo} from "../../../../resource/user"
+    import {logout} from "../../../../resource/authorization"
+    import {getUserInfo, updateUserInfo} from "../../../../resource/user"
+
     export default {
         name: 'home',
         components: {MyGroupTable,},
@@ -179,7 +180,7 @@
             getPhoto(){
                 getUserInfo().then(res=>{
                     // console.log(res)
-                    document.getElementById("headphoto").style.backgroundImage = 'url('+res.profile+')';
+                    document.getElementById("headphoto").style.backgroundImage = 'url('+res.profile+'?t='+Date.now()+')';
                     document.getElementById("headphoto").style.backgroundSize='45px 45px'
                     this.UserInfo = res;
                     // console.log(res.name + " 123");
@@ -211,7 +212,7 @@
                 this.dialogFormVisible=true;
                 getUserInfo().then(res=>{
                     // console.log(res)
-                    document.getElementById("perEditHead").style.backgroundImage = 'url('+res.profile+')';
+                    document.getElementById("perEditHead").style.backgroundImage = 'url('+res.profile+'?t='+Date.now()+')';
                     document.getElementById("perEditHead").style.backgroundSize='120px 120px'
                 })
             },

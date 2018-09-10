@@ -1,7 +1,7 @@
 import {handleResponse, server} from "../utils/http";
 
 export function getUserInfo(){
-    return server.get('user'+"?ran=" + Math.random()).then(handleResponse)
+    return server.get('user').then(handleResponse)
 }
 
 export function updateUserInfo(form) {
