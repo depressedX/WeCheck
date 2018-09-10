@@ -2,6 +2,9 @@
     <div class="group">
         <app-bar>
             <template>{{name}}</template>
+            <template slot="right">
+                <el-button type="text" @click="quitGroup" style="margin-right: 1em;color:#F56C6C">退出群组</el-button>
+            </template>
         </app-bar>
         <section class="content">
             <div class="owner-tag" v-if="ownerName">
@@ -16,13 +19,12 @@
                         title="暂未开启签到"
                         type="warning">
                 </el-alert>
-                <el-button v-else :type="checked?'success':'primary'" :disabled="!state||checked" @click="check">
+                <el-button v-else-if="checked" type="success" disabled>
                     {{checked?'已完成签到':'签到'}}
                 </el-button>
-                <br/>
-
-
-                <el-button type="danger" @click="quitGroup">退出群组</el-button>
+                <div v-else class="check-button-wrapper">
+                    <check-button @click="check"/>
+                </div>
                 <have-not-joined v-if="!hasJoined" :id="id" @hasJoined="hasJoinedHandler"/>
             </div>
             <i class="el-icon-loading" v-else/>
@@ -40,10 +42,11 @@
     import ButtonMore from "../../../../components/ButtonMore";
     import CheckValidator from "./components/CheckValidator";
     import FaceCapture from "./components/FaceCapture";
+    import CheckButton from "./components/CheckButton";
 
     export default {
         name: "Group",
-        components: {FaceCapture, CheckValidator, ButtonMore, Icon, HaveNotJoined, AppBar},
+        components: {CheckButton, FaceCapture, CheckValidator, ButtonMore, Icon, HaveNotJoined, AppBar},
         props: {
             id: {
                 required: true,
@@ -125,11 +128,24 @@
             hasJoinedHandler() {
                 this.update()
             },
-            quitGroup() {
-                quitGroup(this.id).then(() => {
+            async quitGroup() {
+
+                try {
+                    await this.$confirm('即将退出该群组, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    })
+                    await quitGroup(this.id)
                     this.$message('退出成功');
                     this.$router.go(-1)
-                })
+                } catch (e) {
+                    this.$message.error(e.message)
+                }
+
+            },
+            test(){
+                alert(1)
             }
         }
     }
@@ -148,23 +164,27 @@
         .group-operation {
             position: relative;
             padding: 1em .5em;
+
+            .check-button-wrapper {
+                text-align: center;
+            }
         }
-        
-        .owner-tag{
+
+        .owner-tag {
             border-bottom: 1px solid #409EFF;
             position: relative;
             height: 2em;
             line-height: 2;
-            
-            .owner-tag__key{
-                
+
+            .owner-tag__key {
+
                 display: inline-block;
                 position: relative;
                 background-color: #409EFF;
                 padding-left: .5em;
                 margin-right: 2em;
-                
-                &:after{
+
+                &:after {
                     content: "";
                     display: inline-block;
                     width: 0px;
@@ -178,7 +198,7 @@
                     z-index: -2;
                 }
             }
-            .owner-tag__value{
+            .owner-tag__value {
                 display: inline-block;
                 position: relative;
             }

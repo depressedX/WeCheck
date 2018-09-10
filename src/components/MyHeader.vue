@@ -61,8 +61,9 @@
 <script>
     import {logout} from "../resource/authorization"
     import {getUserInfo, updateUserInfo} from "../resource/user"
+
     export default {
-        name: "Header",
+        name: "MyHeader",
         created(){
             // this.getposition()
             this.getPhoto()

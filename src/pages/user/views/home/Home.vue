@@ -1,5 +1,6 @@
 <template>
     <div class="home">
+        <my-header/>
         <el-form>
             <el-form-item>
                 <el-input type="text" v-model="searchId" placeholder="输入群组口令">
@@ -17,10 +18,12 @@
 <script>
     import TodayScheduleTable from "./components/TodayScheduleList";
     import GroupJoinedList from "./components/GroupJoinedList";
+    import MyHeader from "../../../../components/MyHeader";
 
     export default {
         name: 'home',
         components: {
+            MyHeader,
             GroupJoinedList,
             TodayScheduleTable
         },
@@ -49,5 +52,11 @@
         section.main {
             padding: 0 1em;
         }
+    }
+</style>
+<style lang="scss">
+    .el-dialog {
+        width: 100% !important;
+        max-width: 450px;
     }
 </style>

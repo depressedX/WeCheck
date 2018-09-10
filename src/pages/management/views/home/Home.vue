@@ -2,7 +2,7 @@
 
 
         <div class="home">
-            <Header></Header>
+            <my-header/>
             <MyGroupTable ref="table"></MyGroupTable>
             <!--<div id="allmap"></div>-->
             <div class="footer">
@@ -21,14 +21,12 @@
 
 <script>
     import MyGroupTable from "./component/MyGroupTable"
-    import Header from "../../../../components/Header"
+    import MyHeader from "../../../../components/MyHeader"
     import {createGroup} from "../../../../resource/group"
-    import {logout} from "../../../../resource/authorization"
-    import {getUserInfo, updateUserInfo} from "../../../../resource/user"
 
     export default {
         name: 'home',
-        components: {MyGroupTable,Header},
+        components: {MyHeader, MyGroupTable},
 
         computed: {
             // editPerInfoFormData() {
