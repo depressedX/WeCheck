@@ -33,7 +33,7 @@ export let router = new Router({
             path: '/login',
             name: 'login',
             component: _('login'),
-            props: route => ({ type: route.query.type,redirect:route.query.redirect })
+            props: route => ({ redirect:route.query.redirect })
         },
         {
             path: '/register',

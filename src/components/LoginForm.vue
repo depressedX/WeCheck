@@ -16,7 +16,7 @@
 
 <script>
     import {login} from "../resource/authorization";
-    import {userType} from "../metaInfo";
+    import {wait} from "../utils";
 
     // 管理端、用户端通用登陆组件
 
@@ -24,20 +24,15 @@
     export default {
         name: "LoginForm",
         props: {
-            type: {
-                type: String,
-                required: true,
-                validator: val => Object.keys(userType).find(key => userType[key] === val)
-            },
-            redirect:{
-                type:String
+            redirect: {
+                type: String
             }
         },
         data() {
             return {
                 form: {
-                    username: this.type == 'user' ? 'username' : 'quyans',
-                    password: this.type == 'user' ? 123 : 123,
+                    username: '',
+                    password: '',
                 },
                 rules: {
                     username: [{required: true, message: '请输入用户名'}],
@@ -47,33 +42,31 @@
             }
         },
         methods: {
-            submit() {
+            async submit() {
                 this.submitting = true
 
-                login(this.form.username, this.form.password)
-                    .then(() => {
-                            this.$message({
-                                message: '登陆成功  正在跳转',
-                                type: 'success'
-                            });
-                            // 2s后跳转到相应页面
-                            setTimeout(() => {
-                                if (this.redirect) {
-                                    window.location.href = this.redirect
-                                }else {
-                                    window.location.href = `/${this.type}.html`
-                                }
-                            }, 2000)
-                        },
-                        e => {
-                            this.$message.error(`出错：${e.message}`);
-                        })
-                    .then(() => {
-                            this.submitting = false
-                        },
-                        () => {
-                            this.submitting = false
-                        },)
+                try {
+                    let data = await login(this.form.username, this.form.password)
+                    this.$message({
+                        message: '登陆成功  正在跳转',
+                        type: 'success'
+                    });
+                    // 2s后跳转到相应页面
+                    await wait(2000)
+
+                    if (this.redirect) {
+                        window.location.href = this.redirect
+                    } else {
+                        let type = data.userType === 0? 'user':'management'
+                        window.location.href = `/${type}.html`
+                    }
+                }
+                catch (e) {
+                    this.$message.error(`出错：${e.message}`);
+                }
+                finally {
+                    this.submitting = false
+                }
             }
         }
     }

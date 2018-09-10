@@ -10,7 +10,7 @@
 
                 <el-card style=" margin:0 auto;color: white ">
 
-                    <login-form :type="type" :redirect="redirect"/>
+                    <login-form :redirect="redirect"/>
                     <p style=" float: left">
                         <router-link to="/register" style="color: white;
                                             margin: 0;text-decoration: none;">
@@ -27,16 +27,15 @@
 
 <script>
     import LoginForm from "../../../../components/LoginForm";
-    import {userType} from "../../../../metaInfo";
 
     export default {
         name: "Login",
         components: {LoginForm},
         props: {
-            type: {
-                type: String,
-                validator: val => Object.keys(userType).map(k => userType[k]).indexOf(val) !== -1
-            },
+            // type: {
+            //     type: String,
+            //     validator: val => Object.keys(userType).map(k => userType[k]).indexOf(val) !== -1
+            // },
             redirect:{
                 type:String
             }
