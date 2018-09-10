@@ -24,14 +24,6 @@
                 type: String,
                 required: true
             },
-            // needLocation: {
-            //     type: Boolean,
-            //     default: false
-            // },
-            // needFace: {
-            //     type: Boolean,
-            //     default: false
-            // }
         },
         data() {
             return {
@@ -80,8 +72,9 @@
                         })
                     })
                     face = await this.$refs.faceCapture.getNormalFrame()
+                    this.visible = false
                     this.message = '成功获取人脸信息'
-                    wait(1000)
+                    await wait(1000)
                     this.faceCaptureVisible = false
                     this.visible = true
                 }

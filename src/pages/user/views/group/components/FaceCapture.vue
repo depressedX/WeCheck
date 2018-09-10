@@ -21,9 +21,14 @@
             top: 0;
         }
 
-        position: relative;
-        width: 320px;
-        height: 240px;
+        /*position: relative;*/
+        /*width: 320px;*/
+        /*height: 240px;*/
+        position: fixed;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        top: 25%;
     }
 </style>
 
@@ -75,12 +80,12 @@
                 return await new Promise(resolve => {
                     // 获取一张图像
 
-                    let handler = event => {
+                    let handler = async event => {
                         if (event.data.length !== 0) {
-                            let img = captureImageFromVideo(this.$refs.videoDisplayer)
+                            let img = await captureImageFromVideo(this.$refs.videoDisplayer)
                             this.stopTracking()
                             this.tracker.removeListener('track', handler)
-                            // resolve(img)
+                            resolve(img)
                         }
                     }
 

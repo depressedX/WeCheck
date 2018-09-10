@@ -31,9 +31,9 @@ export function timeout(data, time) {
 
 export function wait(ms) {
     return new Promise(resolve => {
-        setTimeout(()=>{
+        setTimeout(() => {
             resolve()
-        },ms)
+        }, ms)
     })
 }
 
@@ -69,24 +69,24 @@ export function getCurrentPosition() {
             }
 
             function onError(data) {
-                
+
                 // 定位出错
                 console.log(`定位失败  ${Date.now()} ${data}`)
-                
+
                 reject(data)
-                
+
             }
         })
     })
 }
 
-export function captureImageFromVideo(video) {
-    var canvas = document.createElement("canvas");
+export async function captureImageFromVideo(video) {
+    let canvas = document.createElement("canvas");
     canvas.width = video.videoWidth
     canvas.height = video.videoHeight
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    var img = new Image()
-    img.src = canvas.toDataURL("image/jpeg");
-    return img
+    let blob = await new Promise(resolve => canvas.toBlob(blob => {
+        resolve(blob)
+    }, "image/jpeg"))
+    return new File([blob],`video_capture_${Date.now()}`,{lastModified:Date.now()})
 };
