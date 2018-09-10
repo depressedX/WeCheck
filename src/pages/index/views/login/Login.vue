@@ -1,6 +1,6 @@
 <template>
     
-    <div :style="note" id="test" style="height: 100%">
+    <div :style="note" id="test" style="height: 100%;min-height: 550px">
         <div style="height: 100% ;background-color: rgba(0,0,0,0.47);color: white">
 
             <div style="width: 80% ;margin: 0 auto; padding-top: 15%">
@@ -60,7 +60,7 @@
     }
 
 </style>
-<style lang="scss">
+<style  lang="scss">
 
     html {
         height: 100%;
@@ -72,7 +72,7 @@
     }
 
     #test .el-card {
-        background-color: #fff0;
+        background-color: rgba(7, 6, 8, 0.03);
         border: none;
     }
 

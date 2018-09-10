@@ -70,6 +70,7 @@
         },
         data(){
             return{
+                BASE_URL: process.env.BASE_URL,
                 note: {
                     backgroundImage: "url(" + require("../image/head3.png") + ")",
                     backgroundRepeat: "no-repeat",
@@ -136,7 +137,7 @@
                         type: 'success'
                     })
                     setTimeout(() => {
-                        this.$router.push('/login')
+                        window.location.href=this.BASE_URL;
                     }, 2000)
                 })
             },

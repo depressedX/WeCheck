@@ -504,7 +504,7 @@
                             if (temp[i].checked==true){
                                 temp[i].checked = '签到'
                             } else {
-                                temp[i].checked = '未签'
+                                temp[i].checked = '已签'
                             }
                         }
                         this.historyScheduleList = temp
@@ -815,7 +815,7 @@
                         temp[i].day = temp[i].startUpDateTime.slice(0,10);
                         temp[i].time = temp[i].startUpDateTime.slice(11,16);
                         if (temp[i].checked==true){
-                            temp[i].checked = '签到'
+                            temp[i].checked = '已签'
                         } else {
                             temp[i].checked = '未签'
                         }
