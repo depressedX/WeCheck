@@ -4,9 +4,11 @@ import qs from 'qs'
 const hasLoggedInKey = 'hasLoggedIn'
 
 export function login(username, password) {
-    return server.post('login', qs.stringify({username, password}))
+    let res = server.post('login', qs.stringify({username, password}))
         .then(handleResponse)
-        .then(res => sessionStorage.setItem(hasLoggedInKey, 'true'))
+        res.then(res => sessionStorage.setItem(hasLoggedInKey, 'true'))
+    
+    return res
 }
 
 export function logout() {
