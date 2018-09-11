@@ -47,13 +47,13 @@
             scheduleColor() {
                 switch (this.type) {
                     case scheduleTypes.missed:
-                        return '#909399'
+                        return 'rgba(136, 138, 143, 0.45)'
                     case scheduleTypes.done:
-                        return '#67C23A'
+                        return 'rgba(149, 235, 106, 0.5)'
                     case scheduleTypes.open:
-                        return '#E6A23C'
+                        return 'rgba(230, 162, 60, 0.41)'
                     case scheduleTypes.future:
-                        return '#909399'
+                        return '#71c2f145'
                 }
             }
         }

@@ -1,5 +1,5 @@
 <template>
-    <div class="my-title"><div class="inner-wrapper"><slot></slot></div></div>
+    <div class="my-title" style="color: white"><div class="inner-wrapper"><slot></slot></div></div>
 </template>
 
 <script>
@@ -17,7 +17,7 @@
         
         >.inner-wrapper{
             display: inline-block;
-            background-color: #409EFF;
+            background-color: #409effad;;
             /*border-bottom-left-radius: 5px;*/
             border-top-left-radius: 5px;
             border-top-right-radius: 15px;

@@ -408,7 +408,7 @@
                 mySchList:[
 
                 ],
-
+                intervalindex:null,
                 group_Editform:{
                     name:'操作系统',
                     // state:false,
@@ -420,7 +420,7 @@
                 },
                 //经度纬度
 
-
+                stateOfList:false,
                 //临时存放对应修改计划的数据
                 change_arr_repeat:[],
 
@@ -494,7 +494,7 @@
                     this.owner = res.owner;
                     this.state = res.state;
 
-
+                    var that = this
                     //在这里获取 历史计划列表
                     getGroupHistory(this.id).then(res =>{
                          var temp = res
@@ -510,9 +510,9 @@
                         this.historyScheduleList = temp
                     })
 
-
                     //在这里对每个成员进行统计
                     var temp = res.members
+                    // console.log(temp)
                     for (var i=0;i<temp.length;i++)
                     {
                         console.log(i+" 这是一开始")
@@ -527,12 +527,29 @@
                             }
                             temp[index].allRecord = allRecord ;
                             temp[index].misRecord = misRecord;
+                            allRecord = 0;
+                            misRecord = 0;
                             index++;
-                            that.members = temp;
 
+                            console.log(that)
+                            if (index==temp.length){
+                                // console.log(that.stateOfList)
+                                that.stateOfList =true
+                            }
                         })
-
+                        // this.members = ["你好"]
                     }
+
+                    // console.log(this)
+
+                    this.intervalindex = setInterval(function () {
+                        // console.log(that)
+                        if (that.stateOfList ==true){
+                            that.members = temp
+                            clearInterval(that.intervalindex)
+                            console.log(that.members)
+                        }
+                    },1000)
 
 
 

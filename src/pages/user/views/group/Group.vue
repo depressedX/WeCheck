@@ -8,7 +8,7 @@
         </app-bar>
         <section class="content">
             <div class="owner-tag" v-if="ownerName">
-                <div class="owner-tag__key">创建者：</div>
+                <div class="owner-tag__key" style="color: white">创建者：</div>
                 <div class="owner-tag__value">{{ownerName}}</div>
             </div>
             <div class="group-operation" v-if="!loading">
