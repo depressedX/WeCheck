@@ -164,6 +164,7 @@
             padding: 1em .5em;
 
             .check-button-wrapper {
+                margin-top: 20px;
                 text-align: center;
             }
         }

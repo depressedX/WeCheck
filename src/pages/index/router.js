@@ -27,7 +27,7 @@ export let router = new Router({
         {
             path: '/',
             name: 'home',
-            component: _('home')
+            redirect:'/login'
         },
         {
             path: '/login',
