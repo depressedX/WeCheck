@@ -80,13 +80,21 @@ export function getCurrentPosition() {
     })
 }
 
-export async function captureImageFromVideo(video) {
+export async function captureImageFromVideo(video,boxConstraint = {width:200,height:200}) {
     let canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth
-    canvas.height = video.videoHeight
+    
+    if (video.videoHeight / video.videoWidth > boxConstraint.height / boxConstraint.width) {
+        // 较高
+        canvas.height = boxConstraint.height
+        canvas.width = canvas.height * video.videoWidth / video.videoHeight
+    }else {
+        canvas.width = boxConstraint.width
+        canvas.height = canvas.width * video.videoHeight/video.videoWidth
+    }
+    
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
     let blob = await new Promise(resolve => canvas.toBlob(blob => {
         resolve(blob)
-    }, "image/jpeg",.5))
+    }, "image/jpeg"))
     return new File([blob], `video_capture_${Date.now()}`, {lastModified: Date.now()})
 };

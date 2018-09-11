@@ -245,7 +245,7 @@
                 <el-dialog title="编辑群体" :visible.sync="dialogEditGroup">
 
                     <el-form ref="group_Editform" :model="group_Editform"
-                             :rules="{hasPosition: [{required: true, message: '请在图中标记中心点'}]}">
+                             :rules="{positionCorrect: [{required: true, message: '请在图中标记中心点',trigger:'change'}]}">
                         <el-form-item label="群体名称" :label-width="formLabelWidth">
                             <el-input v-model="group_Editform.name"></el-input>
                         </el-form-item>
@@ -289,8 +289,7 @@
                             </el-col>
                             米
                         </el-form-item>
-                        <el-form-item prop="hasPosition">
-
+                        <el-form-item prop="positionCorrect">
                         </el-form-item>
                     </el-form>
                     <div slot="footer" class="dialog-footer">
@@ -424,7 +423,7 @@
                     effectiveDistance: 500,
 
                     // 根据son_prop计算出
-                    hasPosition: false
+                    // positionCorrect: ''
                 },
                 //经度纬度
 
@@ -477,8 +476,18 @@
                 // console.log("路由变化"+this.id)
                 this.update();
             },
-            'group_Editform.lng'(v) {
-                this.group_Editform.hasPosition = (v.lng && v.lat)?'true':''
+            'group_Editform.lng': {
+                immediate: true,
+                handler(v) {
+                    let form = this.group_Editform
+                    this.group_Editform.positionCorrect = (!form.needLocation || v) ? 'true' : ''
+                }
+            },
+            'group_Editform.needLocation': {
+                immediate: true,
+                handler(v) {
+                    this.group_Editform.positionCorrect = (!v || this.group_Editform.lng) ? 'true' : ''
+                }
             }
 
 
