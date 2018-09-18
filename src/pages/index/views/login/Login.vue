@@ -1,6 +1,6 @@
 <template>
     
-    <div :style="note" id="test" style="height: 100%;min-height: 550px">
+    <div :style="this.note" id="test" style="height: 100%;min-height: 550px">
         <div style="height: 100% ;background-color: rgba(0,0,0,0.47);color: white">
 
             <div style="width: 80% ;margin: 0 auto; padding-top: 15%">
@@ -40,6 +40,14 @@
                 type:String
             }
         },
+        created(){
+
+            if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+                this.pcOrPhone = false
+            } else {
+                this.pcOrPhone = true
+            }
+        },
         data() {
             return {
                 note: {
@@ -48,7 +56,14 @@
                     height: '100%',
                     backgroundSize: '100% 100%'
                 },
-                BASE_URL: process.env.BASE_URL
+                notePc:{
+                    backgroundImage: "url(" + require("../../../../image/pcBackground.jpg") + ")",
+                    backgroundRepeat: "no-repeat",
+                    height: '100%',
+                    backgroundSize: '100% 100%'
+                },
+                BASE_URL: process.env.BASE_URL,
+                pcOrPhone:true,
             }
         },
         computed: {}
