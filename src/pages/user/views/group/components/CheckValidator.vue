@@ -5,7 +5,7 @@
                 width="100%">
             <i class="el-icon-loading"/>{{message}}
         </el-dialog>
-        <face-capture v-if="faceCaptureVisible" ref="faceCapture"/>
+        <real-face-capture v-if="faceCaptureVisible" ref="faceCapture"/>
     </div>
 </template>
 
@@ -13,19 +13,25 @@
     // 签到地理信息人脸信息验证
 
     import {check} from "../../../../../resource/check";
-    import {getCurrentPosition, timeout, wait} from "../../../../../utils";
-    import FaceCapture from "./FaceCapture";
+    import {getCurrentPosition, wait} from "@/utils";
+    import {FaceDetector} from "@/utils/FaceDetector";
 
     export default {
         name: "CheckValidator",
-        components: {FaceCapture},
+        components: {
+            RealFaceCapture: () => {
+                return FaceDetector.support() ?
+                    import(/*webpackChunkName:"googleFaceDetectorComponent"*/'./FaceCapture2.vue') :
+                    import(/*webpackChunkName:"normalFaceDetectorComponent"*/'./FaceCapture.vue')
+            },
+        },
         props: {
             groupId: {
                 type: String,
                 required: true
             },
         },
-        created(){
+        created() {
 
         },
         data() {
@@ -80,16 +86,9 @@
                                 resolve()
                             })
                         })
-                        new Promise(resolve => {
-                            this.$nextTick(() => {
-                                resolve()
-                            })
-                        }).then(()=>{
-
-                            console.log('ok')
-                        })
 
                         face = await this.$refs.faceCapture.getNormalFrame()
+
                         this.visible = true
                         this.message = '成功获取人脸信息'
                         this.faceCaptureVisible = false

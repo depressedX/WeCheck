@@ -41,12 +41,15 @@
     import Icon from "../../../../components/Icon";
     import ButtonMore from "../../../../components/ButtonMore";
     import CheckValidator from "./components/CheckValidator";
-    import FaceCapture from "./components/FaceCapture";
     import CheckButton from "./components/CheckButton";
+
+    let test = false
 
     export default {
         name: "Group",
-        components: {CheckButton, FaceCapture, CheckValidator, ButtonMore, Icon, HaveNotJoined, AppBar},
+        components: {
+            CheckButton, CheckValidator, ButtonMore, Icon, HaveNotJoined, AppBar,
+        },
         props: {
             id: {
                 required: true,
@@ -142,7 +145,7 @@
                 }
 
             },
-            test(){
+            test() {
                 alert(1)
             }
         }

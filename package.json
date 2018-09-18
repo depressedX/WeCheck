@@ -1,25 +1,27 @@
 {
-  "name": "we-check",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
-  },
-  "dependencies": {
-    "axios": "^0.18.0",
-    "element-ui": "^2.4.5",
-    "qs": "^6.5.2",
-    "url-parse": "^1.4.3",
-    "vue": "^2.5.16",
-    "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.0-rc.5",
-    "@vue/cli-service": "^3.0.0-rc.5",
-    "node-sass": "^4.9.2",
-    "sass-loader": "^7.0.1",
-    "vue-template-compiler": "^2.5.16"
-  }
+	"name": "we-check",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"serve": "vue-cli-service serve",
+		"build": "vue-cli-service build"
+	},
+	"dependencies": {
+		"axios": "^0.18.0",
+		"element-ui": "^2.4.5",
+		"qs": "^6.5.2",
+		"stats-webpack-plugin": "^0.7.0",
+		"url-parse": "^1.4.3",
+		"vue": "^2.5.16",
+		"vue-router": "^3.0.1",
+		"vuex": "^3.0.1"
+	},
+	"devDependencies": {
+		"@vue/cli-plugin-babel": "^3.0.0-rc.5",
+		"@vue/cli-service": "^3.0.0-rc.5",
+		"node-sass": "^4.9.2",
+		"sass-loader": "^7.0.1",
+		"vue-template-compiler": "^2.5.16",
+		"webpack-cli": "^3.1.0"
+	}
 }

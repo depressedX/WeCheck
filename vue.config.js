@@ -1,3 +1,5 @@
+const StatsPlugin = require('stats-webpack-plugin')
+
 module.exports = {
     pages: {
         index: {
@@ -29,5 +31,18 @@ module.exports = {
             }
         },
         https: true
+    },
+    configureWebpack: {
+        plugins:[
+            new StatsPlugin('stats.json',{
+                chunkModules: true,
+                chunks:true,
+                assets:false,//html,css这些 
+                modules:true,
+                children:true,
+                chunksSort:true,//排序这两个都要加上   
+                assetsSort:true
+            })
+        ],
     }
 }

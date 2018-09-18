@@ -4,7 +4,9 @@ import Router from 'vue-router'
 import {toFirstLowerCase, toFirstUpperCase} from "../../utils/index";
 import {hasLoggedIn} from "../../resource/authorization";
 
-const views = require.context('./views')
+const views = require.context('./views',true,/(\w+)\/\1/i)
+
+console.log(views.keys())
 
 /*
 对组件的引用需先考虑一下引用方式，如果没有，再直接通过import引用

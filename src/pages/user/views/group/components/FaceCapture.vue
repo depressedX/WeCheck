@@ -34,8 +34,9 @@
 
 <script>
     import {captureImageFromVideo} from "../../../../../utils";
-    
-    
+    import '@/lib/tracking.js'
+    import '@/lib/data/face.js'
+
     // 用于初始化的promise
     let initPromise = null
 
@@ -52,26 +53,24 @@
 
         },
         mounted() {
-            
+
             initPromise = new Promise(async resolve => {
 
                 let video = this.$refs.videoDisplayer
 
-                await import(/*webpackChunkName:"chunk_tracking"*/'@/lib/tracking.js')
-                await import(/*webpackChunkName:"chunk_tracking2"*/'@/lib/data/face.js')
-                
+
                 let tracker = this.tracker = new tracking.ObjectTracker('face')
                 tracker.setInitialScale(4);
                 tracker.setStepSize(2);
                 tracker.setEdgesDensity(0.1);
-                
+
                 let trackerTask = this.trackerTask = tracking.track(video, tracker, {camera: true});
                 console.log('mounted ', this.trackerTask)
                 trackerTask.stop()
-                
+
                 resolve()
             })
-            
+
 
         },
         beforeDestroy() {
@@ -86,7 +85,7 @@
 
 
             async getNormalFrame() {
-                
+
                 // 等待初始化完成 否则会导致trackerTask未初始化  而失败
                 await initPromise
 
@@ -99,7 +98,7 @@
                     let handler = async event => {
                         if (event.data.length !== 0 && !hasPicture) {
                             hasPicture = true
-                            let img = await captureImageFromVideo(this.$refs.videoDisplayer)
+                            let img = await captureImageFromVideo(this.$refs.videoDisplayer, {boxConstraint: true})
                             this.stopTracking()
                             this.tracker.removeListener('track', handler)
                             resolve(img)

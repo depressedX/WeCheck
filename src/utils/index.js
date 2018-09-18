@@ -80,8 +80,26 @@ export function getCurrentPosition() {
     })
 }
 
-export async function captureImageFromVideo(video, boxConstraint = {width: 200, height: 200}) {
+export async function captureImageFromVideo(video, options = {}) {
     let canvas = document.createElement("canvas");
+
+    let boxConstraint = options.boxConstraint
+    if (boxConstraint) {
+
+        if (typeof boxConstraint === "boolean" || boxConstraint instanceof Boolean)
+            boxConstraint = {
+                width: 200,
+                height: 200
+            }
+        else
+            boxConstraint = {
+                width: boxConstraint.width,
+                height: boxConstraint.height
+            }
+
+    } else {
+        boxConstraint = {width: video.videoWidth, height: video.videoHeight}
+    }
 
     if (video.videoHeight / video.videoWidth > boxConstraint.height / boxConstraint.width) {
         // 较高
