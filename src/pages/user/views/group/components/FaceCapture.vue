@@ -33,10 +33,11 @@
 </style>
 
 <script>
-    import '../../../../../lib/tracking'
-    import '../../../../../lib/data/face'
     import {captureImageFromVideo} from "../../../../../utils";
-
+    
+    
+    // 用于初始化的promise
+    let initPromise = null
 
     // 利用clmtrackr和百度ai人脸识别来识别一张高质量的照片
     export default {
@@ -44,44 +45,60 @@
         data() {
 
             return {
-                stream: null,
+                // stream: null,
                 tracker: null,
                 trackerTask: null
             }
 
         },
         mounted() {
-            let video = this.$refs.videoDisplayer
+            
+            initPromise = new Promise(async resolve => {
 
-            let tracker = this.tracker = new tracking.ObjectTracker('face')
-            tracker.setInitialScale(4);
-            tracker.setStepSize(2);
-            tracker.setEdgesDensity(0.1);
+                let video = this.$refs.videoDisplayer
 
-
-            let trackerTask = this.trackerTask = tracking.track(video, tracker, {camera: true});
-            trackerTask.stop()
+                await import(/*webpackChunkName:"chunk_tracking"*/'@/lib/tracking.js')
+                await import(/*webpackChunkName:"chunk_tracking2"*/'@/lib/data/face.js')
+                
+                let tracker = this.tracker = new tracking.ObjectTracker('face')
+                tracker.setInitialScale(4);
+                tracker.setStepSize(2);
+                tracker.setEdgesDensity(0.1);
+                
+                let trackerTask = this.trackerTask = tracking.track(video, tracker, {camera: true});
+                console.log('mounted ', this.trackerTask)
+                trackerTask.stop()
+                
+                resolve()
+            })
+            
 
         },
-        beforeDestroy(){
+        beforeDestroy() {
             this.trackerTask.stop()
             let video = this.$refs.videoDisplayer
-            if (video.srcObject){
-                video.srcObject.getTracks().forEach(t=>t.stop())
+            if (video.srcObject) {
+                video.srcObject.getTracks().forEach(t => t.stop())
                 video.srcObject = null
-            } 
+            }
         },
         methods: {
 
 
             async getNormalFrame() {
+                
+                // 等待初始化完成 否则会导致trackerTask未初始化  而失败
+                await initPromise
 
                 this.startTracking()
                 return await new Promise(resolve => {
                     // 获取一张图像
 
+                    let hasPicture = false
+
                     let handler = async event => {
-                        if (event.data.length !== 0) {
+                        if (event.data.length !== 0 && !hasPicture) {
+                            hasPicture = true
                             let img = await captureImageFromVideo(this.$refs.videoDisplayer)
                             this.stopTracking()
                             this.tracker.removeListener('track', handler)
@@ -92,18 +109,19 @@
                     this.tracker.on('track', handler)
                 })
             },
-            
+
             startTracking() {
-                this.tracker && this.tracker.on('track', this.paintingFunc);
+                if (this.tracker) this.tracker.on('track', this.paintingFunc)
                 this.trackerTask.run()
                 this.$refs.videoDisplayer.play()
             },
             stopTracking() {
+                console.log(this.$refs)
                 this.tracker && this.tracker.removeListener('track', this.paintingFunc);
                 this.trackerTask.stop()
                 this.$refs.videoDisplayer.pause()
             },
-            
+
 
             paintingFunc(event) {
                 let canvas = this.$refs.canvasDisplayer,

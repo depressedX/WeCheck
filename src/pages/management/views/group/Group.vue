@@ -865,8 +865,8 @@
                 var schId = this.historyScheduleList[index].id;
                 console.log(schId)
                 getRecord(schId).then(res => {
-                    this.RecordData.done = res.missed;
-                    this.RecordData.missed = res.done;
+                    this.RecordData.done = res.done;
+                    this.RecordData.missed = res.missed;
                 })
             }
         },

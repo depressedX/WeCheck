@@ -13,7 +13,7 @@
     // 签到地理信息人脸信息验证
 
     import {check} from "../../../../../resource/check";
-    import {getCurrentPosition, wait} from "../../../../../utils";
+    import {getCurrentPosition, timeout, wait} from "../../../../../utils";
     import FaceCapture from "./FaceCapture";
 
     export default {
@@ -75,6 +75,20 @@
                                 resolve()
                             })
                         })
+                        await new Promise(resolve => {
+                            this.$nextTick(() => {
+                                resolve()
+                            })
+                        })
+                        new Promise(resolve => {
+                            this.$nextTick(() => {
+                                resolve()
+                            })
+                        }).then(()=>{
+
+                            console.log('ok')
+                        })
+
                         face = await this.$refs.faceCapture.getNormalFrame()
                         this.visible = true
                         this.message = '成功获取人脸信息'

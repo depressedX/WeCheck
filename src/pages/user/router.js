@@ -41,11 +41,8 @@ export let router = new Router({
 router.beforeEach(((to, from, next) => {
     
     if (!hasLoggedIn()){
-        // 跳转到首页
-        // window.location.href = '/index.html'
-        
         // 跳转到首页的登录页
-        window.location.href = `/#/login?type=user&redirect=${encodeURIComponent(location.href)}`
+        window.location.href = `/#/login?redirect=${encodeURIComponent(location.href)}`
     }else {
         next()
     }
