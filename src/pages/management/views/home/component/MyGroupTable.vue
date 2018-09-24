@@ -65,7 +65,7 @@
         data(){
 
             return{
-                baseurl:'https://192.168.48.1:8080/management.html#/group/',
+                baseurl:'https://www.wecheck.work/user.html#/group/',
                 tableData: [],
                 activeNames: ['1'],
                 myGroupList:[
