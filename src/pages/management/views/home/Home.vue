@@ -51,7 +51,6 @@
             return {
                 BASE_URL: process.env.BASE_URL,
                 headPhoto:null,
-
                 // note: {
                 //     backgroundImage: "url(" + require("../../../../image/head3.png") + ")",
                 //     backgroundRepeat: "no-repeat",
