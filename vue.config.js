@@ -1,4 +1,9 @@
-const StatsPlugin = require('stats-webpack-plugin')
+const StatsPlugin = require('stats-webpack-plugin');
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
+
+
+
+
 
 module.exports = {
     pages: {
@@ -42,7 +47,18 @@ module.exports = {
                 children:true,
                 chunksSort:true,//排序这两个都要加上   
                 assetsSort:true
-            })
+            }),
+
+
+            // service worker caching
+            new SWPrecacheWebpackPlugin({
+                cacheId: 'my-vue-app',
+                filename: 'service-worker.js',
+                staticFileGlobs: ['dist/**/*.{js,html,css}'],
+                minify: true,
+                stripPrefix: 'dist/'
+            }),
+
         ],
     }
 }
