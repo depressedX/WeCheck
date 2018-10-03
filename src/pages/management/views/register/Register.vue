@@ -4,7 +4,6 @@
         <register-form/>
         <p style="text-align: right"><a :href="`${BASE_URL}user.html/#/register`">切换至用户端注册</a></p>
     </el-card>
-
 </template>
 
 <script>

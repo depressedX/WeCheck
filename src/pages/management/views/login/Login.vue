@@ -29,6 +29,7 @@
     export default {
         name: "Login",
         components: {LoginForm},
+
         data() {
             return {
                 note:{

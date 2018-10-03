@@ -44,7 +44,13 @@ export let router = new Router({
             name:'group',
             // props:true,
             component: _('group')
-        }
+        },
+        // {
+        //     path:'/app',
+        //     name:'app',
+        //     // props:true,
+        //     component: _('app')
+        // }
     ]
 })
 router.beforeEach(((to, from, next) => {

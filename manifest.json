@@ -1,0 +1,22 @@
+{
+  "scope": "/",
+  "name": "weCheck",
+  "short_name": "weCheck",
+  "start_url": "/?from=homescreen",
+  "display": "standalone",
+  "description": "签到助手weCheck",
+  "orientation": "portrait",
+  "theme_color": "#3f51b5",
+  "background_color": "#fff",
+  "icons": [{
+    "src": "./src/image/weChecklogo.png",
+    "sizes": "32x32",
+    "type": "image/png"
+  },
+    {
+      "src": "./src/image/weChecklogo.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ]
+}

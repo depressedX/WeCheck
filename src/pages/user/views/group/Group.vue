@@ -139,7 +139,7 @@
                     })
                     await quitGroup(this.id)
                     this.$message('退出成功');
-                    this.$router.go(-1)
+                    this.$router.push({name: 'home'});
                 } catch (e) {
                     this.$message.error(e.message)
                 }
