@@ -1,7 +1,7 @@
 <template>
     <div id="app">
-        <QRCodeScanner @detected="alert"/>
-        <img v-if="imgUrl" :src="imgUrl"/>
+        <!--<QRCodeScanner @detected="alert"/>-->
+        <!--<img v-if="imgUrl" :src="imgUrl"/>-->
         <router-view/>
     </div>
 </template>

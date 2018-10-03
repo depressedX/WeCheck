@@ -1,9 +1,9 @@
 <template>
     <div class="group">
-        <app-bar>
-            <template>{{name}}</template>
+        <app-bar :style="note">
+            <template  ><span style="color: white;font-size: 1.3em;letter-spacing: 7.5px">{{name}}</span></template>
             <template slot="right">
-                <el-button type="text" @click="quitGroup" style="margin-right: 1em;color:#F56C6C">退出群组</el-button>
+                <el-button type="text" @click="quitGroup" style="margin-right: 1em;color:white">退出群组</el-button>
             </template>
         </app-bar>
         <section class="content">
@@ -30,6 +30,9 @@
             <i class="el-icon-loading" v-else/>
         </section>
         <check-validator ref="checkValidator" :group-id="id"/>
+        <!--<div class="footer">-->
+            <!--<el-button type="danger">退出群体</el-button>-->
+        <!--</div>-->
     </div>
 </template>
 
@@ -77,7 +80,15 @@
 
                 // 人脸、地理
                 needFace: false,
-                needLocation: false
+                needLocation: false,
+                note: {
+                    backgroundImage: "url(" + require("../../../../image/head3.png") + ")",
+                    backgroundRepeat: "no-repeat",
+                    height: '60px',
+                    width: "100%",
+                    backgroundSize: '100% 100%',
+                    position: "relative",
+                },
             }
         },
         watch: {
@@ -159,7 +170,8 @@
         & > .content {
             position: relative;
             overflow: hidden;
-            min-height: calc(100vh - #{$top-bar-height});
+            min-height: calc(75vh - #{$top-bar-height});
+            margin-top: 5vh;
         }
 
         .group-operation {
@@ -167,7 +179,7 @@
             padding: 1em .5em;
 
             .check-button-wrapper {
-                margin-top: 20px;
+                margin-top: 10vh;
                 text-align: center;
             }
         }
@@ -206,4 +218,5 @@
             }
         }
     }
+
 </style>
