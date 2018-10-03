@@ -4,25 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="manifest" href="./manifest.json">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-
-
     <title><%= htmlWebpackPlugin.options.title %></title>
     <script>
         window.BMap_loadScriptTime = (new Date).getTime();
     </script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('./service-worker.js');
-            });
-        }
-    </script>
-
-    <!--百度地图api  暂时弃用-->
-    <!--<script type="text/javascript" src="http://api.map.baidu.com/getscript?v=3.0&ak=nA50vfiO6QOheIIE03GNtlnrbnKEmG2T&quot;&services=&t=20180823175819"></script>-->
-    <script type="text/javascript"
+ <script type="text/javascript"
             src="https://webapi.amap.com/maps?v=1.4.8&key=9aab6b6fff994d6e7d3f187cf5422fd6"></script>
 
 </head>
@@ -31,8 +17,6 @@
     <strong>We're sorry but we-check doesn't work properly without JavaScript enabled. Please enable it to
         continue.</strong>
 </noscript>
-<!-- 注册service-worker.js -->
-<%= htmlWebpackPlugin.options.serviceWorkerLoader %>
 <div id="app"></div>
 <!-- built files will be auto injected -->
 </body>

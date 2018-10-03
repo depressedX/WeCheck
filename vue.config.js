@@ -1,9 +1,4 @@
-const StatsPlugin = require('stats-webpack-plugin');
-const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
-
-
-
-
+const StatsPlugin = require('stats-webpack-plugin')
 
 module.exports = {
     pages: {
@@ -15,7 +10,7 @@ module.exports = {
         },
         user: {
             entry: 'src/pages/user/main.js',
-            template: 'template.html',
+            template: 'user.template.html',
             filename: 'user.html',
             title: 'User',
 
@@ -24,7 +19,7 @@ module.exports = {
         },
         management: {
             entry: 'src/pages/management/main.js',
-            template: 'template.html',
+            template: 'management.template.html',
             filename: 'management.html',
             title: 'Management',
         },
@@ -49,15 +44,6 @@ module.exports = {
                 assetsSort:true
             }),
 
-
-            // service worker caching
-            new SWPrecacheWebpackPlugin({
-                cacheId: 'my-vue-app',
-                filename: 'service-worker.js',
-                staticFileGlobs: ['dist/**/*.{js,html,css}'],
-                minify: true,
-                stripPrefix: 'dist/'
-            }),
 
         ],
     }
