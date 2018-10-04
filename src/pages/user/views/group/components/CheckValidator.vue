@@ -5,7 +5,7 @@
                 width="100%">
             <i class="el-icon-loading"/>{{message}}
         </el-dialog>
-        <real-face-capture v-if="faceCaptureVisible" ref="faceCapture"/>
+        <real-face-capture v-show="faceCaptureVisible" ref="faceCapture"/>
     </div>
 </template>
 
@@ -15,15 +15,15 @@
     import {check} from "../../../../../resource/check";
     import {getCurrentPosition, wait} from "@/utils";
     import {FaceDetector} from "@/utils/FaceDetector";
+    
+    const FaceCapture =  FaceDetector.support() ?
+        import(/*webpackChunkName:"googleFaceDetectorComponent"*/'./FaceCapture2.vue') :
+        import(/*webpackChunkName:"normalFaceDetectorComponent"*/'./FaceCapture.vue')
 
     export default {
         name: "CheckValidator",
         components: {
-            RealFaceCapture: () => {
-                return FaceDetector.support() ?
-                    import(/*webpackChunkName:"googleFaceDetectorComponent"*/'./FaceCapture2.vue') :
-                    import(/*webpackChunkName:"normalFaceDetectorComponent"*/'./FaceCapture.vue')
-            },
+            RealFaceCapture: () => FaceCapture
         },
         props: {
             groupId: {
@@ -76,17 +76,8 @@
                         this.message = '正在获取人脸信息'
                         this.faceCaptureVisible = true
                         this.visible = false
-                        await new Promise(resolve => {
-                            this.$nextTick(() => {
-                                resolve()
-                            })
-                        })
-                        await new Promise(resolve => {
-                            this.$nextTick(() => {
-                                resolve()
-                            })
-                        })
-
+                        
+                        
                         face = await this.$refs.faceCapture.getNormalFrame()
 
                         this.visible = true
@@ -115,6 +106,7 @@
                     throw e
                 } finally {
                     this.visible = false
+                    this.faceCaptureVisible = false
                 }
 
             },

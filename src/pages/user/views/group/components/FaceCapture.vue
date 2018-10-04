@@ -53,7 +53,7 @@
 
         },
         mounted() {
-
+console.log('child another mounted')
             initPromise = new Promise(async resolve => {
 
                 let video = this.$refs.videoDisplayer

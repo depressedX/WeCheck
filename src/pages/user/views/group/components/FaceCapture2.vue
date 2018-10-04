@@ -76,7 +76,6 @@
 
                 await new Promise(resolve => {
                     video.onloadedmetadata = () => resolve()
-                    console.log('ok')
                 })
 
                 video.play()
