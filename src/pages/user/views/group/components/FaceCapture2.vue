@@ -1,6 +1,6 @@
 <template>
     <div class="face-capture container">
-        <video width="320" height="240" ref="videoDisplayer"></video>
+        <video width="320" height="140" ref="videoDisplayer"></video>
         <canvas width="320" height="240" ref="canvasDisplayer"></canvas>
     </div>
 </template>
@@ -34,6 +34,7 @@
 
 <script>
     // 使用googleFaceCapture
+    //!!!暂时不可用
 
     import {FaceDetector} from "@/utils/FaceDetector";
 
@@ -43,15 +44,19 @@
         name: "FaceCapture2",
 
         created() {
-            if (!FaceDetector.support()){
+            if (!FaceDetector.support()) {
                 throw new Error('当前浏览器不支持google face detector api')
-            } 
+            }
         },
         data() {
             return {
                 faceDetector: null,
                 detectorTimeoutId: null,
-                lastDetectingTime: 0
+                lastDetectingTime: 0,
+                videoArea: {
+                    width: 320,
+                    height: 240
+                }
             }
         },
         mounted() {
@@ -60,13 +65,17 @@
                 resolve()
             })
         },
+        beforeDestroy(){
+            this.$refs.videoDisplayer.srcObject.getTracks().forEach(track=>track.stop())
+            this.$refs.videoDisplayer.srcObject = null
+        },
         methods: {
 
             async getNormalFrame() {
 
                 await initPromise
 
-                const stream = await navigator.mediaDevices.getUserMedia({video: true, audio:true})
+                const stream = await navigator.mediaDevices.getUserMedia({video: true})
                 const video = this.$refs.videoDisplayer,
                     canvas = this.$refs.canvasDisplayer,
                     ctx = canvas.getContext('2d')
@@ -79,26 +88,25 @@
                 })
 
                 video.play()
-                
+
                 return new Promise(resolve => {
-                    
+
                     let detectorTimeFunction = async () => {
                         try {
                             let faces = await this.faceDetector.detect()
 
-                            // 画出轮廓
                             ctx.clearRect(0, 0, canvas.width, canvas.height)
 
                             ctx.lineWidth = 2;
                             ctx.strokeStyle = 'red';
-
-                            for (let face of faces) {
-                                let boundingBox = face.boundingBox
-
-                                ctx.strokeRect(Math.floor(boundingBox.x),
-                                    Math.floor(boundingBox.y),
-                                    Math.floor(boundingBox.width),
-                                    Math.floor(boundingBox.height));
+                            
+                            for (let face in faces) {
+                                let boundingBox = face
+                                
+                                ctx.strokeRect(Math.floor(boundingBox.x * this.videoArea.width),
+                                    Math.floor(boundingBox.y * this.videoArea.height),
+                                    Math.floor(boundingBox.width * this.videoArea.width),
+                                    Math.floor(boundingBox.height * this.videoArea.height));
                                 ctx.stroke();
                             }
 
@@ -106,8 +114,8 @@
                                 resolve(this.faceDetector.currentDetectingImageFile)
                             } else {
 
-                                let now = this.lastDetectingTime = Date.now()
-                                this.detectorTimeoutId = setTimeout(detectorTimeFunction, Math.max(0, 300 - now + this.lastDetectingTime))
+                            let now = this.lastDetectingTime = Date.now()
+                            this.detectorTimeoutId = setTimeout(detectorTimeFunction, Math.max(0, 300 - now + this.lastDetectingTime))
 
                             }
                         } catch (e) {
@@ -115,12 +123,11 @@
                         }
 
                     }
-                    
-                    detectorTimeFunction()
-                    
-                    
-                })
 
+                    detectorTimeFunction()
+
+
+                })
 
 
             },

@@ -16,14 +16,13 @@
     import {getCurrentPosition, wait} from "@/utils";
     import {FaceDetector} from "@/utils/FaceDetector";
     
-    const FaceCapture =  FaceDetector.support() ?
-        import(/*webpackChunkName:"googleFaceDetectorComponent"*/'./FaceCapture2.vue') :
-        import(/*webpackChunkName:"normalFaceDetectorComponent"*/'./FaceCapture.vue')
 
     export default {
         name: "CheckValidator",
         components: {
-            RealFaceCapture: () => FaceCapture
+            RealFaceCapture: () => FaceDetector.support() ?
+                import(/*webpackChunkName:"googleFaceDetectorComponent"*/'./FaceCapture2.vue') :
+                import(/*webpackChunkName:"normalFaceDetectorComponent"*/'./FaceCapture.vue')
         },
         props: {
             groupId: {

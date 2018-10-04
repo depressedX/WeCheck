@@ -1,6 +1,6 @@
 <template>
     <div class="face-capture container">
-        <video width="320" height="240" ref="videoDisplayer"></video>
+        <video width="320" height="240" ref="videoDisplayer" autoplay></video>
         <canvas width="320" height="240" ref="canvasDisplayer"></canvas>
     </div>
 </template>
@@ -37,8 +37,6 @@
     import '@/lib/tracking.js'
     import '@/lib/data/face.js'
 
-    // 用于初始化的promise
-    let initPromise = null
 
     // 利用clmtrackr和百度ai人脸识别来识别一张高质量的照片
     export default {
@@ -46,15 +44,20 @@
         data() {
 
             return {
-                // stream: null,
+
                 tracker: null,
                 trackerTask: null
             }
 
         },
-        mounted() {
-console.log('child another mounted')
-            initPromise = new Promise(async resolve => {
+        beforeDestroy() {
+            this.stopTracking()
+        },
+        methods: {
+
+
+            async getNormalFrame() {
+
 
                 let video = this.$refs.videoDisplayer
 
@@ -65,42 +68,19 @@ console.log('child another mounted')
                 tracker.setEdgesDensity(0.1);
 
                 let trackerTask = this.trackerTask = tracking.track(video, tracker, {camera: true});
-                console.log('mounted ', this.trackerTask)
-                trackerTask.stop()
-
-                resolve()
-            })
-
-
-        },
-        beforeDestroy() {
-            this.trackerTask.stop()
-            let video = this.$refs.videoDisplayer
-            if (video.srcObject) {
-                video.srcObject.getTracks().forEach(t => t.stop())
-                video.srcObject = null
-            }
-        },
-        methods: {
-
-
-            async getNormalFrame() {
-
-                // 等待初始化完成 否则会导致trackerTask未初始化  而失败
-                await initPromise
-
-                this.startTracking()
+                this.tracker.on('track', this.paintingFunc)
+                trackerTask.run()
                 return await new Promise(resolve => {
                     // 获取一张图像
 
                     let hasPicture = false
 
                     let handler = async event => {
+                        
                         if (event.data.length !== 0 && !hasPicture) {
                             hasPicture = true
                             let img = await captureImageFromVideo(this.$refs.videoDisplayer, {boxConstraint: true})
                             this.stopTracking()
-                            this.tracker.removeListener('track', handler)
                             resolve(img)
                         }
                     }
@@ -109,16 +89,13 @@ console.log('child another mounted')
                 })
             },
 
-            startTracking() {
-                if (this.tracker) this.tracker.on('track', this.paintingFunc)
-                this.trackerTask.run()
-                this.$refs.videoDisplayer.play()
-            },
             stopTracking() {
-                console.log(this.$refs)
-                this.tracker && this.tracker.removeListener('track', this.paintingFunc);
+
+                this.tracker && this.tracker.removeAllListeners();
                 this.trackerTask.stop()
-                this.$refs.videoDisplayer.pause()
+                let video = this.$refs.videoDisplayer
+                video.srcObject.getTracks().forEach(t=>t.stop())
+                video.srcObject = null
             },
 
 
@@ -126,15 +103,39 @@ console.log('child another mounted')
                 let canvas = this.$refs.canvasDisplayer,
                     cc = canvas.getContext('2d');
                 cc.clearRect(0, 0, canvas.width, canvas.height);
-                event.data.forEach(function (rect) {
+
+                let video = this.$refs.videoDisplayer
+
+
+                let normalize = rect => ({
+                    x: rect.x / video.videoWidth,
+                    y: rect.y / video.videoHeight,
+                    width: rect.width / video.videoWidth,
+                    height: rect.height / video.videoHeight,
+                })
+                let boundingBox = {
+                    width: 320,
+                    height: 240
+                }
+
+
+                event.data.forEach(rect => {
+
+                    console.log(rect.x,video.videoWidth)
+                    rect = normalize(rect)
+
+                    rect = {
+                        x: rect.x * boundingBox.width,
+                        y: rect.y * boundingBox.height,
+                        width: rect.width * boundingBox.width,
+                        height: rect.height * boundingBox.height,
+                    }
+
                     cc.strokeStyle = '#a64ceb';
-                    cc.strokeRect(rect.x, rect.y, rect.width, rect.height);
-                    cc.font = '11px Helvetica';
-                    cc.fillStyle = "#fff";
-                    cc.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
-                    cc.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
-                });
-            }
+                    cc.strokeRect(rect.x, rect.y, rect.width, rect.height)
+                })
+            },
+
         }
     }
 </script>
