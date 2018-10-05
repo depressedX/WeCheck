@@ -7,27 +7,21 @@
 
 <style scoped lang="scss">
 
-    .face-capture {
-    }
 
     .container {
 
         video, canvas {
-            width: 100%;
-            height: 100%;
             object-fit: contain;
             position: absolute;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             top: 0;
         }
 
-        /*position: relative;*/
-        /*width: 320px;*/
-        /*height: 240px;*/
         position: fixed;
         left: 0;
         width: 100%;
-        height: 50%;
+        height: 240px;
         top: 25%;
     }
 </style>
@@ -36,6 +30,8 @@
     import {captureImageFromVideo} from "../../../../../utils";
     import '@/lib/tracking.js'
     import '@/lib/data/face.js'
+
+    let mounted = null
 
 
     // 利用clmtrackr和百度ai人脸识别来识别一张高质量的照片
@@ -58,7 +54,6 @@
 
             async getNormalFrame() {
 
-
                 let video = this.$refs.videoDisplayer
 
 
@@ -76,7 +71,7 @@
                     let hasPicture = false
 
                     let handler = async event => {
-                        
+
                         if (event.data.length !== 0 && !hasPicture) {
                             hasPicture = true
                             let img = await captureImageFromVideo(this.$refs.videoDisplayer, {boxConstraint: true})
@@ -92,10 +87,12 @@
             stopTracking() {
 
                 this.tracker && this.tracker.removeAllListeners();
-                this.trackerTask.stop()
+                this.trackerTask && this.trackerTask.stop()
                 let video = this.$refs.videoDisplayer
-                video.srcObject.getTracks().forEach(t=>t.stop())
-                video.srcObject = null
+                if (video.srcObject !== null) {
+                    video.srcObject.getTracks().forEach(t => t.stop())
+                    video.srcObject = null
+                }
             },
 
 
@@ -104,33 +101,25 @@
                     cc = canvas.getContext('2d');
                 cc.clearRect(0, 0, canvas.width, canvas.height);
 
-                let video = this.$refs.videoDisplayer
+                // let video = this.$refs.videoDisplayer
 
 
-                let normalize = rect => ({
-                    x: rect.x / video.videoWidth,
-                    y: rect.y / video.videoHeight,
-                    width: rect.width / video.videoWidth,
-                    height: rect.height / video.videoHeight,
-                })
-                let boundingBox = {
-                    width: 320,
-                    height: 240
-                }
+                // let normalize = rect => ({
+                //     x: rect.x / video.videoWidth,
+                //     y: rect.y / video.videoHeight,
+                //     width: rect.width / video.videoWidth,
+                //     height: rect.height / video.videoHeight,
+                // })
+                // let boundingBox = {
+                //     width: 320,
+                //     height: 240
+                // }
+
+                // cc.fillRect(boundingBox.width - 20, boundingBox.height - 20, 20, 20)
 
 
                 event.data.forEach(rect => {
-
-                    console.log(rect.x,video.videoWidth)
-                    rect = normalize(rect)
-
-                    rect = {
-                        x: rect.x * boundingBox.width,
-                        y: rect.y * boundingBox.height,
-                        width: rect.width * boundingBox.width,
-                        height: rect.height * boundingBox.height,
-                    }
-
+                    console.log(rect)
                     cc.strokeStyle = '#a64ceb';
                     cc.strokeRect(rect.x, rect.y, rect.width, rect.height)
                 })
