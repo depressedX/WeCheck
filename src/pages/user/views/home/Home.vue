@@ -5,6 +5,9 @@
             <el-form-item>
                 <el-input type="text" v-model="searchId" placeholder="输入群组口令">
                     <el-button slot="append" icon="el-icon-search" @click="searchButtonHandler"></el-button>
+                    <el-button slot="append" @click="handleIconScanClick">
+                        <img class="icon_scan" src="@/assets/icon_scan.png">
+                    </el-button>
                 </el-input>
             </el-form-item>
         </el-form>
@@ -12,6 +15,7 @@
             <today-schedule-table/>
             <group-joined-list/>
         </section>
+        <q-r-code-scanner @detected="handleDetectedQRCode" v-if="isScanningQRCode"/>
     </div>
 </template>
 
@@ -19,10 +23,14 @@
     import TodayScheduleTable from "./components/TodayScheduleList";
     import GroupJoinedList from "./components/GroupJoinedList";
     import MyHeader from "../../../../components/MyHeader";
+    import Icon from "@/components/Icon";
+    import QRCodeScanner from "@/components/QRCodeScanner";
 
     export default {
         name: 'home',
         components: {
+            QRCodeScanner,
+            Icon,
             MyHeader,
             GroupJoinedList,
             TodayScheduleTable
@@ -32,7 +40,8 @@
         data() {
             return {
                 BASE_URL: process.env.BASE_URL,
-                searchId: ''
+                searchId: '',
+                isScanningQRCode: false
             }
         },
         methods: {
@@ -43,7 +52,25 @@
                 }
                 this.$router.push(`/group/${this.searchId}`)
             },
+            handleIconScanClick() {
+                this.isScanningQRCode = true
+            },
+            handleDetectedQRCode(content) {
+                if (!this.isScanningQRCode) {
+                    return
+                }
+                this.isScanningQRCode = false
+                // 判断content是否属于我们的
+                if (!content.match(/\\group\\[a-zA-Z]+/i)) {
+                    this.$message.error(`检测到的内容：${content} 中不含群组信息`)
+                } else {
+                    this.$message.success(`检测到：${content}即将跳转到新的页面`)
+                    setTimeout(() => {
+                        location.href = content
+                    },2000)
+                }
 
+            }
         }
     }
 </script>
@@ -51,6 +78,12 @@
     .home {
         section.main {
             padding: 0 1em;
+        }
+
+        .icon_scan {
+            width: 14px;
+            height: 14px;
+            vertical-align: bottom;
         }
     }
 </style>

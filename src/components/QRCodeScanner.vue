@@ -34,6 +34,7 @@
             await new Promise(resolve => {
                 video.onloadedmetadata = () => {
                     resolve()
+                    console.log(stream)
                     video.play()
                     canvas.width = video.videoWidth
                     canvas.height = video.videoHeight
@@ -106,6 +107,9 @@
         height: 100%;
 
         position: fixed;
+        
+        left: 0;
+        top: 0;
 
         canvas {
             position: absolute;

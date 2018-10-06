@@ -3,12 +3,10 @@
         <el-container id="GroupContainer">
             <el-header :style="note">
                 <AppBar>
-                    <template>{{this.name}}
-                    </template>
+                    <template>{{this.name}}</template>
                 </AppBar>
             </el-header>
             <el-main>
-
                 <el-tabs v-model="activeName" @tab-click="handleListClick">
                     <el-tab-pane label="群体成员" name="first">
                         <el-table
@@ -47,7 +45,6 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-
                         <el-dialog id="detailRecord" class="recordDiv" style="margin-top: 0" title="详细签到情况"
                                    :visible.sync="perRecordDiv">
                             <el-table :data="perRecordData" :height="350" :row-class-name="perRecordState">
