@@ -5,7 +5,10 @@
                 width="100%">
             <i class="el-icon-loading"/>{{message}}
         </el-dialog>
-        <real-face-capture v-show="faceCaptureVisible" ref="faceCapture"/>
+        <real-face-capture 
+                v-show="faceCaptureVisible" 
+                @close="faceCaptureVisible=false" 
+                ref="faceCapture"/>
     </div>
 </template>
 

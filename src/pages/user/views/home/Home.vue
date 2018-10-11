@@ -15,7 +15,7 @@
             <today-schedule-table/>
             <group-joined-list/>
         </section>
-        <q-r-code-scanner @detected="handleDetectedQRCode" v-if="isScanningQRCode"/>
+        <q-r-code-scanner @close="isScanningQRCode=false" @detected="handleDetectedQRCode" v-if="isScanningQRCode"/>
     </div>
 </template>
 
@@ -61,7 +61,7 @@
                 }
                 this.isScanningQRCode = false
                 // 判断content是否属于我们的
-                if (!content.match(/\\group\\[a-zA-Z]+/i)) {
+                if (!content.match(/\/group\/[a-zA-Z0-9]+/i)) {
                     this.$message.error(`检测到的内容：${content} 中不含群组信息`)
                 } else {
                     this.$message.success(`检测到：${content}即将跳转到新的页面`)

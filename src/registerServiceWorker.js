@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-
+// vue-cli自动生成的registerServiceWorker|暂时不用
 import {register} from 'register-service-worker'
 
 if (process.env.NODE_ENV === 'production') {

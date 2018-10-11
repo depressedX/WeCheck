@@ -27,12 +27,10 @@
                 </div>
                 <have-not-joined v-if="!hasJoined" :id="id" @hasJoined="hasJoinedHandler"/>
             </div>
+            <checking-history v-if="!loading && hasJoined" :id="id"/>
             <i class="el-icon-loading" v-else/>
         </section>
         <check-validator ref="checkValidator" :group-id="id"/>
-        <!--<div class="footer">-->
-            <!--<el-button type="danger">退出群体</el-button>-->
-        <!--</div>-->
     </div>
 </template>
 
@@ -45,12 +43,14 @@
     import ButtonMore from "../../../../components/ButtonMore";
     import CheckValidator from "./components/CheckValidator";
     import CheckButton from "./components/CheckButton";
+    import CheckingHistory from "@/pages/user/views/group/components/CheckingHistory";
 
     let test = false
 
     export default {
         name: "Group",
         components: {
+            CheckingHistory,
             CheckButton, CheckValidator, ButtonMore, Icon, HaveNotJoined, AppBar,
         },
         props: {
@@ -180,6 +180,7 @@
 
             .check-button-wrapper {
                 margin-top: 10vh;
+                margin-bottom: 50px;
                 text-align: center;
             }
         }

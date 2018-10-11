@@ -1,4 +1,6 @@
 const StatsPlugin = require('stats-webpack-plugin')
+const OfflinePlugin = require('offline-plugin')
+const path = require('path')
 
 module.exports = {
     pages: {
@@ -27,24 +29,41 @@ module.exports = {
     devServer: {
         proxy: {
             '/api/v1': {
-                target: 'http://39.106.131.88'
-            }
+                target: 'https://39.106.131.88'
+            },
         },
-        https: true
+        https:true
     },
     configureWebpack: {
-        plugins:[
-            new StatsPlugin('stats.json',{
-                chunkModules: true,
-                chunks:true,
-                assets:false,//html,css这些 
-                modules:true,
-                children:true,
-                chunksSort:true,//排序这两个都要加上   
-                assetsSort:true
-            }),
+        plugins: [
+            // new StatsPlugin('stats.json', {
+            //     chunkModules: true,
+            //     chunks: true,
+            //     assets: false,//html,css这些 
+            //     modules: true,
+            //     children: true,
+            //     chunksSort: true,//排序这两个都要加上   
+            //     assetsSort: true
+            // }),
+            new OfflinePlugin({
+                caches: {
+                    main: [],
+                    additional: [],
+                    optional: []
+                }
+            })
 
+        ]
+    },
+    // chainWebpack: config => {
+    //     // worker Loader
+    //     config.module
+    //         .rule('webworker')
+    //         .test(/\.worker\.js$/)
+    //         .use('worker-loader')
+    //         .loader('worker-loader')
+    //         .end()
+    //
+    // }
 
-        ],
-    }
 }

@@ -2,6 +2,7 @@
     <div class="QR-code-scanner">
         <video ref="video"></video>
         <canvas :class="[showCanvas?'':'hidden']" ref="canvas"></canvas>
+        <a href="javascript:void(0)" @click="$emit('close')" class="button-close"><i class="el-icon-close"/></a>
     </div>
 </template>
 
@@ -65,7 +66,7 @@
                     cc.strokeStyle = '#FF3B58'
                     cc.lineWidth = 10
                     cc.strokeRect(x, y, width, height)
-                    
+
                     this.showCanvas = true
 
                     clearTimeout(delayTimeoutId)
@@ -88,12 +89,12 @@
                     let {x, y} = code.location.topLeftCorner,
                         width = code.location.topRightCorner.x - code.location.topLeftCorner.x,
                         height = code.location.bottomLeftCorner.y - code.location.topLeftCorner.y
-                    
+
                     this.highlightArea(x, y, width, height)
-                    this.$emit('detected',code.data)
-                } 
+                    this.$emit('detected', code.data)
+                }
                 scannerTickId = requestAnimationFrame(this.scanner);
-                
+
             }
         }
     }
@@ -104,12 +105,13 @@
     .QR-code-scanner {
 
         width: 100%;
-        height: 100%;
 
         position: fixed;
-        
-        left: 0;
-        top: 0;
+
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 500px;
 
         canvas {
             position: absolute;
@@ -133,6 +135,15 @@
             &.hidden {
                 opacity: 0;
             }
+        }
+
+        .button-close {
+            display: inline-block;
+            font-size: 30px;
+            background-color: rgba(50, 50, 50, .5);
+            position: absolute;
+            top: 100%;
+            right: 0;
         }
     }
 

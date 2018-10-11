@@ -2,13 +2,14 @@
     <div class="face-capture container">
         <video width="320" height="240" ref="videoDisplayer" autoplay></video>
         <canvas width="320" height="240" ref="canvasDisplayer"></canvas>
+        <el-button @click="$emit('close')" type="danger" icon="el-icon-close" circle class="button-close"></el-button>
     </div>
 </template>
 
 <style scoped lang="scss">
 
 
-    .container {
+    /*.container {
 
         video, canvas {
             object-fit: contain;
@@ -23,6 +24,30 @@
         width: 100%;
         height: 240px;
         top: 25%;
+    }*/
+    .container {
+
+        video {
+            position: relative;
+        }
+
+        canvas{
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+        }
+        
+        .button-close{
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+        
+        position: fixed;
+        left: 50%;
+        top: 25%;
+        transform: translateX(-50%);
     }
 </style>
 
@@ -76,6 +101,7 @@
                             hasPicture = true
                             let img = await captureImageFromVideo(this.$refs.videoDisplayer, {boxConstraint: true})
                             this.stopTracking()
+                            this.$emit('close')
                             resolve(img)
                         }
                     }
