@@ -9,6 +9,8 @@
             <el-main>
                 <el-tabs v-model="activeName" @tab-click="handleListClick">
                     <el-tab-pane label="群体成员" name="first">
+                        <span style="color: #606266">考勤次数:{{kaoqin_all}}    出勤率：97%</span>
+                        <test></test>
                         <el-table
                                 :data="members"
                                 style="width: 100%"
@@ -43,6 +45,7 @@
                                 </template>
                             </el-table-column>
                         </el-table>
+
                         <el-dialog id="detailRecord" class="recordDiv" style="margin-top: 0" title="详细签到情况"
                                    :visible.sync="perRecordDiv">
                             <el-table :data="perRecordData" :height="350" :row-class-name="perRecordState">
@@ -137,8 +140,7 @@
                                         <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
                                     </el-table>
                                 </el-collapse-item>
-                                <div style="height: 100px;width: 50px;background-color: black;margin: 0 auto"></div>
-
+                                <Pie_graph style="margin: 0 auto;"  :data_people="data_people"></Pie_graph>
                             </el-collapse>
 
 
@@ -298,6 +300,7 @@
                 </el-dialog>
             </el-main>
         </el-container>
+
         <div class="footer">
             <el-button-group>
                 <el-button @click='imme_sign' :type="!state?'primary':'danger'">
@@ -308,11 +311,15 @@
                 <el-button @click="editGroup">编辑群体</el-button>
             </el-button-group>
         </div>
+
     </div>
 </template>
 
 
 <script>
+
+
+
 
     import AppBar from "../../../../components/AppBar";
     import {getGroupInfo} from "../../../../resource/group";
@@ -321,10 +328,12 @@
     import {addSchedule, updateSchedule, getAllSchedules, deleteSchedule} from "../../../../resource/schedule";
     import SetPosition from "../../../../components/SetPosition"
     import {getUserHistory, getGroupHistory, getRecord} from "../../../../resource/history"
+    import Pie_graph from "./components/pie_graph";
+    import test from "./components/test";
 
     export default {
         name: "Group",
-        components: {AppBar, SetPosition},
+        components: {test, Pie_graph, AppBar, SetPosition},
 
 
         data() {
@@ -454,6 +463,14 @@
                     backgroundSize: '100% 100%',
                     position: "relative",
                 },
+                kaoqin_all:0,
+                data_people:{
+                    come:5,
+                    notcome:5,
+                    leavea:5,
+                },
+
+
             }
         },
 
@@ -522,7 +539,10 @@
                             }
                         }
                         this.historyScheduleList = temp
+                        this.kaoqin_all = temp.length
                     })
+                    //统计总共开启了几次考勤
+
 
                     //在这里对每个成员进行统计
                     var temp = res.members
@@ -531,10 +551,11 @@
                         console.log(i + " 这是一开始")
                         var allRecord = 0, misRecord = 0, index = 0;
                         // console.log(that.id+'sdfasdf')
-                        getUserHistory(that.id, temp[i].username).then(res => {
-                            for (var j = 0; j < res.length; j++) {
+                        getUserHistory(that.id, temp[i].username).then(response => {
+                            console.log("正在加载")
+                            for (var j = 0; j < response.length; j++) {
                                 allRecord++;
-                                if (res[j].checked == false) {
+                                if (response[j].checked == false) {
                                     misRecord++;
                                 }
                             }
@@ -551,6 +572,7 @@
                             }
                         })
                         // this.members = ["你好"]
+                        allRecord = 0, misRecord = 0, index = 0;
                     }
 
                     // console.log(this)
@@ -558,7 +580,8 @@
                     this.intervalindex = setInterval(function () {
                         // console.log(that)
                         if (that.stateOfList == true) {
-                            that.members = temp
+                            that.members = temp;
+
                             clearInterval(that.intervalindex)
                             console.log(that.members)
                         }
@@ -868,6 +891,7 @@
         },
 
     }
+
 </script>
 
 <style scoped>

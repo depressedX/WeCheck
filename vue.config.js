@@ -51,7 +51,8 @@ module.exports = {
                     additional: [],
                     optional: []
                 }
-            })
+            }),
+
 
         ]
     },

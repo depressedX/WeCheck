@@ -16,10 +16,17 @@ export function getGroupHistory(id) {
     return server.get('history/'+id).then(handleResponse)
 }
 
+//获取某群体的历史每人签到数据统计信息
+export function getEveryoneHistory(groupid) {
+
+    return server.get('group/'+groupid+"/user/record").then(handleResponse)
+}
+
 
 //获取历史记录中的某条记录的信息
 export function getRecord(recordId) {
     // return server.get('group', {params: {groupname,username}}).then(handleResponse)
     return server.get('record/'+recordId).then(handleResponse)
 }
+
 

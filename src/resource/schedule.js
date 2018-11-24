@@ -16,3 +16,4 @@ export function updateSchedule(scheduleId, bundle) {
 export function deleteSchedule(scheduleId) {
     return server.post('schedule/delete', qs.stringify({scheduleId})).then(handleResponse)
 }
+
