@@ -66,10 +66,10 @@
     .checking-history-table{
         .record-{
             &missed{
-                background-color: lighten(#F56C6C,15%);
+                background-color: #fdd4d4;
             }
             &done{
-                background-color: lighten(#67C23A,15%);
+                background-color: rgba(162, 252, 152, 0.31);
             }
         }
     }

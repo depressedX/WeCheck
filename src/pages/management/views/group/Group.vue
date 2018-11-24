@@ -19,20 +19,18 @@
                                     label="姓名"
                             >
                             </el-table-column>
+
                             <el-table-column
-                                    label="签到情况"
+                                    prop="allRecord"
+                                    label="本群次数"
                             >
-                                <el-table-column
-                                        prop="allRecord"
-                                        label="本群次数"
-                                >
-                                </el-table-column>
-                                <el-table-column
-                                        prop="misRecord"
-                                        label="未签次数"
-                                >
-                                </el-table-column>
                             </el-table-column>
+                            <el-table-column
+                                    prop="misRecord"
+                                    label="缺勤"
+                            >
+                            </el-table-column>
+
 
 
                             <el-table-column
@@ -139,6 +137,7 @@
                                         <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
                                     </el-table>
                                 </el-collapse-item>
+                                <div style="height: 100px;width: 50px;background-color: black;margin: 0 auto"></div>
 
                             </el-collapse>
 
