@@ -14,3 +14,9 @@ export function check(group_id, str) {
     form.append('group_id', group_id)
     return server.post('group/leave', form).then(handleResponse)
 }
+
+//老师回复请假请求
+export function responseToLeave(bundle) {
+    return server.post('leave/response', qs.stringify(Object.assign(bundle))).then(handleResponse)
+}
+

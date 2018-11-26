@@ -43,7 +43,8 @@
                         HtmlText: false,
                         grid: {
                             verticalLines: false,
-                            horizontalLines: false
+                            horizontalLines: false,
+                            outlineWidth: 0, //去除Grid的边框
                         },
                         xaxis: {showLabels: false},
                         yaxis: {showLabels: false},

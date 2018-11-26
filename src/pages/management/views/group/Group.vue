@@ -9,8 +9,8 @@
             <el-main>
                 <el-tabs v-model="activeName" @tab-click="handleListClick">
                     <el-tab-pane label="群体成员" name="first">
-                        <span style="color: #606266">考勤次数:{{kaoqin_all}}    出勤率：97%</span>
-                        <test></test>
+                        <p style="color: #606266;margin: 5px 0;">考勤次数:{{kaoqin_all}} 平均出勤率：{{avg_done_persent}}</p>
+
                         <el-table
                                 :data="members"
                                 style="width: 100%"
@@ -23,18 +23,20 @@
                             </el-table-column>
 
                             <el-table-column
-                                    prop="allRecord"
-                                    label="本群次数"
+                                    prop="done_percent"
+                                    label="出勤率"
                             >
                             </el-table-column>
                             <el-table-column
-                                    prop="misRecord"
+                                    prop="missed"
                                     label="缺勤"
                             >
                             </el-table-column>
-
-
-
+                            <el-table-column
+                                    prop="leave"
+                                    label="请假"
+                            >
+                            </el-table-column>
                             <el-table-column
                                     fixed="right"
                                     label="操作"
@@ -45,7 +47,9 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-
+                        <div style="text-align: right;margin-top: 10px">
+                            <downExcel :json-data="members" ></downExcel>
+                        </div>
                         <el-dialog id="detailRecord" class="recordDiv" style="margin-top: 0" title="详细签到情况"
                                    :visible.sync="perRecordDiv">
                             <el-table :data="perRecordData" :height="350" :row-class-name="perRecordState">
@@ -125,7 +129,7 @@
                         <el-dialog class="recordDiv" title="详细签到情况" :visible.sync="RecordDiv">
 
                             <el-collapse v-model="Record_activeName">
-                                <el-collapse-item title="完成签到人员" name="1">
+                                <el-collapse-item title="出勤人员" name="1">
                                     <el-table :data="RecordData.done" :row-class-name="recordBack_done">
                                         <el-table-column property="username" label="用户名"></el-table-column>
                                         <el-table-column property="name" label="姓名"></el-table-column>
@@ -133,8 +137,15 @@
                                     </el-table>
                                 </el-collapse-item>
 
-                                <el-collapse-item title="未完成签到人员" name="2">
+                                <el-collapse-item title="缺勤人员" name="2">
                                     <el-table :data="RecordData.missed" :row-class-name="recordBack_missed">
+                                        <el-table-column property="username" label="用户名"></el-table-column>
+                                        <el-table-column property="name" label="姓名"></el-table-column>
+                                        <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
+                                    </el-table>
+                                </el-collapse-item>
+                                <el-collapse-item title="请假人员" name="3">
+                                    <el-table :data="RecordData.leave" :row-class-name="recordBack_leave">
                                         <el-table-column property="username" label="用户名"></el-table-column>
                                         <el-table-column property="name" label="姓名"></el-table-column>
                                         <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
@@ -327,23 +338,18 @@
     import {enableCheck, disableCheck} from "../../../../resource/check";
     import {addSchedule, updateSchedule, getAllSchedules, deleteSchedule} from "../../../../resource/schedule";
     import SetPosition from "../../../../components/SetPosition"
-    import {getUserHistory, getGroupHistory, getRecord} from "../../../../resource/history"
+    import {getUserHistory, getGroupHistory, getRecord,getEveryoneHistory} from "../../../../resource/history"
+    import {getLeaveRequest,responseToLeave}from "../../../../resource/leave"
     import Pie_graph from "./components/pie_graph";
-    import test from "./components/test";
+    import downExcel from "./components/downExcel";
 
     export default {
         name: "Group",
-        components: {test, Pie_graph, AppBar, SetPosition},
+        components: {downExcel, Pie_graph, AppBar, SetPosition},
 
 
         data() {
             return {
-
-                // //经纬度
-                // JingWei: {
-                //     lng:null,
-                //     lat:null,
-                // },
 
                 //当前群组名称
                 name: '',
@@ -454,6 +460,7 @@
                     duration: null,
                     done: [],
                     missed: [],
+                    leave:[]
                 },
                 note: {
                     backgroundImage: "url(" + require("../../../../image/head3.png") + ")",
@@ -467,10 +474,14 @@
                 data_people:{
                     come:5,
                     notcome:5,
-                    leavea:5,
+                    leavea:0,
                 },
+                avg_done_persent:"",
 
-
+                //轮询的interval_index
+                group_mes_index:0,
+                leave_mes_index:0,
+                leave_list:[],
             }
         },
 
@@ -478,6 +489,13 @@
             this.id = this.$route.params.id;
             console.log(this.id)
             this.update();
+            if (this.state==true){
+                this.group_mes_index = setInterval(function () {
+                    getLeaveRequest(this.id).then(res =>{
+                        this.leave_list = res;
+                    })
+                },2000)
+            }
 
             //
         },
@@ -501,7 +519,27 @@
                 handler(v) {
                     this.group_Editform.positionCorrect = (!v || this.group_Editform.lng) ? 'true' : ''
                 }
+            },
+            state:function (newval,oldval) {
+                // console.log("新状态是" + newval);
+                // console.log("旧状态是"+oldval);
+                if (newval==true&&oldval==false){
+                //    开启轮询
+                    console.log("开启轮询了")
+                    this.group_mes_index = setInterval(function () {
+                        getLeaveRequest(this.id).then(res =>{
+                            this.leave_list = res;
+                            console.log("有请假请求")
+                        })
+                    },2000)
+                }else if (newval==false&&oldval==true){
+                    clearInterval(this.group_mes_index);
+                    console.log("关闭轮询了")
+                    this.group_mes_index = 0
+                }
             }
+                
+            
 
 
         },
@@ -545,47 +583,59 @@
 
 
                     //在这里对每个成员进行统计
-                    var temp = res.members
-                    // console.log(temp)
-                    for (var i = 0; i < temp.length; i++) {
-                        console.log(i + " 这是一开始")
-                        var allRecord = 0, misRecord = 0, index = 0;
-                        // console.log(that.id+'sdfasdf')
-                        getUserHistory(that.id, temp[i].username).then(response => {
-                            console.log("正在加载")
-                            for (var j = 0; j < response.length; j++) {
-                                allRecord++;
-                                if (response[j].checked == false) {
-                                    misRecord++;
-                                }
-                            }
-                            temp[index].allRecord = allRecord;
-                            temp[index].misRecord = misRecord;
-                            allRecord = 0;
-                            misRecord = 0;
-                            index++;
-
-                            console.log(that)
-                            if (index == temp.length) {
-                                // console.log(that.stateOfList)
-                                that.stateOfList = true
-                            }
-                        })
-                        // this.members = ["你好"]
-                        allRecord = 0, misRecord = 0, index = 0;
+                    getEveryoneHistory(this.id).then(respon => {
+                        this.members = respon
+                    })
+                    // this.members=getEveryoneHistory(this.id)
+                    var that = this;
+                    var avg_donepercent = 0;
+                    for (var i in that.members){
+                        var tem = parseFloat(that.members[i]["done_percent"]);
+                        avg_donepercent = avg_donepercent+tem
                     }
-
-                    // console.log(this)
-
-                    this.intervalindex = setInterval(function () {
-                        // console.log(that)
-                        if (that.stateOfList == true) {
-                            that.members = temp;
-
-                            clearInterval(that.intervalindex)
-                            console.log(that.members)
-                        }
-                    }, 1000)
+                    avg_donepercent = avg_donepercent/that.members.length;
+                    this.avg_done_persent = avg_donepercent+"%";
+                    // var temp = res.members
+                    // // console.log(temp)
+                    // for (var i = 0; i < temp.length; i++) {
+                    //     console.log(i + " 这是一开始")
+                    //     var allRecord = 0, misRecord = 0, index = 0;
+                    //     // console.log(that.id+'sdfasdf')
+                    //     getUserHistory(that.id, temp[i].username).then(response => {
+                    //         console.log("正在加载")
+                    //         for (var j = 0; j < response.length; j++) {
+                    //             allRecord++;
+                    //             if (response[j].checked == false) {
+                    //                 misRecord++;
+                    //             }
+                    //         }
+                    //         temp[index].allRecord = allRecord;
+                    //         temp[index].misRecord = misRecord;
+                    //         allRecord = 0;
+                    //         misRecord = 0;
+                    //         index++;
+                    //
+                    //         console.log(that)
+                    //         if (index == temp.length) {
+                    //             // console.log(that.stateOfList)
+                    //             that.stateOfList = true
+                    //         }
+                    //     })
+                    //     // this.members = ["你好"]
+                    //     allRecord = 0, misRecord = 0, index = 0;
+                    // }
+                    //
+                    // // console.log(this)
+                    //
+                    // this.intervalindex = setInterval(function () {
+                    //     // console.log(that)
+                    //     if (that.stateOfList == true) {
+                    //         that.members = temp;
+                    //
+                    //         clearInterval(that.intervalindex)
+                    //         console.log(that.members)
+                    //     }
+                    // }, 1000)
 
 
                     this.group_Editform.name = res.name;
@@ -834,7 +884,10 @@
 
                 return 'warning_row';
             },
+            recordBack_leave({row, rowIndex}) {
 
+                return 'warning_row';
+            },
             perRecordState({row, rowIndex}) {
 
                 if (this.perRecordData[rowIndex].checked === '未签') {
@@ -886,6 +939,13 @@
                 getRecord(schId).then(res => {
                     this.RecordData.done = res.done;
                     this.RecordData.missed = res.missed;
+
+                    this.RecordData.leave = res.leave;
+
+                    this.data_people.come = this.RecordData.done.length;
+                    this.data_people.notcome = this.RecordData.missed.length;
+                    this.data_people.leavea = this.RecordData.leave.length;
+
                 })
             }
         },
