@@ -25,7 +25,7 @@
     export default {
         name: "CheckingHistory",
         async created(){
-            console.log(moment('2018-11-26T21:22Z').locale('zh-cn').format("M/D, HH:mm, dddd"))
+            console.log(moment('2018-11-26T21:22:38Z').locale('zh-cn').format("M/D, HH:mm, dddd"))
             this.loading = true
             try {
                 this.historyData = await getGroupHistory(this.id)
