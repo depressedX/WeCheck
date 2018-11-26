@@ -25,6 +25,7 @@
     import MyHeader from "../../../../components/MyHeader";
     import Icon from "@/components/Icon";
     import QRCodeScanner from "@/components/QRCodeScanner";
+    import {getGroupInfo} from "@/resource/group";
 
     export default {
         name: 'home',
@@ -50,7 +51,19 @@
                     this.$alert('群组ID不可为空')
                     return
                 }
-                this.$router.push(`/group/${this.searchId}`)
+                getGroupInfo(this.searchId).then(
+                    () => {
+                        this.$message.success(`正在跳转`)
+                        this.$router.push(`/group/${this.searchId}`)
+                    },
+                    e => {
+                        if (e.status === 202) {
+                            this.$message.error(`群组：${this.searchId} 不存在`)
+                        } else {
+                            this.$message.error(`未知错误：${e.message}`)
+                        }
+                    }
+                )
             },
             handleIconScanClick() {
                 this.isScanningQRCode = true
@@ -67,7 +80,7 @@
                     this.$message.success(`检测到：${content}即将跳转到新的页面`)
                     setTimeout(() => {
                         location.href = content
-                    },2000)
+                    }, 2000)
                 }
 
             }
