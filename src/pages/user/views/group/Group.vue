@@ -1,7 +1,7 @@
 <template>
     <div class="group">
         <app-bar :style="note">
-            <template  ><span style="color: white;font-size: 1.3em;letter-spacing: 7.5px">{{name}}</span></template>
+            <template><span style="color: white;font-size: 1.3em;letter-spacing: 7.5px">{{name}}</span></template>
             <template slot="right">
                 <el-button type="text" @click="quitGroup" style="margin-right: 1em;color:white">退出群组</el-button>
             </template>
@@ -19,12 +19,16 @@
                         title="暂未开启签到"
                         type="warning">
                 </el-alert>
-                <el-button v-else-if="checked" type="success" disabled>
-                    {{checked?'已完成签到':'签到'}}
-                </el-button>
-                <div v-else class="check-button-wrapper">
-                    <check-button @click="check"/>
-                </div>
+                <el-button v-else-if="checked" type="success" disabled>已完成签到</el-button>
+                <template v-else>
+                    <!--包含签到按钮和请假按钮（逻辑上两个按钮共存亡  所以放在一起-->
+                    <div class="check-button-wrapper">
+                        <check-button @click="check"/>
+                    </div>
+                    <div style="text-align: right">
+                        <el-button type="danger" class="absence-button" plain @click="reportAbsence">请假</el-button>
+                    </div>
+                </template>
                 <have-not-joined v-if="!hasJoined" :id="id" @hasJoined="hasJoinedHandler"/>
             </div>
             <checking-history v-if="!loading && hasJoined" :id="id"/>
@@ -44,6 +48,7 @@
     import CheckValidator from "./components/CheckValidator";
     import CheckButton from "./components/CheckButton";
     import CheckingHistory from "@/pages/user/views/group/components/CheckingHistory";
+    import {reportAbsence} from "@/resource/leave";
 
     let test = false
 
@@ -107,6 +112,22 @@
                     .then(() => {
                         this.update()
                     })
+            },
+            reportAbsence() {
+
+
+                this.$prompt('请输入请假理由', '请假', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消'
+                }).then(({value}) => {
+                    reportAbsence(this.id, value).then(() => {
+                        this.$message.success('请假成功')
+                        this.update()
+                    }, e => {
+                        this.$message.error(`请假失败：${e.message}`)
+                    })
+                },()=>{})
+
             },
             update() {
 

@@ -1,7 +1,7 @@
 <template>
     <el-container id="RfContainer" style="">
 
-        <el-form status-icon :model="ruleForm" :rules="rules" ref="ruleForm" style="width: 80%;margin: 0 auto"  >
+        <el-form status-icon :model="ruleForm" :rules="rules" ref="ruleForm" style="width: 80%;margin: 0 auto">
 
             <el-form-item label="用户名" prop="username">
                 <el-input type="text" v-model="ruleForm.username"></el-input>
@@ -39,7 +39,7 @@
                         :limit=1
                         :auto-upload="false"
                 >
-                    <i class="el-icon-upload"></i   >
+                    <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                     <!--<div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>-->
                 </el-upload>
@@ -61,25 +61,25 @@
 <script>
 
     import {register} from "../resource/authorization";
-    import {captureImageFromVideo}from "../utils/index"
+    import {captureImageFromVideo} from "../utils/index"
+    import {compressImage} from "@/utils";
 
     export default {
 
         name: 'RegisterForm',
 
-        created(){
+        created() {
 
-            if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+            if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
                 this.pcOrPhone = false
             } else {
                 this.pcOrPhone = true
             }
         },
 
-        mounted(){
+        mounted() {
 
         },
-
 
 
         data() {
@@ -167,7 +167,6 @@
             };
 
 
-
             return {
 
                 ruleForm: {
@@ -177,8 +176,8 @@
                     name: '',
                     userType: null,
                     profile: false,
-                    pcOrPhone:true,
-                    photo_PC:null,
+                    pcOrPhone: true,
+                    photo_PC: null,
 
                 },
 
@@ -202,7 +201,7 @@
                     profile: [
                         {required: true, validator: checkfile, trigger: 'blur'},
                     ],
-                    photo_PC:[
+                    photo_PC: [
                         {required: true, validator: checkface, trigger: 'blur'},
                     ]
 
@@ -226,16 +225,29 @@
         methods: {
 
 
-
             getFile(file, filelist) {
-                console.log(file)
                 this.ruleForm.profile = file.raw;
+
             },
 
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        register(this.ruleFormData)
+
+
+                        new Promise(resolve => {
+
+                            // 图片压缩
+                            let formData = this.ruleFormData
+                            let img = new Image()
+                            img.src = URL.createObjectURL(formData.get('profile'))
+                            img.onload = () => {
+                                compressImage(img).then(file => {
+                                    formData.append('profile',file)
+                                    resolve(formData)
+                                })
+                            }
+                        }).then(formData => register(formData))
                             .then(() => {
                                     this.$message({
                                         message: '注册成功  正在跳转',
@@ -278,7 +290,6 @@
             },
 
 
-
         }
 
     }
@@ -289,22 +300,22 @@
 
 <style scoped lang="scss">
 
-    .displayNone{
+    .displayNone {
         display: none;
     }
 
-    .show{
+    .show {
         display: block;
     }
 
 
-
 </style>
 <style lang="scss">
-    #RfContainer .el-upload-dragger  {
+    #RfContainer .el-upload-dragger {
         width: 100%;
     }
-    #RfContainer .el-upload{
+
+    #RfContainer .el-upload {
         width: 100%;
     }
 </style>

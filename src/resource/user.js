@@ -9,5 +9,6 @@ export function getUserInfo(id) {
 }
 
 export function updateUserInfo(form) {
+    console.log(form.get('profile'))
     return server.post('user', form).then(handleResponse)
 }

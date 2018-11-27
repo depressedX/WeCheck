@@ -8,10 +8,10 @@ export function getLeaveRequest(group_id) {
 }
 
 //学生发起请假
-export function check(group_id, str) {
-    var form = {};
-    form.append('result',str)
-    form.append('group_id', group_id)
+export function reportAbsence(group_id, result) {
+    var form = new FormData()
+    form.set('result',result)
+    form.set('group_id', group_id)
     return server.post('group/leave', form).then(handleResponse)
 }
 
