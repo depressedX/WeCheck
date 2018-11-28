@@ -1,6 +1,5 @@
 <template>
     <div id="pie" style="height: 200px;width: 200px">
-
     </div>
 </template>
 
@@ -17,7 +16,8 @@
             this.update();
         },
         watch:{
-            data_people:function (val) {
+            data_people:function (val,oldval) {
+                // console.log("修改了修改了修改了")
                 this.update()
             }
         },

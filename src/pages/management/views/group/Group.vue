@@ -7,6 +7,12 @@
                 </AppBar>
             </el-header>
             <el-main>
+                <!--<el-button-->
+                        <!--plain-->
+                        <!--@click="open12">-->
+                    <!--使用 HTML 片段-->
+                <!--</el-button>-->
+
                 <el-tabs v-model="activeName" @tab-click="handleListClick">
                     <el-tab-pane label="群体成员" name="first">
                         <p style="color: #606266;margin: 5px 0;">考勤次数:{{kaoqin_all}} 平均出勤率：{{avg_done_persent}}</p>
@@ -88,7 +94,7 @@
                             <el-table-column
                                     fixed="right"
                                     label="操作"
-                                    width="100">
+                                    width="60">
                                 <template slot-scope="scope">
                                     <el-button @click="deleteScheduleClick(scope.$index)" type="text" size="small">删除
                                     </el-button>
@@ -129,6 +135,8 @@
                         <el-dialog class="recordDiv" title="详细签到情况" :visible.sync="RecordDiv">
 
                             <el-collapse v-model="Record_activeName">
+                                <Pie_graph  style="margin: 0 auto;"  :data_people="data_people"></Pie_graph>
+
                                 <el-collapse-item title="出勤人员" name="1">
                                     <el-table :data="RecordData.done" :row-class-name="recordBack_done">
                                         <el-table-column property="username" label="用户名"></el-table-column>
@@ -151,7 +159,6 @@
                                         <!--<el-table-column property="checked" fixed="right" width="50" label="情况" ></el-table-column>-->
                                     </el-table>
                                 </el-collapse-item>
-                                <Pie_graph style="margin: 0 auto;"  :data_people="data_people"></Pie_graph>
                             </el-collapse>
 
 
@@ -309,6 +316,33 @@
                         <el-button type="primary" @click="submit_EditGroup">确 定</el-button>
                     </div>
                 </el-dialog>
+                <!--弹出框 显示签到信息-->
+                <el-dialog title="请假请求" :visible.sync="dialogLeaveList">
+                    <el-table :data="leave_list">
+                        <el-table-column property="name" label="姓名" width="70"></el-table-column>
+                        <el-table-column property="result" label="原因" width="100"></el-table-column>
+                        <el-table-column
+                                fixed="right"
+                                label="操作"
+                                width="100">
+                            <template slot-scope="scope">
+                                <el-switch
+                                        style="display: block"
+                                        v-model="request_list[scope.$index].leave_response"
+                                        active-color="#13ce66"
+                                        inactive-color="#ff4949"
+                                        active-text="同意"
+                                        inactive-text="拒绝">
+                                </el-switch>
+
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <span slot="footer" class="dialog-footer">
+
+                            <el-button type="primary" @click="submit_leaveAnswer">确 定</el-button>
+                        </span>
+                </el-dialog>
             </el-main>
         </el-container>
 
@@ -350,7 +384,19 @@
 
         data() {
             return {
-
+                // test_list:[
+                //     {
+                //         leave_id:"abc",
+                //     name:"曲延松",
+                //         result:"上厕所"
+                //     },
+                //     {leave_id:"abc",name:"郭松岳",
+                //         result:"上厕所"
+                //     },
+                //     {leave_id:"abc",name:"郭松岳",
+                //         result:"上厕所"
+                //     },
+                // ],
                 //当前群组名称
                 name: '',
                 owner: '',
@@ -472,7 +518,7 @@
                 },
                 kaoqin_all:0,
                 data_people:{
-                    come:5,
+                    come:0,
                     notcome:5,
                     leavea:0,
                 },
@@ -480,8 +526,15 @@
 
                 //轮询的interval_index
                 group_mes_index:0,
-                leave_mes_index:0,
+
+                //获取请假请求
                 leave_list:[],
+                //回复请假请求
+                request_list:[],
+                dialogLeaveList:false,
+                //用来让饼图重新渲染
+                pie_show:true,
+                downloadData:[]
             }
         },
 
@@ -489,15 +542,31 @@
             this.id = this.$route.params.id;
             console.log(this.id)
             this.update();
+
+            /**
+             * 测试
+             */
+
+            // var temp=[]
+            //
+            // for (var i =0;i<this.test_list.length;i++){
+            //     temp[i] = {}
+            //     temp[i]["leave_id"]=this.test_list[i]["leave_id"];
+            //     temp[i]["leave_response"] = false
+            // }
+            // this.request_list = temp
+            // console.log(this.request_list)
+
+
             if (this.state==true){
-                this.group_mes_index = setInterval(function () {
-                    getLeaveRequest(this.id).then(res =>{
-                        this.leave_list = res;
-                    })
-                },2000)
+                this.ReturnTheLeaveMessage()
             }
 
             //
+        },
+        beforeDestroy(){
+            console.log("我要关闭了")
+            clearInterval(this.group_mes_index)
         },
         watch: {
             '$route'(to, from) {
@@ -526,12 +595,8 @@
                 if (newval==true&&oldval==false){
                 //    开启轮询
                     console.log("开启轮询了")
-                    this.group_mes_index = setInterval(function () {
-                        getLeaveRequest(this.id).then(res =>{
-                            this.leave_list = res;
-                            console.log("有请假请求")
-                        })
-                    },2000)
+                    this.ReturnTheLeaveMessage()
+
                 }else if (newval==false&&oldval==true){
                     clearInterval(this.group_mes_index);
                     console.log("关闭轮询了")
@@ -544,6 +609,7 @@
 
         },
         methods: {
+
             //对群体初始化
             update() {
                 getGroupInfo(this.id).then(res => {
@@ -585,16 +651,18 @@
                     //在这里对每个成员进行统计
                     getEveryoneHistory(this.id).then(respon => {
                         this.members = respon
+
+                        var that = this;
+                        var avg_donepercent = 0;
+                        for (var i in that.members){
+                            var tem = parseFloat(that.members[i]["done_percent"]);
+                            avg_donepercent = avg_donepercent+tem
+                        }
+                        avg_donepercent = avg_donepercent/that.members.length;
+                        this.avg_done_persent = avg_donepercent.toFixed(2)+"%";
                     })
                     // this.members=getEveryoneHistory(this.id)
-                    var that = this;
-                    var avg_donepercent = 0;
-                    for (var i in that.members){
-                        var tem = parseFloat(that.members[i]["done_percent"]);
-                        avg_donepercent = avg_donepercent+tem
-                    }
-                    avg_donepercent = avg_donepercent/that.members.length;
-                    this.avg_done_persent = avg_donepercent+"%";
+
                     // var temp = res.members
                     // // console.log(temp)
                     // for (var i = 0; i < temp.length; i++) {
@@ -815,7 +883,7 @@
 
 
             handleListClick(tab, event) {
-                console.log(tab, event);
+                // console.log(tab, event);
             },
 
 
@@ -914,7 +982,7 @@
                 this.perRecordDiv = true
                 var username = this.members[index].username;
                 getUserHistory(this.id, username).then(res => {
-                    console.log(res)
+                    // console.log(res)
                     var temp = res;
                     for (var i = 0; i < temp.length; i++) {
                         temp[i].day = temp[i].startUpDateTime.slice(0, 10);
@@ -928,7 +996,27 @@
                     this.perRecordData = temp
                 })
             },
-
+            //轮询群体看有没有请假请求
+            ReturnTheLeaveMessage(){
+                var that = this
+                // console.log()
+                console.log("开始轮询了"+that.id)
+                this.group_mes_index = setInterval(function () {
+                    getLeaveRequest(that.id).then(res =>{
+                        if (res.leaves.length>0){
+                            that.open12()
+                            that.leave_list = res.leaves;
+                            var temp=[]
+                            for (var i =0;i<that.leave_list.length;i++){
+                                temp[i] = {}
+                                temp[i]["leave_id"]=that.leave_list[i]["leave_id"];
+                                temp[i]["leave_response"] = false
+                            }
+                            that.request_list = temp
+                        }
+                    })
+                },2000)
+            },
 
             recordMess(index) {
                 this.RecordDiv = true
@@ -941,17 +1029,47 @@
                     this.RecordData.missed = res.missed;
 
                     this.RecordData.leave = res.leave;
-
-                    this.data_people.come = this.RecordData.done.length;
-                    this.data_people.notcome = this.RecordData.missed.length;
-                    this.data_people.leavea = this.RecordData.leave.length;
-
+                    var temp={}
+                    temp.come = this.RecordData.done.length;
+                    temp.notcome = this.RecordData.missed.length;
+                    temp.leavea = this.RecordData.leave.length;
+                    this.data_people = temp
+                    // console.log("应该修改了")
                 })
+            },
+            //开启通知
+            open12() {
+                var that = this;
+                clearInterval(this.group_mes_index)
+                this.$notify({
+                    title: '通知',
+                    dangerouslyUseHTMLString: true,
+                    duration: 0,
+                    showClose: false,
+                    message: '<strong>学生请假</strong>',
+                    onClick:function () {
+                        // console.log(that.$notify.close())
+                        that.dialogLeaveList=true
+                        this.close();
+                    }
+                });
+            },
+            //提交leave请求的反馈
+            submit_leaveAnswer(){
+                this.dialogLeaveList=false
+                for (var i=0;i<this.request_list.length;i++){
+                    // console.log("123")
+                    responseToLeave(this.request_list[i]);
+                }
+                this.ReturnTheLeaveMessage()
+
             }
+
         },
 
-    }
 
+    }
+    // document.getElementById("testbutton").onclick=function(){alert(123456)};
 </script>
 
 <style scoped>
@@ -1019,3 +1137,6 @@
 
 
 </style>
+
+
+}
