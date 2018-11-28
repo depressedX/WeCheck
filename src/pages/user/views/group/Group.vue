@@ -48,7 +48,7 @@
     import CheckValidator from "./components/CheckValidator";
     import CheckButton from "./components/CheckButton";
     import CheckingHistory from "@/pages/user/views/group/components/CheckingHistory";
-    import {reportAbsence} from "@/resource/leave";
+    import {getAbsenceRequestFeedback, reportAbsence} from "@/resource/leave";
 
     let test = false
 
@@ -66,6 +66,36 @@
         },
         created() {
             this.update()
+            
+            // 绑定请假回复定时器
+            this.absenceTimer = setInterval(()=>{
+                this.absenceIdList.map(id=>getAbsenceRequestFeedback(id)).forEach(respPromise=>{
+                    respPromise.then(resp=>{
+                        
+                        const states = {
+                            unhandled:0,
+                            fullfilled:1,
+                            rejected:2
+                        }
+                        
+                        switch (resp.leave_status) {
+                            case states.unhandled:
+                                return
+                                break
+                            case states.fullfilled:
+                                this.$message.success('请假成功')
+                                break
+                            case states.rejected:
+                                this.$message.error(`请假失败：${resp.leave_msg}`)
+                                break
+                        }
+                        
+                    })
+                })
+            },2000)
+        },
+        beforeDestroy(){
+            clearTimeout(this.absenceTimer)
         },
         data() {
             return {
@@ -94,6 +124,9 @@
                     backgroundSize: '100% 100%',
                     position: "relative",
                 },
+                
+                absenceIdList:[],
+                absenceTimer:null
             }
         },
         watch: {
@@ -120,9 +153,12 @@
                     confirmButtonText: '确定',
                     cancelButtonText: '取消'
                 }).then(({value}) => {
-                    reportAbsence(this.id, value).then(() => {
+                    reportAbsence(this.id, value).then((data) => {
                         this.$message.success('请假成功')
                         this.update()
+                        
+                        this.pushAbsenceId(data.leaveID)
+                        
                     }, e => {
                         this.$message.error(`请假失败：${e.message}`)
                     })
