@@ -40,9 +40,9 @@
                 let str = `用户名,姓名,缺勤,请假,出勤,出勤率\n`;
                 //增加\t为了不让表格显示科学计数法或者其他格式
                 for(let i = 0 ; i < this.jsonData.length ; i++ ){
-                    for(let item in this.jsonData[i]){
-                        str+=`${this.jsonData[i][item] + '\t'},`;
-                    }
+
+                    str =str+`${this.jsonData[i]["username"] + '\t'},`+`${this.jsonData[i]["name"] + '\t'},`+`${this.jsonData[i]["missed"] + '\t'},`+
+                        `${this.jsonData[i]["leave"] + '\t'},`+`${this.jsonData[i]["done"] + '\t'},`+`${this.jsonData[i]["done_percent"] + '\t'},`
                     str+='\n';
                 }
                 //encodeURIComponent解决中文乱码

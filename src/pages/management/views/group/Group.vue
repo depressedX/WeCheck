@@ -326,22 +326,16 @@
                                 label="操作"
                                 width="100">
                             <template slot-scope="scope">
-                                <el-switch
-                                        style="display: block"
-                                        v-model="request_list[scope.$index].leave_response"
-                                        active-color="#13ce66"
-                                        inactive-color="#ff4949"
-                                        active-text="同意"
-                                        inactive-text="拒绝">
-                                </el-switch>
+                                <el-button @click="submit_leaveAnswer(scope.$index,false)" type="text" size="small">拒绝</el-button>
+                                <el-button @click="submit_leaveAnswer(scope.$index,true)" type="text" size="small">同意</el-button>
 
                             </template>
                         </el-table-column>
                     </el-table>
-                    <span slot="footer" class="dialog-footer">
+                    <!--<span slot="footer" class="dialog-footer">-->
 
-                            <el-button type="primary" @click="submit_leaveAnswer">确 定</el-button>
-                        </span>
+                            <!--<el-button type="primary" @click="submit_leaveAnswer">确 定</el-button>-->
+                        <!--</span>-->
                 </el-dialog>
             </el-main>
         </el-container>
@@ -1055,13 +1049,15 @@
                 });
             },
             //提交leave请求的反馈
-            submit_leaveAnswer(){
-                this.dialogLeaveList=false
-                for (var i=0;i<this.request_list.length;i++){
-                    // console.log("123")
-                    responseToLeave(this.request_list[i]);
-                }
-                this.ReturnTheLeaveMessage()
+            submit_leaveAnswer(index,state){
+                // this.dialogLeaveList=false
+                var obj = {}
+                obj.leave_id=this.leave_list[index].leave_id;
+                obj.leave_response = state;
+                obj.leave_msg = state
+                this.leave_list.splice(index,1)
+                responseToLeave(obj);
+                // this.ReturnTheLeaveMessage()
 
             }
 
