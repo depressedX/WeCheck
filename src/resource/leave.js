@@ -7,6 +7,11 @@ export function getLeaveRequest(group_id) {
     return server.get('leave', {params: {group_id}}).then(handleResponse)
 }
 
+//获取请假请求回馈
+export function getAbsenceRequestFeedback(absenceId) {
+    return server.get(`leave/${absenceId}/feedback`).then(handleResponse)
+}
+
 //学生发起请假
 export function reportAbsence(group_id, result) {
     var form = new FormData()
