@@ -157,7 +157,7 @@
                         this.$message.success('请假成功')
                         this.update()
                         
-                        this.pushAbsenceId(data.leaveID)
+                        this.absenceIdList.push(data.leaveID)
                         
                     }, e => {
                         this.$message.error(`请假失败：${e.message}`)
