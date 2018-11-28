@@ -50,7 +50,7 @@
                 //通过创建a标签实现
                 var link = document.createElement("a");
                 link.href = uri;
-                //对下载的文件命名
+                //对下载的文件命名.
                 link.download =  "考勤记录.csv";
                 document.body.appendChild(link);
                 link.click();
