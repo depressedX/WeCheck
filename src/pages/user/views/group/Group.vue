@@ -84,9 +84,11 @@
                                 break
                             case states.fullfilled:
                                 this.$message.success('请假成功')
+                                this.absenceIdList.splice(this.absenceIdList.findIndex(v=>v===resp.leave_id))
                                 break
                             case states.rejected:
                                 this.$message.error(`请假失败：${resp.leave_msg}`)
+                                this.absenceIdList.splice(this.absenceIdList.findIndex(v=>v===resp.leave_id))
                                 break
                         }
                         
@@ -125,6 +127,8 @@
                     position: "relative",
                 },
                 
+                
+                // 请假
                 absenceIdList:[],
                 absenceTimer:null
             }
