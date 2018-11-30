@@ -13,7 +13,7 @@
         <el-table-column
                 align="center"
                 label="状态">
-            <template slot-scope="scope">{{ scope.row.checked?'成功':'失败' }}</template>
+            <template slot-scope="scope">{{ scope.row.checked?'出勤':'缺勤' }}</template>
         </el-table-column>
     </el-table>
 </template>

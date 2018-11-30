@@ -87,7 +87,7 @@
                                 this.absenceIdList.splice(this.absenceIdList.findIndex(v=>v===resp.leave_id))
                                 break
                             case states.rejected:
-                                this.$message.error(`请假失败：${resp.leave_msg}`)
+                                this.$message.error(`老师拒绝了您的请求`)
                                 this.absenceIdList.splice(this.absenceIdList.findIndex(v=>v===resp.leave_id))
                                 break
                         }
@@ -158,7 +158,7 @@
                     cancelButtonText: '取消'
                 }).then(({value}) => {
                     reportAbsence(this.id, value).then((data) => {
-                        this.$message.success('请假成功')
+                        this.$message.success('请求成功，请等待老师回复')
                         this.update()
                         
                         this.absenceIdList.push(data.leaveID)

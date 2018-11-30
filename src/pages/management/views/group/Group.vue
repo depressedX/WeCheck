@@ -94,7 +94,7 @@
                             <el-table-column
                                     fixed="right"
                                     label="操作"
-                                    width="60">
+                                    width="100">
                                 <template slot-scope="scope">
                                     <el-button @click="deleteScheduleClick(scope.$index)" type="text" size="small">删除
                                     </el-button>
@@ -106,7 +106,7 @@
                         </el-table>
                     </el-tab-pane>
 
-                    <el-tab-pane label="历史计划" name="third">
+                    <el-tab-pane label="历史签到" name="third">
                         <el-table
                                 :data="historyScheduleList"
                                 style="width: 100% ;    margin-bottom: 40px;"
@@ -395,7 +395,7 @@
                 name: '',
                 owner: '',
                 //当前群体是否正在签到  true 在签到中  false不在
-                state: true,
+                state: false,
                 // id:this.$route.params.id,
                 members: [],
                 //本群体的id
@@ -528,7 +528,9 @@
                 dialogLeaveList:false,
                 //用来让饼图重新渲染
                 pie_show:true,
-                downloadData:[]
+                downloadData:[],
+                //通知
+                notifynote:{}
             }
         },
 
@@ -595,6 +597,13 @@
                     clearInterval(this.group_mes_index);
                     console.log("关闭轮询了")
                     this.group_mes_index = 0
+                    // console.log(this.$notify)
+
+                    this.notifynote.close()
+
+//                     var a=this.$notify({title:'一则想要关闭的通知'})
+// //1s后关闭
+//                     setTimeout(a.close,1000)
                 }
             }
                 
@@ -983,7 +992,9 @@
                         temp[i].time = temp[i].startUpDateTime.slice(11, 16);
                         if (temp[i].checked == true) {
                             temp[i].checked = '已签'
-                        } else {
+                        } else if (temp[i].checked == false&&temp[i].leave==true) {
+                            temp[i].checked = '请假'
+                        }else {
                             temp[i].checked = '未签'
                         }
                     }
@@ -1009,7 +1020,7 @@
                             that.request_list = temp
                         }
                     })
-                },2000)
+                },1000)
             },
 
             recordMess(index) {
@@ -1035,7 +1046,7 @@
             open12() {
                 var that = this;
                 clearInterval(this.group_mes_index)
-                this.$notify({
+                this.notifynote=this.$notify({
                     title: '通知',
                     dangerouslyUseHTMLString: true,
                     duration: 0,
@@ -1051,6 +1062,7 @@
             //提交leave请求的反馈
             submit_leaveAnswer(index,state){
                 // this.dialogLeaveList=false
+                console.log(state)
                 var obj = {}
                 obj.leave_id=this.leave_list[index].leave_id;
                 obj.leave_response = state;
