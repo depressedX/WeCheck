@@ -370,10 +370,30 @@
     import {getLeaveRequest,responseToLeave}from "../../../../resource/leave"
     import Pie_graph from "./components/pie_graph";
     import downExcel from "./components/downExcel";
+    import {
+        Button,
+        ButtonGroup, Collapse, CollapseItem,
+        Container,
+        Dialog, Form,
+        FormItem,
+        Header, Input,
+        Main, Switch,
+        Table,
+        TableColumn,
+        TabPane,
+        Tabs, TimePicker
+    } from "element-ui";
 
+    var collapseItem;
     export default {
         name: "Group",
-        components: {downExcel, Pie_graph, AppBar, SetPosition},
+        components: {downExcel, Pie_graph, AppBar, SetPosition,
+            ElContainer:Container,ElHeader:Header,ElMain:Main,ElTabs:Tabs,ElTabPane:TabPane,
+            ElTable:Table,ElTableColumn:TableColumn,ElButton:Button,ElDialog:Dialog,
+            ElButtonGroup:ButtonGroup, ElFormItem:FormItem,ElForm:Form,ElInput:Input,
+            ElSwitch:Switch,ElTimePicker:TimePicker,ElCollapseItem:CollapseItem,ElCollapse:Collapse
+        
+        },
 
 
         data() {

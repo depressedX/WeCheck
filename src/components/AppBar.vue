@@ -21,10 +21,13 @@
 <script>
     import Icon from "./Icon";
     import backIcon from '../assets/icon_back.png'
+    import {Row,Col,Button} from 'element-ui'
 
     export default {
         name: "AppBar",
-        components: {Icon},
+        components: {Icon,
+            ElRow:Row,ElCol:Col,ElButton:Button
+        },
         data() {
             return {
                 backIcon

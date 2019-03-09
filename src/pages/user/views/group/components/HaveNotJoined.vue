@@ -8,9 +8,13 @@
 
 <script>
     import {joinGroup} from "../../../../../resource/group";
+    import {Button} from "element-ui";
 
     export default {
         name: "HaveNotJoined",
+        components:{
+            ElButton:Button
+        },
         props: {
             id: {
                 required: true,

@@ -18,6 +18,7 @@
     import {check} from "../../../../../resource/check";
     import {getCurrentPosition, wait} from "@/utils";
     import {FaceDetector} from "@/utils/FaceDetector";
+    import {Dialog} from "element-ui";
 
 
     export default {
@@ -25,7 +26,8 @@
         components: {
             RealFaceCapture: () => FaceDetector.support() ?
                 import(/*webpackChunkName:"googleFaceDetectorComponent"*/'./FaceCapture2.vue') :
-                import(/*webpackChunkName:"normalFaceDetectorComponent"*/'./FaceCapture.vue')
+                import(/*webpackChunkName:"normalFaceDetectorComponent"*/'./FaceCapture.vue'),
+            ElDialog:Dialog
         },
         props: {
             groupId: {

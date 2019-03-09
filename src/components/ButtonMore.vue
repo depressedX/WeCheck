@@ -3,8 +3,13 @@
 </template>
 
 <script>
+    import {Button} from "element-ui";
+
     export default {
-        name: "ButtonMore"
+        name: "ButtonMore",
+        components:{
+            ElButton:Button
+        }
     }
 </script>
 

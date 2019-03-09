@@ -25,10 +25,11 @@
     import {createGroup} from "../../../../resource/group"
     import {logout} from "../../../../resource/authorization"
     import {getUserInfo, updateUserInfo} from "../../../../resource/user"
+    import {Button} from "element-ui";
 
     export default {
         name: 'home',
-        components: {MyHeader, MyGroupTable},
+        components: {MyHeader, MyGroupTable,ElButton:Button},
 
         computed: {
             // editPerInfoFormData() {

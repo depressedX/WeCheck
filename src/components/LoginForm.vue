@@ -17,12 +17,16 @@
 <script>
     import {login} from "../resource/authorization";
     import {wait} from "../utils";
+    import {FormItem,Form,Button,Input} from 'element-ui'
 
     // 管理端、用户端通用登陆组件
 
-
     export default {
         name: "LoginForm",
+        components:{
+            // ElFormItem:ElFormItem,ElForm:ElForm
+            ElFormItem:FormItem,ElForm:Form,ElButton:Button,ElInput:Input
+        },
         props: {
             redirect: {
                 type: String

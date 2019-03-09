@@ -62,9 +62,14 @@
     import {logout} from "../resource/authorization"
     import {getUserInfo, updateUserInfo} from "../resource/user"
     import {compressImage} from "@/utils";
+    import {Button, Dialog, Form, FormItem, Input, Upload} from "element-ui";
 
     export default {
         name: "MyHeader",
+        components:{
+            ElButton:Button,ElDialog:Dialog,ElForm:Form,ElFormItem:FormItem,
+            ElInput:Input,ElUpload:Upload
+        },
         created() {
             // this.getposition()
             this.getPhoto()

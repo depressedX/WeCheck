@@ -4,7 +4,7 @@ import Router from 'vue-router'
 import {toFirstLowerCase, toFirstUpperCase} from "../../utils/index";
 import {hasLoggedIn} from "../../resource/authorization";
 
-const views = require.context('./views',true,/(\w+)\/\1/i)
+// const views = require.context('./views',true,/(\w+)\/\1/i)
 
 
 /*
@@ -19,7 +19,7 @@ const views = require.context('./views',true,/(\w+)\/\1/i)
    ./views/home/Home.vue
    可以通过_('home')或_('Home')引用
 */
-const _ = name => views(`./${toFirstLowerCase(name)}/${toFirstUpperCase(name)}.vue`).default
+// const _ = name => views(`./${toFirstLowerCase(name)}/${toFirstUpperCase(name)}.vue`).default
 
 Vue.use(Router)
 
@@ -29,13 +29,15 @@ export let router = new Router({
         {
             path: '/',
             name: 'home',
-            component: _('home')
+            // component: _('home')
+            component:()=>import(/*webpackChunkName:"userRoute-home"*/'./views/home/Home.vue')
         },
         {
             path:'/group/:id',
             name:'group',
             props:true,
-            component:_('group')
+            // component:_('group')
+            component:()=>import(/*webpackChunkName:"userRoute-group"*/'./views/group/Group.vue')
         },
     ]
 })

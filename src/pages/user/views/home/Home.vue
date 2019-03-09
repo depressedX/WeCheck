@@ -24,19 +24,18 @@
     import GroupJoinedList from "./components/GroupJoinedList";
     import MyHeader from "../../../../components/MyHeader";
     import Icon from "@/components/Icon";
-    import QRCodeScanner from "@/components/QRCodeScanner";
     import {getGroupInfo} from "@/resource/group";
-
+    import {Button, Form, FormItem, Input} from "element-ui";
+    
     export default {
         name: 'home',
         components: {
-            QRCodeScanner,
+            QRCodeScanner:()=>import(/*webpackChunkName:"qr-code-scanner"*/'../../../../components/QRCodeScanner'),
             Icon,
             MyHeader,
             GroupJoinedList,
-            TodayScheduleTable
-        },
-        created() {
+            TodayScheduleTable,
+            ElForm:Form,ElFormItem:FormItem,ElInput:Input,ElButton:Button
         },
         data() {
             return {

@@ -1,16 +1,17 @@
 <template>
-    <el-card style="; margin: auto ">
+    <card style="; margin: auto ">
         <h2 style="font-weight: initial">用户注册</h2>
         <register-form/>
-    </el-card>
+    </card>
 </template>
 
 <script>
     import RegisterForm from "../../../../components/RegisterForm";
+    import {Card} from 'element-ui'
 
     export default {
         name: "Register",
-        components: {RegisterForm}
+        components: {RegisterForm,Card}
     }
 </script>
 

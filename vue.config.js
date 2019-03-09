@@ -1,7 +1,7 @@
-const StatsPlugin = require('stats-webpack-plugin')
 const OfflinePlugin = require('offline-plugin')
 const path = require('path')
-
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const webpack = require('webpack')
 module.exports = {
     pages: {
         index: {
@@ -32,39 +32,43 @@ module.exports = {
                 target: 'https://39.106.131.88'
             },
         },
-        https:true
+        // https: true
     },
     configureWebpack: {
         plugins: [
-            // new StatsPlugin('stats.json', {
-            //     chunkModules: true,
-            //     chunks: true,
-            //     assets: false,//html,css这些 
-            //     modules: true,
-            //     children: true,
-            //     chunksSort: true,//排序这两个都要加上   
-            //     assetsSort: true
+            // new OfflinePlugin({
+            //     caches: {
+            //         main: [],
+            //         additional: [],
+            //         optional: []
+            //     }
             // }),
-            new OfflinePlugin({
+
+            // new BundleAnalyzerPlugin(),
+            // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+        ]
+    },
+    chainWebpack: config => {
+        config
+            .plugin('offline-plugin')
+            .use(OfflinePlugin,[{
                 caches: {
                     main: [],
                     additional: [],
                     optional: []
                 }
-            }),
-
-
-        ]
-    },
-    // chainWebpack: config => {
-    //     // worker Loader
-    //     config.module
-    //         .rule('webworker')
-    //         .test(/\.worker\.js$/)
-    //         .use('worker-loader')
-    //         .loader('worker-loader')
-    //         .end()
-    //
-    // }
-
+            }])
+            .end()
+            
+            .plugin('ignore-plugin')
+            .use(webpack.IgnorePlugin,[/^\.\/locale$/, /moment$/])
+        
+        // 修改splitChunks配置
+        
+        
+        if (process.env.NODE_ENV === 'production') {
+            config.plugin('bundle-analyzer-plugin')
+                .use(BundleAnalyzerPlugin,[])
+        }
+    }
 }

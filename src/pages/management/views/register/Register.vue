@@ -8,9 +8,10 @@
 
 <script>
     import RegisterForm from "../../../../components/RegisterForm";
+    import {Card} from "element-ui";
     export default {
         name: "Register",
-        components: {RegisterForm},
+        components: {RegisterForm,ElCard:Card},
 
         data(){
             return{

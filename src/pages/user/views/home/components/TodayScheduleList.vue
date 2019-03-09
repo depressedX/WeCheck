@@ -42,10 +42,13 @@
     import {getCheckInfoToday} from "../../../../../resource/check";
     import Schedule from "./Schedule";
     import MyTitle from "./MyTitle";
+    import {Collapse, CollapseItem} from "element-ui";
 
     export default {
         name: "TodayScheduleList",
-        components: {MyTitle, Schedule},
+        components: {MyTitle, Schedule,
+            ElCollapse:Collapse,ElCollapseItem:CollapseItem
+        },
         created() {
             getCheckInfoToday().then(res => {
                 this.doneList = res.done

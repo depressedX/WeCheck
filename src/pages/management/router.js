@@ -29,28 +29,12 @@ export let router = new Router({
             name: 'home',
             component: _('home')
         },
-        // {
-        //     path: '/login',
-        //     name: 'login',
-        //     component: _('login')
-        // },
-        // {
-        //     path: '/register',
-        //     name: 'register',
-        //     component: _('register')
-        // },
         {
             path:'/group/:id',
             name:'group',
             // props:true,
             component: _('group')
         },
-        // {
-        //     path:'/app',
-        //     name:'app',
-        //     // props:true,
-        //     component: _('app')
-        // }
     ]
 })
 router.beforeEach(((to, from, next) => {

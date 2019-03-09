@@ -56,10 +56,14 @@
 <script>
 
     import {getGroupInfoList} from "../../../../../resource/group";
-    import QRCode from 'qrcode'
+    import {Button, Dialog, Table, TableColumn} from "element-ui";
 
     export default {
         name: "MyGroupTable",
+        
+        components:{
+            ElDialog:Dialog,ElTable:Table,ElTableColumn:TableColumn,ElButton:Button
+        },
 
         created(){
             this.update();
@@ -99,8 +103,11 @@
                 var id   = this.myGroupList[index].id;
                 this.groupname = this.myGroupList[index].name
                 var comUrl = this.baseurl+id;
-                QRCode.toDataURL(comUrl, { errorCorrectionLevel: 'H' }, (err, url) =>{
-                    this.imgUrl = url
+                import(/*webpackChunkName:"qrcode"*/'qrcode').then(QRCode=>{
+
+                    QRCode.toDataURL(comUrl, { errorCorrectionLevel: 'H' }, (err, url) =>{
+                        this.imgUrl = url
+                    })
                 })
             }
 

@@ -3,8 +3,13 @@
 </template>
 
 <script>
+    import {Button} from "element-ui";
+
     export default {
         name: "downExcel",
+        components:{
+            ElButton:Button
+        },
         props:[
             "jsonData"
         ],

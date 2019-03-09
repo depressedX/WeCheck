@@ -10,6 +10,8 @@
 <script>
 
 
+    import {Card} from "element-ui";
+
     const scheduleTypes = {
         missed: 'missed',
         done: 'done',
@@ -19,6 +21,9 @@
 
     export default {
         name: "Schedule",
+        components:{
+            ElCard:Card
+        },
         props: {
             type: {
                 type: String,

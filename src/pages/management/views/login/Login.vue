@@ -25,15 +25,16 @@
 
 <script>
     import LoginForm from "../../../../components/LoginForm";
+    import {Card} from "element-ui";
 
     export default {
         name: "Login",
-        components: {LoginForm},
+        components: {LoginForm,ElCard:Card},
 
         data() {
             return {
                 note:{
-                    backgroundImage: "url(" + require("../../../../image/login_back.png") + ")",
+                    backgroundImage: "url(" + require("../../../../image/login_back.jpg") + ")",
                     backgroundRepeat: "no-repeat",
                     height:'100%',
                     backgroundSize:'100% 100%'

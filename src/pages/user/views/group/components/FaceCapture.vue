@@ -9,22 +9,6 @@
 <style scoped lang="scss">
 
 
-    /*.container {
-
-        video, canvas {
-            object-fit: contain;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 0;
-        }
-
-        position: fixed;
-        left: 0;
-        width: 100%;
-        height: 240px;
-        top: 25%;
-    }*/
     .container {
 
         video {
@@ -55,6 +39,7 @@
     import {captureImageFromVideo} from "../../../../../utils";
     import '@/lib/tracking.js'
     import '@/lib/data/face.js'
+    import {Button} from "element-ui";
 
     let mounted = null
 
@@ -62,6 +47,9 @@
     // 利用clmtrackr和百度ai人脸识别来识别一张高质量的照片
     export default {
         name: "FaceCapture",
+        components:{
+            ElButton:Button
+        },
         data() {
 
             return {

@@ -61,12 +61,17 @@
 <script>
 
     import {register} from "../resource/authorization";
-    import {captureImageFromVideo} from "../utils/index"
     import {compressImage} from "@/utils";
+    import {Form, FormItem, Input, Container, Option, Select, Upload, Button} from 'element-ui'
 
     export default {
 
         name: 'RegisterForm',
+
+        components: {
+            ElForm: Form, ElFormItem: FormItem, ElInput: Input, ElContainer: Container,
+            ElOption:Option, ElSelect:Select, ElUpload:Upload, ElButton:Button
+        },
 
         created() {
 
@@ -243,7 +248,7 @@
                             img.src = URL.createObjectURL(formData.get('profile'))
                             img.onload = () => {
                                 compressImage(img).then(file => {
-                                    formData.append('profile',file)
+                                    formData.append('profile', file)
                                     resolve(formData)
                                 })
                             }

@@ -21,11 +21,15 @@
 <script>
     import {getGroupHistory} from "@/resource/history";
     import moment from 'moment'
+    require('moment/locale/zh-cn');
+    import {Table, TableColumn} from "element-ui";
 
     export default {
         name: "CheckingHistory",
+        components:{
+            ElTable:Table,ElTableColumn:TableColumn
+        },
         async created(){
-            console.log(moment('2018-11-26T21:22:38Z').locale('zh-cn').format("M/D, HH:mm, dddd"))
             this.loading = true
             try {
                 this.historyData = await getGroupHistory(this.id)

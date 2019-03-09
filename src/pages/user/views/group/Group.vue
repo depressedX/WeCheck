@@ -49,6 +49,7 @@
     import CheckButton from "./components/CheckButton";
     import CheckingHistory from "@/pages/user/views/group/components/CheckingHistory";
     import {getAbsenceRequestFeedback, reportAbsence} from "@/resource/leave";
+    import {Alert, Button} from "element-ui";
 
     let test = false
 
@@ -57,6 +58,7 @@
         components: {
             CheckingHistory,
             CheckButton, CheckValidator, ButtonMore, Icon, HaveNotJoined, AppBar,
+            ElAlert:Alert,ElButton:Button
         },
         props: {
             id: {

@@ -8,7 +8,7 @@
                 <h2 style="margin: 0;margin-bottom: 10vh;">Hello，<br>
                     <h2 style="margin: 0">欢迎回来!</h2></h2>
 
-                <el-card style=" margin:0 auto;color: white ">
+                <card style=" margin:0 auto;color: white ">
 
                     <login-form :redirect="redirect"/>
                     <p style=" float: left">
@@ -16,7 +16,7 @@
                                             margin: 0;text-decoration: none;">
                             新用户注册</router-link>
                     </p>
-                </el-card>
+                </card>
             </div>
 
 
@@ -27,10 +27,11 @@
 
 <script>
     import LoginForm from "../../../../components/LoginForm";
+    import {Card} from 'element-ui'
 
     export default {
         name: "Login",
-        components: {LoginForm},
+        components: {LoginForm,Card},
         props: {
             // type: {
             //     type: String,
@@ -51,7 +52,7 @@
         data() {
             return {
                 note: {
-                    backgroundImage: "url(" + require("../../../../image/login_back.png") + ")",
+                    backgroundImage: "url(" + require("../../../../image/login_back.jpg") + ")",
                     backgroundRepeat: "no-repeat",
                     height: '100%',
                     backgroundSize: '100% 100%'

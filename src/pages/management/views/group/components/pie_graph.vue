@@ -4,9 +4,6 @@
 </template>
 
 <script>
-    var $ = require('jquery');
-
-
     export default {
         name: "pie_graph",
         props:[

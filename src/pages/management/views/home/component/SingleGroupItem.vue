@@ -7,8 +7,11 @@
 </template>
 
 <script>
+    import {Card} from "element-ui";
+
     export default {
         name: "SingleGroupItem",
+        components:{ElCard:Card},
         props:{
             groupId:{
                 type:String,
