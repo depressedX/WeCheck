@@ -1,4 +1,5 @@
 import Vue from 'vue';
+
 import {
 
     Loading,
@@ -11,8 +12,6 @@ import App from './App.vue'
 import {router} from './router'
 import './style/global.scss'
 import checkingListenerWorker from 'worker-loader!./checkingListener.worker.js'
-
-// import 'element-ui/lib/theme-chalk/index.css';
 Vue.config.productionTip = false
 
 Vue.use(Loading.directive);

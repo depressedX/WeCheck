@@ -3,7 +3,7 @@
         <my-header/>
         <el-form>
             <el-form-item>
-                <el-input type="text" v-model="searchId" placeholder="输入群组口令">
+                <el-input type="text" v-model="searchId" placeholder="输入群组口令" class="search-input">
                     <el-button slot="append" icon="el-icon-search" @click="searchButtonHandler"></el-button>
                     <el-button slot="append" @click="handleIconScanClick">
                         <img class="icon_scan" src="@/assets/icon_scan.png">
@@ -18,24 +18,23 @@
         <q-r-code-scanner @close="isScanningQRCode=false" @detected="handleDetectedQRCode" v-if="isScanningQRCode"/>
     </div>
 </template>
-
 <script>
     import TodayScheduleTable from "./components/TodayScheduleList";
     import GroupJoinedList from "./components/GroupJoinedList";
     import MyHeader from "../../../../components/MyHeader";
-    import Icon from "@/components/Icon";
     import {getGroupInfo} from "@/resource/group";
-    import {Button, Form, FormItem, Input} from "element-ui";
-    
+    import {Button, ButtonGroup, Form, FormItem, Input} from "element-ui";
+
     export default {
         name: 'home',
         components: {
-            QRCodeScanner:()=>import(/*webpackChunkName:"qr-code-scanner"*/'../../../../components/QRCodeScanner'),
-            Icon,
+            QRCodeScanner: () => import(/*webpackChunkName:"qr-code-scanner"*/'../../../../components/QRCodeScanner'),
             MyHeader,
             GroupJoinedList,
             TodayScheduleTable,
-            ElForm:Form,ElFormItem:FormItem,ElInput:Input,ElButton:Button
+            ElForm: Form, ElFormItem: FormItem, 
+            ElButtonGroup: ButtonGroup,
+            ElButton: Button,ElInput: Input
         },
         data() {
             return {
@@ -103,5 +102,15 @@
     .el-dialog {
         width: 100% !important;
         max-width: 450px;
+    }
+
+    .home .search-input .el-button{
+        margin: -10px 0 !important;
+    }
+    .home .search-input .el-button:first-child{
+        margin-left: -20px !important;
+    }
+    .home .search-input .el-button:last-child{
+        margin-right: -20px !important;
     }
 </style>
