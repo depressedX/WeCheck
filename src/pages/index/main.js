@@ -16,6 +16,8 @@ import './style/global.scss'
  * ServiceWorker部分代码
  */
 import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+import {getUserInfo} from "../../resource/user";
+import {eventBus} from "../../utils/http";
 
 OfflinePluginRuntime.install({
     onInstalled: function () {
@@ -50,3 +52,12 @@ new Vue({
     render: h => h(App)
 }).$mount('#app')
 
+// getUserInfo(0).then(data=>{
+//     console.log('successs   ')
+// },e=>{
+//     console.log(e.message)
+// })
+
+eventBus.on('unhandlederror',(e)=>{
+    console.log(e.message)
+})

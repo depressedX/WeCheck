@@ -1,4 +1,4 @@
-import {handleResponse, server} from "../utils/http";
+import {server} from "../utils/http";
 import qs from 'qs'
 
 /***
@@ -6,7 +6,7 @@ import qs from 'qs'
  * @return {PromiseLike<T> | Promise<T>}
  */
 export function getCheckInfoToday() {
-    return server.get('check/status').then(handleResponse)
+    return server.get('check/status')
 }
 
 /***
@@ -17,14 +17,14 @@ export function getCheckInfoToday() {
  */
 export function check(id, form) {
     form.append('id', id)
-    return server.post('check/check', form).then(handleResponse)
+    return server.post('check/check', form)
 }
 
 // 开启、关闭签到
 export function enableCheck(id) {
-    return server.post('check/enable', qs.stringify({id})).then(handleResponse)
+    return server.post('check/enable', qs.stringify({id}))
 }
 
 export function disableCheck(id) {
-    return server.post('check/disable', qs.stringify({id})).then(handleResponse)
+    return server.post('check/disable', qs.stringify({id}))
 }
