@@ -1,6 +1,5 @@
 <template>
     <el-container id="RfContainer" style="">
-
         <el-form status-icon :model="ruleForm" :rules="rules" ref="ruleForm" style="width: 80%;margin: 0 auto">
 
             <el-form-item label="用户名" prop="username">
@@ -49,10 +48,7 @@
                 <el-button type="primary" style="width: 100%" @click="submitForm('ruleForm') ">注册</el-button>
                 <!--<el-button @click="resetForm('ruleForm')">重置</el-button>-->
             </el-form-item>
-
-
         </el-form>
-
     </el-container>
 
 

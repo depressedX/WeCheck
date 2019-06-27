@@ -259,7 +259,6 @@
 
                 <!--弹出框 编辑群体-->
                 <el-dialog title="编辑群体" :visible.sync="dialogEditGroup">
-
                     <el-form ref="group_Editform" :model="group_Editform"
                              :rules="{positionCorrect: [{required: true, message: '请在图中标记中心点',trigger:'change'}]}">
                         <el-form-item label="群体名称" :label-width="formLabelWidth">
@@ -1121,7 +1120,29 @@
 
 </style>
 <style>
-
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
 
     .el-table .warning_row {
         background: oldlace;
