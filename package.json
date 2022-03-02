@@ -22,7 +22,7 @@
     "register-service-worker": "^1.0.0",
     "sw-precache-webpack-plugin": "^0.11.5",
     "underscore": "^1.9.1",
-    "url-parse": "^1.4.3",
+    "url-parse": "^1.5.9",
     "vue": "^2.5.16",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
